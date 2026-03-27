@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.so
+.Python
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Django
+db.sqlite3
+*.ps1
+*.md
+/staticfiles/
+
+# Tailwind CSS
+theme/static/
+node_modules/
+
+# IDE
+.vscode/
+
+!README.md

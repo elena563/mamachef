@@ -1,0 +1,31 @@
+<button 
+    type="{{ type|default:'button' }}"
+    class="
+        inline-flex items-center justify-center
+        px-4 py-2 rounded-md
+        font-medium text-sm
+        transition-colors duration-200
+        focus:outline-none focus:ring-2 focus:ring-offset-2
+        {% if variant == 'primary' or not variant %}
+            bg-orange-500 hover:bg-orange-600 text-white focus:ring-orange-500
+        {% elif variant == 'secondary' %}
+            bg-gray-200 hover:bg-gray-300 text-gray-800 focus:ring-gray-400
+        {% elif variant == 'danger' %}
+            bg-red-500 hover:bg-red-600 text-white focus:ring-red-500
+        {% elif variant == 'success' %}
+            bg-green-500 hover:bg-green-600 text-white focus:ring-green-500
+        {% endif %}
+        {% if size == 'sm' %}
+            px-3 py-1.5 text-xs
+        {% elif size == 'lg' %}
+            px-6 py-3 text-base
+        {% endif %}
+        {% if disabled %}
+            opacity-50 cursor-not-allowed
+        {% endif %}
+    "
+    {% if disabled %}disabled{% endif %}
+    {{ attrs }}
+>
+    {{ slot }}
+</button>
