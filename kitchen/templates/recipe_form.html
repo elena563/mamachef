@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if object %}Modifica Ricetta{% else %}Nuova Ricetta{% endif %} - MamaChef
+{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">
+        {% if object %}
+            ✏️ Modifica Ricetta
+        {% else %}
+            ➕ Nuova Ricetta
+        {% endif %}
+    </h1>
+    
+    <form method="post" class="bg-white rounded-lg shadow-md p-6">
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <c-form_field :field="field" />
+        {% endfor %}
+        
+        <div class="flex gap-4 mt-6">
+            <c-button variant="primary" type="submit">
+                {% if object %}Aggiorna Ricetta{% else %}Crea Ricetta{% endif %}
+            </c-button>
+            <a href="{% url 'Kitchen:home' %}">
+                <c-button variant="secondary" type="button">
+                    Annulla
+                </c-button>
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

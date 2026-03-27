@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Recipes - MamaChef{% endblock %}
+
+{% block content %}
+<div class="px-4 sm:px-0">
+    <h1 class="text-4xl font-bold mb-4">Ricette</h1>
+    <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary" size="lg" class="mb-6">
+        Add new Recipe
+    </c-button>
+    
+    <p class="text-xl mb-6">Esplora tutte le nostre deliziose ricette</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Example Recipe Cards using Cotton component -->
+        <c-recipe-card 
+            title="Pasta alla Carbonara"
+            description="La classica ricetta romana con guanciale, uova e pecorino"
+            difficulty="Medium"
+            preparation_time="30"
+            author="Chef Mario"
+            url="#"
+        />
+        
+        <c-recipe-card 
+            title="Pizza Margherita"
+            description="La regina delle pizze: pomodoro, mozzarella e basilico"
+            difficulty="Easy"
+            preparation_time="45"
+            author="Chef Giuseppe"
+            url="#"
+        />
+        
+        <c-recipe-card 
+            title="Risotto ai Funghi"
+            description="Un risotto cremoso con funghi porcini freschi"
+            difficulty="Hard"
+            preparation_time="40"
+            author="Chef Anna"
+            url="#"
+        />
+    </div>
+</div>
+{% endblock %}

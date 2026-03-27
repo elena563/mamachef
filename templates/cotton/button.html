@@ -1,12 +1,24 @@
+<c-vars
+    type="button"
+    link=""
+    variant="primary"
+    size=""
+    disabled="False"
+    aria_label=""
+    target=""
+/>
+
+{% if link != "" %}<a href="{{ link }}" {% if aria_label != "" %}aria-label="{{ aria_label }}"{% endif %} {% if target != "" %}target="{{target}}"{% endif %}>{% endif %}
 <button 
-    type="{{ type|default:'button' }}"
+    type="{{ type }}"
     class="
         inline-flex items-center justify-center
         px-4 py-2 rounded-md
-        font-medium text-sm
+        font-medium text-md
         transition-colors duration-200
         focus:outline-none focus:ring-2 focus:ring-offset-2
-        {% if variant == 'primary' or not variant %}
+        cursor-pointer
+        {% if variant == 'primary' %}
             bg-orange-500 hover:bg-orange-600 text-white focus:ring-orange-500
         {% elif variant == 'secondary' %}
             bg-gray-200 hover:bg-gray-300 text-gray-800 focus:ring-gray-400
@@ -20,12 +32,13 @@
         {% elif size == 'lg' %}
             px-6 py-3 text-base
         {% endif %}
-        {% if disabled %}
+        {% if disabled == 'True' %}
             opacity-50 cursor-not-allowed
         {% endif %}
     "
-    {% if disabled %}disabled{% endif %}
+    {% if disabled == 'True' %}disabled{% endif %}
     {{ attrs }}
 >
     {{ slot }}
 </button>
+{% if link != "" %}</a>{% endif %}
