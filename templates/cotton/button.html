@@ -6,6 +6,7 @@
     disabled="False"
     aria_label=""
     target=""
+    class=""
 />
 
 {% if link != "" %}<a href="{{ link }}" {% if aria_label != "" %}aria-label="{{ aria_label }}"{% endif %} {% if target != "" %}target="{{target}}"{% endif %}>{% endif %}
@@ -35,6 +36,7 @@
         {% if disabled == 'True' %}
             opacity-50 cursor-not-allowed
         {% endif %}
+        {{ class }}
     "
     {% if disabled == 'True' %}disabled{% endif %}
     {{ attrs }}

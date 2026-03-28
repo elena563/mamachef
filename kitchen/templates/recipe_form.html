@@ -22,16 +22,34 @@
         {% endfor %}
 
         <div id="ingredients-container">
-            <h4 class="text-xl font-semibold mb-4">Ingredients</h4>
-            <div class="ingrediente">
+            <h5 class="text-md font-semibold mb-4">Ingredients</h5>
+            {% if object %}
+                {% for ingredient in object.ingredients.all %}
+                <div class="flex flex-col md:flex-row gap-4 mb-4">
+                    <c-form-field type="text" name="ingredient" value="{{ ingredient.name }}" placeholder="flour"/>
+                    <c-form-field type="number" name="quantity" value="{{ ingredient.quantity }}" placeholder="200"/>
+                    <c-form-field type="select" name="unit" :choices="{{ unit_choices }}" value="{{ ingredient.unit }}"/>
+                    <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
+                </div>
+                {% endfor %}
+            {% endif %}
+            <template id="ingredient-template">
+                <div class="flex flex-col md:flex-row gap-4 mb-4">
+                    <c-form-field type="text" name="ingredient" placeholder="flour"/>
+                    <c-form-field type="number" name="quantity" placeholder="200"/>
+                    <c-form-field type="select" name="unit" :choices="{{ unit_choices }}"/>
+                    <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
+                </div>
+            </template>
+            <div class="flex flex-col md:flex-row gap-4 mb-4">
                 <c-form-field type="text" name="ingredient" placeholder="flour"/>
                 <c-form-field type="number" name="quantity" placeholder="200"/>
-                <c-form-field type="text" name="unit" placeholder="g"/>
-                <c-button type="button" variant="secondary" onclick="rimuoviIngrediente()">-</c-button>
+                <c-form-field type="select" name="unit" :choices="{{ unit_choices }}"/>
+                <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
             </div>
         </div>
 
-        <c-button type="button" variant="secondary" onclick="aggiungiIngrediente()">+</c-button>
+        <c-button class='add_btn' type="button" variant="secondary">+</c-button>
         
         <div class="flex gap-4 mt-6">
             <c-button variant="primary" type="submit">
@@ -47,11 +65,22 @@
 </div>
 
 <script>
-function aggiungiIngrediente() {
-  const container = document.getElementById("ingredienti-container");
-  const nuovo = container.children[0].cloneNode(true);
-  container.appendChild(nuovo);
-}
+const addBtn = document.querySelector('.add_btn');
+const container = document.getElementById("ingredients-container");
+const template = document.getElementById('ingredient-template')
+
+// aggiungere ingrediente
+addBtn.addEventListener('click', () => {
+  const newEl = template.content.firstElementChild.cloneNode(true)
+  container.appendChild(newEl)
+})
+
+// rimuovere ingrediente (event delegation)
+container.addEventListener('click', (e) => {
+  if (e.target.classList.contains('remove_btn')) {
+    e.target.parentElement.remove()
+  }
+})
 </script>
 
 {% endblock %}

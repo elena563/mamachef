@@ -18,6 +18,17 @@
         <h2 class="text-3xl font-bold text-gray-900 mb-6">Featured Recipes</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Example Recipe Cards using Cotton component -->
+            {% for recipe in recipes %}
+            <c-recipe-card
+                title={{recipe.name}}
+                description={{recipe.description}}
+                difficulty={{recipe.difficulty}}
+                preparation_time={{recipe.preparation_time}}
+                author={{recipe.author}}
+                url=#
+            />
+            {% endfor %}
+
             <c-recipe-card 
                 title="Pasta alla Carbonara"
                 description="La classica ricetta romana con guanciale, uova e pecorino"

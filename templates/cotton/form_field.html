@@ -6,6 +6,7 @@
     value=""
     placeholder=""
     required="False"
+    choices=""
 />
 
 {% if name %}
@@ -17,16 +18,32 @@
                 <span class="text-red-500">*</span>
             {% endif %}
         </label>
+
+        {% if type == 'select' %}
+            <select 
+                name="{{ name }}" 
+                id="{{ name }}"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                {% if required == "True" %}required{% endif %}
+            >
+                {% for option in choices %}
+                    <option value="{{ option }}" {% if value == option %}selected{% endif %}>
+                        {{ option }}
+                    </option>
+                {% endfor %}
+            </select>
+        {% else %}
         
-        <input 
-            type="{{ type }}" 
-            name="{{ name }}" 
-            id="{{ name }}"
-            value="{{ value }}"
-            {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-            {% if required == "True" %}required{% endif %}
-        />
+            <input 
+                type="{{ type }}" 
+                name="{{ name }}" 
+                id="{{ name }}"
+                value="{{ value }}"
+                {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                {% if required == "True" %}required{% endif %}
+            />
+        {% endif %}
     </div>
 {% else %}
     {# Django form field #}
@@ -38,37 +55,39 @@
             {% endif %}
         </label>
         
-        {% if field.field.widget.input_type == 'textarea' %}
-            <textarea 
-                name="{{ field.name }}" 
-                id="{{ field.id_for_label }}"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                {% if field.field.required %}required{% endif %}
-                rows="4"
-            >{{ field.value|default:'' }}</textarea>
-        {% elif field.field.widget.input_type == 'select' %}
-            <select 
-                name="{{ field.name }}" 
-                id="{{ field.id_for_label }}"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                {% if field.field.required %}required{% endif %}
-            >
-                {% for value, label in field.field.choices %}
-                    <option value="{{ value }}" {% if field.value == value %}selected{% endif %}>
-                        {{ label }}
-                    </option>
-                {% endfor %}
-            </select>
-        {% else %}
-            <input 
-                type="{{ field.field.widget.input_type|default:'text' }}" 
-                name="{{ field.name }}" 
-                id="{{ field.id_for_label }}"
-                value="{{ field.value|default:'' }}"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                {% if field.field.required %}required{% endif %}
-            />
-        {% endif %}
+        {% with widget_name=field.field.widget|stringformat:"s" %}
+            {% if 'Textarea' in widget_name %}
+                <textarea 
+                    name="{{ field.name }}" 
+                    id="{{ field.id_for_label }}"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    {% if field.field.required %}required{% endif %}
+                    rows="4"
+                >{{ field.value|default:'' }}</textarea>
+            {% elif 'Select' in widget_name %}
+                <select 
+                    name="{{ field.name }}" 
+                    id="{{ field.id_for_label }}"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    {% if field.field.required %}required{% endif %}
+                >
+                    {% for choice_value, choice_label in field.field.choices %}
+                        <option value="{{ choice_value }}" {% if field.value|stringformat:"s" == choice_value|stringformat:"s" %}selected{% endif %}>
+                            {{ choice_label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                <input 
+                    type="{{ field.field.widget.input_type|default:'text' }}" 
+                    name="{{ field.name }}" 
+                    id="{{ field.id_for_label }}"
+                    value="{{ field.value|default:'' }}"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    {% if field.field.required %}required{% endif %}
+                />
+            {% endif %}
+        {% endwith %}
         
         {% if field.help_text %}
             <p class="text-gray-500 text-sm mt-1">{{ field.help_text }}</p>
