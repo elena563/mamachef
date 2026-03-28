@@ -137,3 +137,7 @@ TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+LOGIN_REDIRECT_URL = 'Kitchen:home'
+LOGOUT_REDIRECT_URL = 'Kitchen:home'
+LOGIN_URL = 'Kitchen:login'

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Register - MamaChef{% endblock %}
+
+{% block content %}
+    <div class="max-w-md mx-auto px-4 py-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Register</h2>
+        <form method="post" class="bg-white rounded-lg shadow-md p-6">
+            {% csrf_token %}
+            {% for field in form %}
+                <c-form-field :field="field" />
+            {% endfor %}
+            <c-button variant="primary" type="submit">Register</c-button>
+        </form>
+
+        <p class="text-center mt-4 text-gray-600">
+            Hai già un account? <a href="{% url 'Kitchen:login' %}" class="text-orange-600 hover:underline">Accedi</a>
+        </p>
+    </div>
+{% endblock %}

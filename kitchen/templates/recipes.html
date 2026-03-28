@@ -5,16 +5,17 @@
 {% block content %}
 <div class="px-4 sm:px-0">
     <h1 class="text-4xl font-bold mb-4">Ricette</h1>
+    {% if user.is_authenticated %}
     <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary" size="lg" class="mb-6">
         Add new Recipe
     </c-button>
+    {% endif %}
     
-    <p class="text-xl mb-6">Esplora tutte le nostre deliziose ricette</p>
+    <p class="text-xl mb-6">Explore our delicious recipes</p>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Example Recipe Cards using Cotton component -->
         <c-recipe-card 
             title="Pasta alla Carbonara"
-            description="La classica ricetta romana con guanciale, uova e pecorino"
+            description="The classic Roman recipe with guanciale, eggs, and pecorino"
             difficulty="Medium"
             preparation_time="30"
             author="Chef Mario"
@@ -23,7 +24,7 @@
         
         <c-recipe-card 
             title="Pizza Margherita"
-            description="La regina delle pizze: pomodoro, mozzarella e basilico"
+            description="The queen of pizzas: tomato, mozzarella, and basil"
             difficulty="Easy"
             preparation_time="45"
             author="Chef Giuseppe"
@@ -31,8 +32,8 @@
         />
         
         <c-recipe-card 
-            title="Risotto ai Funghi"
-            description="Un risotto cremoso con funghi porcini freschi"
+            title="Mushroom Risotto"
+            description="A creamy risotto with fresh porcini mushrooms"
             difficulty="Hard"
             preparation_time="40"
             author="Chef Anna"

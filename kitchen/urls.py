@@ -12,4 +12,10 @@ urlpatterns = [
     
     path('recipe/new_recipe/', views.RecipeCreateView.as_view(), name='new_recipe'),
     path('recipe/<int:pk>/edit/', views.RecipeUpdateView.as_view(), name='edit_recipe'),
+    path('recipe/<int:pk>/delete/', views.recipe_delete, name='delete_recipe'),
+    
+    # Authentication
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('register/', views.register, name='register'),
 ]

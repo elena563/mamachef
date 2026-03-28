@@ -18,8 +18,20 @@
         {% csrf_token %}
         
         {% for field in form %}
-            <c-form_field :field="field" />
+            <c-form-field :field="field" />
         {% endfor %}
+
+        <div id="ingredients-container">
+            <h4 class="text-xl font-semibold mb-4">Ingredients</h4>
+            <div class="ingrediente">
+                <c-form-field type="text" name="ingredient" placeholder="flour"/>
+                <c-form-field type="number" name="quantity" placeholder="200"/>
+                <c-form-field type="text" name="unit" placeholder="g"/>
+                <c-button type="button" variant="secondary" onclick="rimuoviIngrediente()">-</c-button>
+            </div>
+        </div>
+
+        <c-button type="button" variant="secondary" onclick="aggiungiIngrediente()">+</c-button>
         
         <div class="flex gap-4 mt-6">
             <c-button variant="primary" type="submit">
@@ -33,4 +45,13 @@
         </div>
     </form>
 </div>
+
+<script>
+function aggiungiIngrediente() {
+  const container = document.getElementById("ingredienti-container");
+  const nuovo = container.children[0].cloneNode(true);
+  container.appendChild(nuovo);
+}
+</script>
+
 {% endblock %}

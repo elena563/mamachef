@@ -1,11 +1,11 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}MamaChef - Le Tue Ricette{% endblock %}</title>
+    <title>{% block title %}MamaChef - Your Recipes{% endblock %}</title>
     {% tailwind_css %}
     {% block extra_css %}{% endblock %}
 </head>
@@ -39,14 +39,14 @@
                 <div class="hidden sm:ml-6 sm:flex sm:items-center">
                     {% if user.is_authenticated %}
                         <span class="text-gray-700 mr-4">Ciao, {{ user.username }}!</span>
-                        <a href="#" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-sm font-medium">
+                        <a href="{% url 'Kitchen:logout' %}" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-sm font-medium">
                             Logout
                         </a>
                     {% else %}
-                        <a href="#" class="text-gray-700 hover:text-orange-600 px-4 py-2 rounded-md text-sm font-medium">
+                        <a href="{% url 'Kitchen:login' %}" class="text-gray-700 hover:text-orange-600 px-4 py-2 rounded-md text-sm font-medium">
                             Login
                         </a>
-                        <a href="#" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-sm font-medium ml-2">
+                        <a href="{% url 'Kitchen:register' %}" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md text-sm font-medium ml-2">
                             Registrati
                         </a>
                     {% endif %}
