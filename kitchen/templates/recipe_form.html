@@ -5,30 +5,37 @@
 {% endblock %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto px-4 py-8">
+<div class="max-w-3xl mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-gray-900 mb-6">
         {% if object %}
-            ✏️ Modifica Ricetta
+            ✏️ Edit Recipe
         {% else %}
-            ➕ Nuova Ricetta
+            ➕ New Recipe
         {% endif %}
     </h1>
     
     <form method="post" class="bg-white rounded-lg shadow-md p-6">
         {% csrf_token %}
         
-        {% for field in form %}
-            <c-form-field :field="field" />
-        {% endfor %}
+        <c-form-field :field="form.name" />
+        <c-form-field :field="form.description" />
+        <c-form-field :field="form.difficulty" />
+
+        <div class="flex gap-4 [&>*]:flex-1">
+            <c-form-field :field="form.preparation_time" />
+            <c-form-field :field="form.servings" />
+        </div>
+
+        <hr class="my-6">
 
         <div id="ingredients-container">
             <h5 class="text-md font-semibold mb-4">Ingredients</h5>
             {% if object %}
                 {% for ingredient in object.ingredients.all %}
                 <div class="flex flex-col md:flex-row gap-4 mb-4">
-                    <c-form-field type="text" name="ingredient" value="{{ ingredient.name }}" placeholder="flour"/>
-                    <c-form-field type="number" name="quantity" value="{{ ingredient.quantity }}" placeholder="200"/>
-                    <c-form-field type="select" name="unit" :choices="{{ unit_choices }}" value="{{ ingredient.unit }}"/>
+                    <c-form-field type="text" name="ingredient" value="{{ ingredient.ingredient.name }}"/>
+                    <c-form-field type="number" name="quantity" value="{{ ingredient.quantity }}"/>
+                    <c-form-field type="select" name="unit" :choices="unit_choices" value="{{ ingredient.unit }}"/>
                     <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
                 </div>
                 {% endfor %}
@@ -37,14 +44,64 @@
                 <div class="flex flex-col md:flex-row gap-4 mb-4">
                     <c-form-field type="text" name="ingredient" placeholder="flour"/>
                     <c-form-field type="number" name="quantity" placeholder="200"/>
-                    <c-form-field type="select" name="unit" :choices="{{ unit_choices }}"/>
+                    <c-form-field type="select" name="unit" :choices="unit_choices"/>
                     <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
                 </div>
             </template>
             <div class="flex flex-col md:flex-row gap-4 mb-4">
                 <c-form-field type="text" name="ingredient" placeholder="flour"/>
                 <c-form-field type="number" name="quantity" placeholder="200"/>
-                <c-form-field type="select" name="unit" :choices="{{ unit_choices }}"/>
+                <c-form-field type="select" name="unit" :choices="unit_choices"/>
+                <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
+            </div>
+        </div>
+
+        <c-button class='add_btn' type="button" variant="secondary">+</c-button>
+
+        <hr class="my-6">
+
+        <div id="steps-container">
+            <h5 class="text-md font-semibold mb-4">Steps</h5>
+            {% if object %}
+                {% for step in object.steps.all %}
+                <div class="flex flex-col md:flex-row gap-4 mb-4">
+                    <c-form-field type="textarea" name="step" value="{{ step.description }}" placeholder="Step description"/>
+                    <span class="flex flex-col">
+                        <c-form-field type="number" name="timer" value="{{ step.timer }}" placeholder="10"/>
+                        <span class="flex gap-2">
+                            <c-button class='up_btn' type="button" variant="secondary">↑</c-button>
+                            <c-button class='down_btn' type="button" variant="secondary">↓</c-button>
+                        </span>
+                    </span>
+                    <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
+                </div>
+                {% endfor %}
+            {% endif %}
+            <template id="step-template">
+                <div class="flex flex-col md:flex-row gap-4 mb-4">
+                    <c-form-field type="textarea" name="step" placeholder="Step description"/>
+                    <span class="flex flex-col">
+                        <c-form-field type="number" name="timer" placeholder="10"/>
+                        <span class="flex gap-2">
+                            <c-button class='up_btn' type="button" variant="secondary">↑</c-button>
+                            <c-button class='down_btn' type="button" variant="secondary">↓</c-button>
+                            <span class="text-sm text-gray-500">You can add a timer, for example waiting or baking time</span>
+                        </span>
+                    </span>
+                    <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
+                    <input type="hidden" name="order" value=""/>
+                </div>
+            </template>
+            <div class="flex flex-col md:flex-row gap-4 mb-4">
+                <c-form-field type="textarea" name="step" placeholder="Step description"/>
+                 <span class="flex flex-col">
+                    <c-form-field type="number" name="timer" placeholder="10"/>
+                    <span class="flex gap-2">
+                            <c-button class='up_btn' type="button" variant="secondary">↑</c-button>
+                            <c-button class='down_btn' type="button" variant="secondary">↓</c-button>
+                            <span class="text-sm text-gray-500">You can add a timer, for example waiting or baking time</span>
+                        </span>
+                </span>
                 <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
             </div>
         </div>
@@ -53,11 +110,11 @@
         
         <div class="flex gap-4 mt-6">
             <c-button variant="primary" type="submit">
-                {% if object %}Aggiorna Ricetta{% else %}Crea Ricetta{% endif %}
+                {% if object %}Update{% else %}Create Recipe{% endif %}
             </c-button>
             <a href="{% url 'Kitchen:home' %}">
                 <c-button variant="secondary" type="button">
-                    Annulla
+                    Cancel
                 </c-button>
             </a>
         </div>
@@ -65,22 +122,60 @@
 </div>
 
 <script>
-const addBtn = document.querySelector('.add_btn');
-const container = document.getElementById("ingredients-container");
-const template = document.getElementById('ingredient-template')
+function setupDynamicFields(addSelector, containerId, templateId){
+    const addBtn = document.querySelector(addSelector);
+    const container = document.getElementById(containerId);
+    const template = document.getElementById(templateId);
 
-// aggiungere ingrediente
-addBtn.addEventListener('click', () => {
-  const newEl = template.content.firstElementChild.cloneNode(true)
-  container.appendChild(newEl)
-})
+    addBtn.addEventListener('click', () => {
+    const newEl = template.content.firstElementChild.cloneNode(true)
+    container.appendChild(newEl)
+    })
 
-// rimuovere ingrediente (event delegation)
-container.addEventListener('click', (e) => {
-  if (e.target.classList.contains('remove_btn')) {
-    e.target.parentElement.remove()
-  }
-})
+    container.addEventListener('click', (e) => {
+    if (e.target.classList.contains('remove_btn')) {
+        e.target.parentElement.remove()
+    }
+    })
+}
+setupDynamicFields('.add_btn', 'ingredients-container', 'ingredient-template')
+setupDynamicFields('.add_btn', 'steps-container', 'step-template')
+
+const form = document.querySelector('form');
+form.addEventListener('submit', (e) => {
+    const stepDivs = document.querySelectorAll('#steps-container > div:not(h5):not(template)');
+    stepDivs.forEach((div, index) => {
+        const orderInput = div.querySelector('input[name="order"]');
+        if (orderInput) {
+            orderInput.value = index;
+        }
+    });
+});
+
+function swapSteps(step1, step2) {
+    const temp = document.createElement('div');
+    step1.parentNode.insertBefore(temp, step1);
+    step2.parentNode.insertBefore(step1, step2);
+    temp.parentNode.insertBefore(step2, temp);
+    temp.remove();
+}
+
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('up_btn')) {
+        const step = e.target.closest('div');
+        const prevStep = step.previousElementSibling;
+        if (prevStep) {
+            swapSteps(step, prevStep);
+        }
+    } else if (e.target.classList.contains('down_btn')) {
+        const step = e.target.closest('div');
+        const nextStep = step.nextElementSibling;
+        if (nextStep) {
+            swapSteps(step, nextStep);
+        }
+    }
+});
+
 </script>
 
 {% endblock %}

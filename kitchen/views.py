@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 
 from .models import Recipe, RecipeIngredient, Ingredient, RecipeIngredient
 from .forms import RecipeForm
-from functions.recipe_helpers import save_ingredients
+from functions.recipe_helpers import save_dynamic_fields
 
 def home(request):
     recipes = Recipe.objects.all()
@@ -39,7 +39,9 @@ class RecipeCreateView(CreateView):
     model = Recipe
     form_class = RecipeForm
     template_name = 'recipe_form.html'
-    success_url = reverse_lazy('Kitchen:home')
+
+    def get_success_url(self):
+        return reverse_lazy('Kitchen:recipe_detail', kwargs={'pk': self.object.pk})
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -50,14 +52,16 @@ class RecipeCreateView(CreateView):
         form.instance.author = self.request.user
         response = super().form_valid(form)
         
-        save_ingredients(self.request.POST, self.object)
+        save_dynamic_fields(self.request.POST, self.object)
         return response
 
 class RecipeUpdateView(UpdateView):
     model = Recipe
     form_class = RecipeForm
     template_name = 'recipe_form.html'
-    success_url = reverse_lazy('Kitchen:home')
+
+    def get_success_url(self):
+        return reverse_lazy('Kitchen:recipe_detail', kwargs={'pk': self.object.pk})
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -68,7 +72,8 @@ class RecipeUpdateView(UpdateView):
         self.object = form.save()
 
         RecipeIngredient.objects.filter(recipe=self.object).delete()
-        save_ingredients(self.request.POST, self.object)
+        self.object.steps.all().delete()
+        save_dynamic_fields(self.request.POST, self.object)
         return super().form_valid(form)
 
 def recipe_delete(request, pk):
