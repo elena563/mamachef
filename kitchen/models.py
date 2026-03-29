@@ -53,6 +53,8 @@ class Step(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='steps', help_text='The recipe that this step belongs to')
     description = models.TextField(help_text='A description of the step')
     order = models.IntegerField(help_text='The order of the step in the recipe')
+    timer = models.IntegerField(null=True, blank=True, verbose_name='Timer (minutes)', help_text='The time in minutes that this step takes (optional)')
+    used_ingredients = models.ManyToManyField(Ingredient, related_name='steps', blank=True, help_text='The ingredients used in this step')
 
     def __str__(self):
         return f"Step {self.order} for {self.recipe.name}"

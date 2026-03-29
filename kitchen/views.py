@@ -25,7 +25,15 @@ def register(request):
 
 def recipes(request):
     """Recipes page view"""
-    return render(request, 'recipes.html')
+    recipes = Recipe.objects.all()
+    return render(request, 'recipes.html', {'recipes': recipes})
+
+def recipe_detail(request, pk):
+    """Recipe detail view"""
+    recipe = get_object_or_404(Recipe, pk=pk)
+    ingredients = RecipeIngredient.objects.filter(recipe=recipe)
+    steps = recipe.steps.all()
+    return render(request, 'recipe_detail.html', {'recipe': recipe, 'ingredients': ingredients, 'steps': steps})
 
 class RecipeCreateView(CreateView):
     model = Recipe

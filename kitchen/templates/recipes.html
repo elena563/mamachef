@@ -13,6 +13,17 @@
     
     <p class="text-xl mb-6">Explore our delicious recipes</p>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for recipe in recipes %}
+            <c-recipe-card
+                title={{recipe.name}}
+                description={{recipe.description}}
+                difficulty={{recipe.difficulty}}
+                preparation_time={{recipe.preparation_time}}
+                author={{recipe.author}}
+                url="{% url 'Kitchen:recipe_detail' recipe.id %}"
+            />
+            {% endfor %}
+
         <c-recipe-card 
             title="Pasta alla Carbonara"
             description="The classic Roman recipe with guanciale, eggs, and pecorino"

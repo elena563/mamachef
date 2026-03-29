@@ -25,7 +25,7 @@
                 difficulty={{recipe.difficulty}}
                 preparation_time={{recipe.preparation_time}}
                 author={{recipe.author}}
-                url=#
+                url="{% url 'Kitchen:recipe_detail' recipe.id %}"
             />
             {% endfor %}
 
