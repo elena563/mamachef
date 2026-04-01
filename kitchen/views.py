@@ -3,25 +3,17 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
 
 from .models import Recipe, RecipeIngredient, Ingredient, RecipeIngredient
 from .forms import RecipeForm
 from functions.recipe_helpers import save_dynamic_fields
 
+# pages
+
 def home(request):
     recipes = Recipe.objects.all()
     return render(request, 'home.html', {'recipes':recipes})
-
-def register(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('Kitchen:home')
-    else:
-        form = UserCreationForm()
-    return render(request, 'register.html', {'form': form})
 
 def recipes(request):
     """Recipes page view"""
@@ -34,6 +26,25 @@ def recipe_detail(request, pk):
     ingredients = RecipeIngredient.objects.filter(recipe=recipe)
     steps = recipe.steps.all()
     return render(request, 'recipe_detail.html', {'recipe': recipe, 'ingredients': ingredients, 'steps': steps})
+
+@login_required
+def profile(request):
+    user = request.user
+    recipes = Recipe.objects.filter(author=user)
+    return render(request, 'profile.html', {'recipes': recipes})
+
+# CRUD
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('Kitchen:home')
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})
 
 class RecipeCreateView(CreateView):
     model = Recipe
@@ -79,4 +90,17 @@ class RecipeUpdateView(UpdateView):
 def recipe_delete(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
     recipe.delete()
+    return redirect('Kitchen:recipes')
+
+@login_required
+def add_to_favorites(request, pk):
+    user_profile = request.user.profile
+    recipe = get_object_or_404(Recipe, pk=pk)
+    if recipe in user_profile.favorite_recipes.all():
+        user_profile.favorite_recipes.remove(recipe)
+    else:
+        user_profile.favorite_recipes.add(recipe)
+    referer = request.META.get('HTTP_REFERER')
+    if referer:
+        return redirect(referer)
     return redirect('Kitchen:recipes')

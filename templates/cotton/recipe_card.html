@@ -46,7 +46,12 @@
         {% endif %}
         
         <a href="{{ url|default:'#' }}" class="block w-full text-center bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200">
-            Vedi Ricetta
+            View Recipe
         </a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'Kitchen:add_to_favorites' id %}" class="block w-full text-center bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200">
+            Add to Favorites
+        </a>
+        {% endif %}
     </div>
 </div>

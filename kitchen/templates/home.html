@@ -20,6 +20,7 @@
             <!-- Example Recipe Cards using Cotton component -->
             {% for recipe in recipes %}
             <c-recipe-card
+                id = {{recipe.id}}
                 title={{recipe.name}}
                 description={{recipe.description}}
                 difficulty={{recipe.difficulty}}
@@ -30,6 +31,7 @@
             {% endfor %}
 
             <c-recipe-card 
+            id = 1
                 title="Pasta alla Carbonara"
                 description="La classica ricetta romana con guanciale, uova e pecorino"
                 difficulty="Medium"
@@ -39,6 +41,7 @@
             />
             
             <c-recipe-card 
+            id = 2
                 title="Pizza Margherita"
                 description="La regina delle pizze: pomodoro, mozzarella e basilico"
                 difficulty="Easy"
@@ -48,6 +51,7 @@
             />
             
             <c-recipe-card 
+            id = 3
                 title="Risotto ai Funghi"
                 description="Un risotto cremoso con funghi porcini freschi"
                 difficulty="Hard"

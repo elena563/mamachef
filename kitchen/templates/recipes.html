@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="px-4 sm:px-0">
-    <h1 class="text-4xl font-bold mb-4">Ricette</h1>
+    <h1 class="text-4xl font-bold mb-4">Recipes</h1>
     {% if user.is_authenticated %}
     <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary" size="lg" class="mb-6">
         Add new Recipe
@@ -15,6 +15,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for recipe in recipes %}
             <c-recipe-card
+                id = {{recipe.id}}
                 title={{recipe.name}}
                 description={{recipe.description}}
                 difficulty={{recipe.difficulty}}

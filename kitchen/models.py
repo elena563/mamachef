@@ -1,6 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', help_text='The user that this profile belongs to')
+    bio = models.TextField(null=True, blank=True, verbose_name='Bio', help_text='A brief biography of the user (optional)')
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True, verbose_name='Profile Picture', help_text='A profile picture for the user (optional)')
+    favorite_recipes = models.ManyToManyField('Recipe', related_name='favorited_by', blank=True, help_text='The recipes that the user has marked as favorites')
+
+    def __str__(self):
+        return f"{self.user.username}'s Profile"
+
 class Recipe(models.Model):
     DIFFICULTY_CHOICES = [
         ('Easy', 'Easy'),
@@ -45,8 +54,8 @@ class RecipeIngredient(models.Model):
     unit = models.CharField(max_length=10, choices=UNIT_CHOICES, null=True, blank=True, verbose_name='Unit', help_text='The unit of measurement for the ingredient (e.g., grams, cups)')
 
     def __str__(self):
-        return f"{self.quantity} {self.unit} of {self.ingredient.name} for {self.recipe.name}"
-    
+        return f"{self.quantity} {self.unit} of {self.ingredient.name} for {self.recipe.name}" 
+     
 
 class Step(models.Model):
     id = models.AutoField(primary_key=True)
