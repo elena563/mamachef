@@ -14,43 +14,8 @@
     <p class="text-xl mb-6">Explore our delicious recipes</p>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for recipe in recipes %}
-            <c-recipe-card
-                id = {{recipe.id}}
-                title={{recipe.name}}
-                description={{recipe.description}}
-                difficulty={{recipe.difficulty}}
-                preparation_time={{recipe.preparation_time}}
-                author={{recipe.author}}
-                url="{% url 'Kitchen:recipe_detail' recipe.id %}"
-            />
-            {% endfor %}
-
-        <c-recipe-card 
-            title="Pasta alla Carbonara"
-            description="The classic Roman recipe with guanciale, eggs, and pecorino"
-            difficulty="Medium"
-            preparation_time="30"
-            author="Chef Mario"
-            url="#"
-        />
-        
-        <c-recipe-card 
-            title="Pizza Margherita"
-            description="The queen of pizzas: tomato, mozzarella, and basil"
-            difficulty="Easy"
-            preparation_time="45"
-            author="Chef Giuseppe"
-            url="#"
-        />
-        
-        <c-recipe-card 
-            title="Mushroom Risotto"
-            description="A creamy risotto with fresh porcini mushrooms"
-            difficulty="Hard"
-            preparation_time="40"
-            author="Chef Anna"
-            url="#"
-        />
+            <c-recipe-card recipe = recipe />
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

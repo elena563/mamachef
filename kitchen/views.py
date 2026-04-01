@@ -5,7 +5,7 @@ from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 
-from .models import Recipe, RecipeIngredient, Ingredient, RecipeIngredient
+from .models import Recipe, RecipeIngredient, Ingredient, RecipeIngredient, UserProfile
 from .forms import RecipeForm
 from functions.recipe_helpers import save_dynamic_fields
 
@@ -40,13 +40,14 @@ def register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            UserProfile.objects.create(user=user)
             login(request, user)
             return redirect('Kitchen:home')
     else:
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
 
-class RecipeCreateView(CreateView):
+class RecipeFormView:
     model = Recipe
     form_class = RecipeForm
     template_name = 'recipe_form.html'
@@ -58,7 +59,8 @@ class RecipeCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context['unit_choices'] = [choice[0] for choice in RecipeIngredient.UNIT_CHOICES]
         return context
-    
+
+class RecipeCreateView(RecipeFormView,CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         response = super().form_valid(form)
@@ -66,19 +68,7 @@ class RecipeCreateView(CreateView):
         save_dynamic_fields(self.request.POST, self.object)
         return response
 
-class RecipeUpdateView(UpdateView):
-    model = Recipe
-    form_class = RecipeForm
-    template_name = 'recipe_form.html'
-
-    def get_success_url(self):
-        return reverse_lazy('Kitchen:recipe_detail', kwargs={'pk': self.object.pk})
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['unit_choices'] = [choice[0] for choice in RecipeIngredient.UNIT_CHOICES]
-        return context
-    
+class RecipeUpdateView(RecipeFormView,UpdateView):
     def form_valid(self, form):
         self.object = form.save()
 
@@ -86,6 +76,7 @@ class RecipeUpdateView(UpdateView):
         self.object.steps.all().delete()
         save_dynamic_fields(self.request.POST, self.object)
         return super().form_valid(form)
+
 
 def recipe_delete(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)

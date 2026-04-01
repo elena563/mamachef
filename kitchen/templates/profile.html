@@ -8,18 +8,11 @@
 
 <h2>Your Recipes</h2>
 {% if recipes %}
-    <ul>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for recipe in recipes %}
-            <c-recipe-card
-                title={{recipe.name}}
-                description={{recipe.description}}
-                difficulty={{recipe.difficulty}}
-                preparation_time={{recipe.preparation_time}}
-                author={{recipe.author}}
-                url="{% url 'Kitchen:recipe_detail' recipe.id %}"
-            />
+            <c-recipe-card recipe = recipe/>
         {% endfor %}
-    </ul>
+    </div>
 {% else %}
     <p>You haven't added any recipes yet. Let's try creating one!</p>
 {% endif %}
@@ -27,19 +20,11 @@
 
 <h2>Your Favorite Recipes</h2>
 {% if user.profile.favorite_recipes.exists %}
-    <ul>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for recipe in user.profile.favorite_recipes.all %}
-            <c-recipe-card
-                id = {{recipe.id}}
-                title={{recipe.name}}
-                description={{recipe.description}}
-                difficulty={{recipe.difficulty}}
-                preparation_time={{recipe.preparation_time}}
-                author={{recipe.author}}
-                url="{% url 'Kitchen:recipe_detail' recipe.id %}"
-            />
+            <c-recipe-card recipe = recipe />
         {% endfor %}
-    </ul>
+    </div>
 {% else %}
     <p>You haven't saved any recipes yet. Let's explore!</p>
 {% endif %}
