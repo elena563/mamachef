@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 from .models import Recipe, RecipeIngredient, Ingredient, RecipeIngredient, UserProfile
 from .forms import RecipeForm
@@ -16,9 +17,33 @@ def home(request):
     return render(request, 'home.html', {'recipes':recipes})
 
 def recipes(request):
-    """Recipes page view"""
+    """Recipes page view with search functionality"""
     recipes = Recipe.objects.all()
-    return render(request, 'recipes.html', {'recipes': recipes})
+    
+    search_query = request.GET.get('q', '').strip()
+    
+    if search_query:
+        recipes = recipes.filter(
+            Q(name__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+    
+    # For future: handle ingredient search
+    # ingredients = request.GET.getlist('ingredients')
+    # if ingredients:
+    #     recipes = recipes.filter(
+    #         recipeingredient__ingredient__name__in=ingredients
+    #     ).distinct()
+    
+    # For future: handle difficulty filters
+    # difficulty = request.GET.getlist('difficulty')
+    # if difficulty:
+    #     recipes = recipes.filter(difficulty__in=difficulty)
+    
+    return render(request, 'recipes.html', {
+        'recipes': recipes,
+        'search_query': search_query
+    })
 
 def recipe_detail(request, pk):
     """Recipe detail view"""

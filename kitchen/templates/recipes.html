@@ -12,6 +12,27 @@
     {% endif %}
     
     <p class="text-xl mb-6">Explore our delicious recipes</p>
+
+    <div>
+        <form method="get" class="mb-6">
+            <div class="flex flex-col md:flex-row gap-4 items-start">
+                <div class="flex-1 w-full">
+                    <c-search-bar 
+                        placeholder="Search recipes..." 
+                        name="q"
+                        value="{{ search_query }}"
+                    />
+                </div>
+                <div class="flex gap-2">
+                    <c-button type="submit" variant="primary">Search</c-button>
+                    {% if search_query %}
+                    <c-button link="{% url 'Kitchen:recipes' %}" variant="secondary">Clear</c-button>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for recipe in recipes %}
             <c-recipe-card recipe = recipe />
