@@ -11,7 +11,7 @@
     class=""
 />
 
-{% if link != "" %}<a href="{{ link }}" {% if aria_label != "" %}aria-label="{{ aria_label }}"{% endif %} {% if target != "" %}target="{{target}}"{% endif %}>{% endif %}
+{% if link != "" %}<a href="{{ link }}" class="{{ class }}" {% if aria_label != "" %}aria-label="{{ aria_label }}"{% endif %} {% if target != "" %}target="{{target}}"{% endif %}>{% endif %}
 <button 
     type="{{ type }}"
     class="
@@ -43,7 +43,7 @@
         {% if disabled == 'True' %}
             opacity-50 cursor-not-allowed
         {% endif %}
-        {{ class }}
+        {% if link == "" %}{{ class }}{% else %}w-full{% endif %}
     "
     {% if disabled == 'True' %}disabled{% endif %}
     {{ attrs }}
@@ -54,7 +54,5 @@
         </svg>
     {% endif %}
     {{ slot }}
-</button>
-{% if link != "" %}</a>{% endif %}
 </button>
 {% if link != "" %}</a>{% endif %}
