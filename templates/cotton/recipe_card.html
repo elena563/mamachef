@@ -2,7 +2,7 @@
     {% if image %}
         <img src="{{ image }}" alt="{{ title }}" class="w-full h-48 object-cover">
     {% else %}
-        <div class="w-full h-48 bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center">
+        <div class="w-full h-48 bg-yellow-mama flex items-center justify-center">
             <span class="text-6xl">🍽️</span>
         </div>
     {% endif %}
@@ -45,13 +45,15 @@
             </div>
         {% endif %}
         {% if recipe.id %}
-        <a href="{% url 'Kitchen:recipe_detail' recipe.id %}" class="block w-full text-center bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200">
-            View Recipe
-        </a>
-        {% if user.is_authenticated %}
-        <a href="{% url 'Kitchen:add_to_favorites' recipe.id %}" class="block w-full text-center bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200">
-            Add to Favorites
-        </a>
+        <div class="flex gap-2">
+            <c-button link="{% url 'Kitchen:recipe_detail' recipe.id %}" variant="success">
+                View Recipe
+            </c-button>
+            {% if user.is_authenticated %}
+            <c-button icon="heart" link="{% url 'Kitchen:add_to_favorites' recipe.id %}" variant="danger">
+               
+            </c-button>
+        </div>
         {% endif %}
         {% endif %}
     </div>

@@ -8,3 +8,14 @@
   * the scope of this path.
   */
 @source "../../../**/*.{html,py,js}";
+
+@theme {
+  --color-pink-mama: #FEAAC2;
+  --color-pink-mama-dark: #E58AAF;
+  --color-blue-mama: #A2D8FE;
+  --color-blue-mama-dark: #82B8DE;
+  --color-yellow-mama: #FDE68A;
+  --color-yellow-mama-dark: #FCD34D;
+}
+
+
