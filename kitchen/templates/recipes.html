@@ -4,14 +4,15 @@
 
 {% block content %}
 <div class="px-4 sm:px-0">
-    <h1 class="text-4xl font-bold mb-4">Recipes</h1>
-    {% if user.is_authenticated %}
-    <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary" size="lg" class="mb-6">
-        Add new Recipe
-    </c-button>
-    {% endif %}
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <h1 class="text-4xl font-bold mb-4">Explore our delicious recipes</h1>
+        {% if user.is_authenticated %}
+        <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary" size="lg" class="mb-6">
+            Add new Recipe
+        </c-button>
+        {% endif %}
+    </div>
     
-    <p class="text-xl mb-6">Explore our delicious recipes</p>
 
     <div>
         <form method="get" class="mb-6">

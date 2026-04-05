@@ -16,22 +16,27 @@
     type="{{ type }}"
     class="
         inline-flex items-center justify-center
+        font-jua
         {% if icon_only == 'True' %}
             p-2 rounded-full
         {% else %}
-            px-4 py-2 rounded-full
+            px-4 py-2 rounded-2xl
         {% endif %}
-        font-medium text-md
+        font-medium text-xl
         transition-colors duration-200
         cursor-pointer
         {% if variant == 'primary' %}
-            bg-pink-mama hover:bg-pink-mama-dark text-white focus:ring-pink-mama focus:outline-none focus:ring-2 focus:ring-offset-2
-        {% elif variant == 'secondary' %}
-            bg-gray-200 hover:bg-gray-300 text-gray-800 focus:ring-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2
+            bg-gradient-pink-mama hover:bg-gradient-pink-mama-dark text-white focus:ring-pink-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+        {% elif variant == 'secondary-y' %}
+            bg-beige-mama hover:bg-beige-mama-dark text-beige-mama-dark hover:text-white border-beige-mama-dark border-2 focus:ring-beige-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+        {% elif variant == 'secondary-b' %}
+            bg-light-blue hover:bg-blue-mama-dark hover:text-white text-blue-mama-dark border-blue-mama-dark border-2 focus:ring-blue-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+        {% elif variant == 'secondary-p' %}
+            bg-light-pink hover:bg-pink-mama-dark hover:text-white text-pink-mama-dark border-pink-mama-dark border-2 focus:ring-pink-mama focus:outline-none focus:ring-2 focus:ring-offset-2
         {% elif variant == 'danger' %}
             bg-red-500 hover:bg-red-600 text-white focus:ring-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2
         {% elif variant == 'success' %}
-            bg-blue-mama hover:bg-blue-mama-dark text-white focus:ring-blue-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+            bg-gradient-blue-mama hover:bg-gradient-blue-mama-dark text-white focus:ring-blue-mama focus:outline-none focus:ring-2 focus:ring-offset-2
         {% elif variant == 'ghost' %}
             text-gray-600 hover:text-pink-mama hover:bg-pink-mama/10
         {% endif %}
