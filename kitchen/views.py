@@ -35,14 +35,27 @@ def recipes(request):
     #         recipeingredient__ingredient__name__in=ingredients
     #     ).distinct()
     
-    # For future: handle difficulty filters
-    # difficulty = request.GET.getlist('difficulty')
-    # if difficulty:
-    #     recipes = recipes.filter(difficulty__in=difficulty)
+    difficulty = [d for d in request.GET.getlist('difficulty') if d != 'All difficulties']
+    if difficulty:
+        recipes = recipes.filter(difficulty__in=difficulty)
+    
+    preparation_time = request.GET.get('preparation_time')
+    if preparation_time and preparation_time != 'All preparation times':
+        if preparation_time == 'less than 30 minutes':
+            recipes = recipes.filter(preparation_time__lt=30)
+        elif preparation_time == '30-60 minutes':
+            recipes = recipes.filter(preparation_time__gte=30, preparation_time__lte=60)
+        elif preparation_time == 'more than 60 minutes':
+            recipes = recipes.filter(preparation_time__gt=60)
+
+    difficulty_levels = ['All difficulties'] + list(Recipe.objects.values_list('difficulty', flat=True).distinct())
+    preparation_time_ranges = ['All preparation times', 'less than 30 minutes', '30-60 minutes', 'more than 60 minutes']
     
     return render(request, 'recipes.html', {
         'recipes': recipes,
-        'search_query': search_query
+        'search_query': search_query,
+        'difficulty_levels': difficulty_levels,
+        'preparation_time_ranges': preparation_time_ranges
     })
 
 def recipe_detail(request, pk):

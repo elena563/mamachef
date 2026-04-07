@@ -31,6 +31,11 @@
                     {% endif %}
                 </div>
             </div>
+            <div class="flex w-full gap-4">
+                <c-form-field type="select" name="difficulty" :choices="difficulty_levels"/>
+                <c-form-field type="select" name="preparation_time" :choices="preparation_time_ranges"/>
+                <!-- category filter -->
+            </div>
         </form>
     </div>
 
