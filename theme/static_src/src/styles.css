@@ -25,6 +25,7 @@
   --gradient-blue-mama: linear-gradient(180deg, #92C8EE 0%, #72B0D8 62.5%, #4A9FE5 100%);
   --font-family-heading: 'Jua', sans-serif;
   --color-navy-mama: #3B6BBA;
+  --color-green-mama: #A0DC85;
   --color-white: #FFFFFF;
 }
 
@@ -47,6 +48,13 @@
   .gradient-blue-pink{
     background: linear-gradient(
   90deg, #A2D8FE 0%,#D6EEFE 13%,#F2F8FD 28%,#FFF4F6 50%,#F2F8FD 72%,#D6EEFE 87%,#A2D8FE 100%);
+  }
+
+  .scallop-down{
+    height:50px;
+    width:100%;
+    background: -webkit-gradient(radial, 50% 0, 10, 50% 0, 40, from(#D6EEFE), color-stop(0.49, #D6EEFE), color-stop(0.51, #F9FAFB), to(#F9FAFB));
+    -webkit-background-size: 49px 100%;
   }
 }
 

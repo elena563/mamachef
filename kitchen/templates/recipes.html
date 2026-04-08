@@ -1,48 +1,55 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Recipes - MamaChef{% endblock %}
 
+{% block hero %}
+<div class="w-full bg-cover bg-center p-12" style="background-image: url('{% static 'images/bg-table.png' %}')">
+    <div class="max-w-7xl mx-auto rounded-3xl p-8 bg-gray-50/60">
+        <div class=" flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+            <h1 class="text-4xl font-bold mb-4">Explore our delicious recipes</h1>
+            {% if user.is_authenticated %}
+            <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary" size="lg" class="mb-6">
+                Add new Recipe
+            </c-button>
+            {% endif %}
+        </div>
+
+        <div>
+            <form method="get" class="mb-6">
+                <div class="flex flex-col md:flex-row gap-4 items-start">
+                    <div class="flex-1 w-full">
+                        <c-search-bar 
+                            placeholder="Search recipes..." 
+                            name="q"
+                            value="{{ search_query }}"
+                        />
+                    </div>
+                    <div class="flex gap-2">
+                        <c-button type="submit" variant="primary">Search</c-button>
+                        {% if search_query %}
+                        <c-button link="{% url 'Kitchen:recipes' %}" variant="secondary">Clear</c-button>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class='flex w-full gap-4 mt-4 justify-between items-start'>
+                    <c-chip-input name="ingredients" placeholder="Add ingredient..." />
+                    <div class="flex w-full gap-4 mb-0 justify-end">
+                        <c-form-field type="select" name="difficulty" :choices="difficulty_levels"/>
+                        <c-form-field type="select" name="preparation_time" :choices="preparation_time_ranges"/>
+                        <!-- category filter -->
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="scallop-down"></div>
+{% endblock %}
+
 {% block content %}
-<div class="px-4 sm:px-0">
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <h1 class="text-4xl font-bold mb-4">Explore our delicious recipes</h1>
-        {% if user.is_authenticated %}
-        <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary" size="lg" class="mb-6">
-            Add new Recipe
-        </c-button>
-        {% endif %}
-    </div>
-    
-
-    <div>
-        <form method="get" class="mb-6">
-            <div class="flex flex-col md:flex-row gap-4 items-start">
-                <div class="flex-1 w-full">
-                    <c-search-bar 
-                        placeholder="Search recipes..." 
-                        name="q"
-                        value="{{ search_query }}"
-                    />
-                </div>
-                <div class="flex gap-2">
-                    <c-button type="submit" variant="primary">Search</c-button>
-                    {% if search_query %}
-                    <c-button link="{% url 'Kitchen:recipes' %}" variant="secondary">Clear</c-button>
-                    {% endif %}
-                </div>
-            </div>
-            
-            <div class='flex w-full gap-4 mt-4 justify-between items-start'>
-                <c-chip-input name="ingredients" placeholder="Add ingredient..." />
-                <div class="flex w-full gap-4 mb-0 justify-end">
-                    <c-form-field type="select" name="difficulty" :choices="difficulty_levels"/>
-                    <c-form-field type="select" name="preparation_time" :choices="preparation_time_ranges"/>
-                    <!-- category filter -->
-                </div>
-            </div>
-        </form>
-    </div>
-
+<div class="mb-8">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for recipe in recipes %}
             <c-recipe-card recipe = recipe />

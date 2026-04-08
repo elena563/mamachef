@@ -1,40 +1,45 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Home - MamaChef{% endblock %}
 
+{% block hero %}
+<div class="w-full bg-cover bg-center shadow-xl p-12 mb-8" style="background-image: url('{% static 'images/bg-blue.png' %}')">
+    <div class="max-w-7xl mx-auto">
+        <div class='bg-gray-50 rounded-3xl p-4'>
+            <div class='bg-gray-50 rounded-2xl p-6 border-4 border-dashed border-green-mama'>
+                <h1 class="text-4xl font-bold mb-4">Welcome to MamaChef!</h1>
+                <p class="text-xl mb-6">Discover, create, and share your favorite recipes</p>
+                <c-button variant="primary" size="lg">
+                    Start Cooking!
+                </c-button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
 {% block content %}
-<div class="px-4 sm:px-0">
-    <!-- Hero Section -->
-    <div class="bg-gradient-to-r from-pink-mama to-pink-mama rounded-lg shadow-xl p-8 mb-8 text-white">
-        <h1 class="text-4xl font-bold mb-4 text-white">Welcome to MamaChef! 🍳</h1>
-        <p class="text-xl mb-6 text-white">Discover, create, and share your favorite recipes</p>
-        <c-button variant="secondary-b" size="lg">
-            Start Cooking!
+<div class="mb-8">
+    <h2 class="text-3xl font-bold mb-6">Featured Recipes</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for recipe in recipes %}
+        <c-recipe-card recipe = recipe/>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Call to Action -->
+<div class="gradient-blue-pink rounded-lg shadow-md p-8 text-center">
+    <h2 class="text-3xl font-bold mb-4">Do you have a recipe to share?</h2>
+    <p class="text-xl mb-6">Join our community of home chefs!</p>
+    <div class="flex justify-center gap-4">
+        <c-button variant="primary">
+            Add Recipe
         </c-button>
-    </div>
-
-    <!-- Recipe Grid -->
-    <div class="mb-8">
-        <h2 class="text-3xl font-bold mb-6">Featured Recipes</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for recipe in recipes %}
-            <c-recipe-card recipe = recipe/>
-            {% endfor %}
-        </div>
-    </div>
-
-    <!-- Call to Action -->
-    <div class="gradient-blue-pink rounded-lg shadow-md p-8 text-center">
-        <h2 class="text-3xl font-bold mb-4">Do you have a recipe to share?</h2>
-        <p class="text-xl mb-6">Join our community of home chefs!</p>
-        <div class="flex justify-center gap-4">
-            <c-button variant="primary">
-                Add Recipe
-            </c-button>
-            <c-button variant="secondary-y">
-                Explore Recipes
-            </c-button>
-        </div>
+        <c-button variant="secondary-y">
+            Explore Recipes
+        </c-button>
     </div>
 </div>
 {% endblock %}
