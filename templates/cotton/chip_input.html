@@ -1,0 +1,64 @@
+<div class="flex flex-col gap-2">
+    <c-search-bar 
+        placeholder="{{ placeholder }}" 
+        name="{{ name|default:'search' }}_input"
+        value=""></c-search-bar>
+    <div class='chip-container flex flex-wrap py-2'></div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputName = "{{ name|default:'search' }}";
+        const input = document.querySelector(`input[name="${inputName}_input"]`);
+        const chipContainer = input.parentElement.querySelector('.chip-container');
+        const form = input.closest('form');
+
+        function createChip(value) {
+            const chip = document.createElement('div');
+            chip.className = 'inline-flex items-center px-3 py-1 bg-pink-mama text-white rounded-full mr-2 mb-2';
+            chip.textContent = value;
+
+            // hidden input to submit the value
+            const hiddenInput = document.createElement('input');
+            hiddenInput.type = 'hidden';
+            hiddenInput.name = inputName;
+            hiddenInput.value = value;
+            form.appendChild(hiddenInput);
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'ml-2 text-white cursor-pointer';
+            removeBtn.innerHTML = '&times;';
+            removeBtn.addEventListener('click', function() {
+                chip.remove();
+                hiddenInput.remove();
+                if (chipContainer.children.length === 0) {
+                    chipContainer.classList.add('hidden');
+                }
+            });
+
+            chip.appendChild(removeBtn);
+            chipContainer.appendChild(chip);
+            chipContainer.classList.remove('hidden');
+        }
+
+        input.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const value = this.value.trim();
+                if (value) {
+                    createChip(value);
+                    input.value = '';
+                }
+            }
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const existingValues = urlParams.getAll(inputName);
+        existingValues.forEach(value => {
+            if (value.trim()) {
+                createChip(value);
+            }
+        });
+    });
+</script>

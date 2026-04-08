@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from .models import Recipe, RecipeIngredient, Ingredient, RecipeIngredient, UserProfile
 from .forms import RecipeForm
@@ -28,12 +28,11 @@ def recipes(request):
             Q(description__icontains=search_query)
         )
     
-    # For future: handle ingredient search
-    # ingredients = request.GET.getlist('ingredients')
-    # if ingredients:
-    #     recipes = recipes.filter(
-    #         recipeingredient__ingredient__name__in=ingredients
-    #     ).distinct()
+    ingredients = [i.strip() for i in request.GET.getlist('ingredients') if i.strip()]
+    if ingredients:
+        recipes = recipes.filter(
+            ingredients__ingredient__name__in=ingredients
+        ).annotate(num_ingredients=Count('ingredients__ingredient')).order_by('-num_ingredients').distinct()
     
     difficulty = [d for d in request.GET.getlist('difficulty') if d != 'All difficulties']
     if difficulty:

@@ -11,19 +11,21 @@
 
 {% if name %}
     {# Custom field #}
-    <div class="mb-4">
+    <div>
+        {% if label %}
         <label for="{{ name }}" class="block text-gray-700 font-medium mb-2">
             {{ label }}
             {% if required == "True" %}
                 <span class="text-red-500">*</span>
             {% endif %}
         </label>
+        {% endif %}
 
         {% if type == 'select' %}
             <select 
                 name="{{ name }}" 
                 id="{{ name }}"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-mama focus:border-transparent"
+                class="w-full h-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-mama focus:border-transparent"
                 {% if required == "True" %}required{% endif %}
             >
                 {% for option in choices %}
@@ -55,13 +57,15 @@
     </div>
 {% else %}
     {# Django form field #}
-    <div class="mb-4">
+    <div>
+        {% if label %}
         <label for="{{ field.id_for_label }}" class="block text-gray-700 font-medium mb-2">
             {{ field.label }}
             {% if field.field.required %}
                 <span class="text-red-500">*</span>
             {% endif %}
         </label>
+        {% endif %}
         
         {% with widget_name=field.field.widget|stringformat:"s" %}
             {% if 'Textarea' in widget_name %}
@@ -76,7 +80,7 @@
                 <select 
                     name="{{ field.name }}" 
                     id="{{ field.id_for_label }}"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-mama focus:border-transparent"
+                    class="w-full h-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-mama focus:border-transparent"
                     {% if field.field.required %}required{% endif %}
                 >
                     {% for choice_value, choice_label in field.field.choices %}
