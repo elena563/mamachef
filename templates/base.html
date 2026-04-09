@@ -14,6 +14,7 @@
 </head>
 
 <body class="bg-gray-50 text-gray-900 antialiased">
+    {% block header %}
     <header class="bg-white shadow-lg shadow-pink-mama/30">
         <div class="mx-auto px-4 sm:px-6 lg:px-8">
             <nav class="flex justify-between h-16">
@@ -63,6 +64,7 @@
             </nav>
         </div>
     </header>
+    {% endblock header %}
 
     {% block hero %}{% endblock %}
 
@@ -71,6 +73,7 @@
         {% endblock %}
     </main>
 
+    {% block footer %}
     <footer class="bg-white mt-12 shadow-lg">
         <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <p class="text-center text-gray-500 text-sm">
@@ -78,6 +81,7 @@
             </p>
         </div>
     </footer>
+    {% endblock footer %}
 
     {% block extra_js %}{% endblock %}
 </body>

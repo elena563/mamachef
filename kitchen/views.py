@@ -4,11 +4,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q, Count
+from django.db.models import Count
 
 from .models import Recipe, RecipeIngredient, Ingredient, RecipeIngredient, UserProfile
 from .forms import RecipeForm
-from functions.recipe_helpers import save_dynamic_fields
+from functions.recipe_helpers import save_dynamic_fields, filter_recipes
 
 # pages
 
@@ -21,31 +21,11 @@ def recipes(request):
     recipes = Recipe.objects.all()
     
     search_query = request.GET.get('q', '').strip()
-    
-    if search_query:
-        recipes = recipes.filter(
-            Q(name__icontains=search_query) |
-            Q(description__icontains=search_query)
-        )
-    
     ingredients = [i.strip() for i in request.GET.getlist('ingredients') if i.strip()]
-    if ingredients:
-        recipes = recipes.filter(
-            ingredients__ingredient__name__in=ingredients
-        ).annotate(num_ingredients=Count('ingredients__ingredient')).order_by('-num_ingredients').distinct()
-    
     difficulty = [d for d in request.GET.getlist('difficulty') if d != 'All difficulties']
-    if difficulty:
-        recipes = recipes.filter(difficulty__in=difficulty)
-    
     preparation_time = request.GET.get('preparation_time')
-    if preparation_time and preparation_time != 'All preparation times':
-        if preparation_time == 'less than 30 minutes':
-            recipes = recipes.filter(preparation_time__lt=30)
-        elif preparation_time == '30-60 minutes':
-            recipes = recipes.filter(preparation_time__gte=30, preparation_time__lte=60)
-        elif preparation_time == 'more than 60 minutes':
-            recipes = recipes.filter(preparation_time__gt=60)
+    
+    recipes = filter_recipes(recipes, search_query, ingredients, difficulty, preparation_time)
 
     difficulty_levels = ['All difficulties'] + list(Recipe.objects.values_list('difficulty', flat=True).distinct())
     preparation_time_ranges = ['All preparation times', 'less than 30 minutes', '30-60 minutes', 'more than 60 minutes']
@@ -58,11 +38,15 @@ def recipes(request):
     })
 
 def recipe_detail(request, pk):
-    """Recipe detail view"""
     recipe = get_object_or_404(Recipe, pk=pk)
     ingredients = RecipeIngredient.objects.filter(recipe=recipe)
     steps = recipe.steps.all()
     return render(request, 'recipe_detail.html', {'recipe': recipe, 'ingredients': ingredients, 'steps': steps})
+
+def guided_mode(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    steps = recipe.steps.all()
+    return render(request, 'guided_mode.html', {'recipe': recipe, 'steps': steps})
 
 @login_required
 def profile(request):

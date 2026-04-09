@@ -17,6 +17,7 @@ urlpatterns = [
     # pages
     path('recipes/', views.recipes, name='recipes'),
     path('recipe/<int:pk>/', views.recipe_detail, name='recipe_detail'),
+    path('recipe/<int:pk>/guided_mode/', views.guided_mode, name='guided_mode'),
     path('profile/', views.profile, name='profile'),
 
     # crud
