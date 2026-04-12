@@ -11,12 +11,15 @@
     class=""
 />
 
-{% if link != "" %}<a href="{{ link }}" class="{{ class }}" {% if aria_label != "" %}aria-label="{{ aria_label }}"{% endif %} {% if target != "" %}target="{{target}}"{% endif %}>{% endif %}
+{% if link != "" %}<a href="{{ link }}" class="inline-flex items-center justify-center
+        font-jua {{ class }}" {% if aria_label != "" %}aria-label="{{ aria_label }}"{% endif %} {% if target != "" %}target="{{target}}"{% endif %}>{% endif %}
 <button 
     type="{{ type }}"
     class="
+        {% if link == '' %}
         inline-flex items-center justify-center
         font-jua
+        {% endif %}
         {% if icon_only == 'True' %}
             p-2 rounded-full
         {% else %}
@@ -38,10 +41,10 @@
         {% elif variant == 'success' %}
             bg-gradient-blue-mama hover:bg-gradient-blue-mama-dark text-white focus:ring-blue-mama focus:outline-none focus:ring-2 focus:ring-offset-2
         {% elif variant == 'ghost' %}
-            text-gray-600 hover:text-pink-mama hover:bg-pink-mama/10
+            text-navy-mama hover:bg-pink-mama/10
         {% endif %}
         {% if size == 'sm' %}
-            {% if icon_only == 'True' %}p-1.5 text-xs{% else %}px-3 py-1.5 text-xs{% endif %}
+            {% if icon_only == 'True' %}p-1.5 text-sm{% else %}px-3 py-1.5 text-sm{% endif %}
         {% elif size == 'lg' %}
             {% if icon_only == 'True' %}p-3 text-base{% else %}px-6 py-3 text-base{% endif %}
         {% endif %}

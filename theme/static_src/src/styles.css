@@ -13,12 +13,14 @@
 @theme {
   --color-pink-mama: #FEAAC2;
   --color-pink-mama-dark: #FF769D;
+  --color-medium-pink: #fae8ec;
   --color-light-pink: #FFF5F7;
   --color-blue-mama: #A2D8FE;
   --color-blue-mama-dark: #82B8DE;
   --color-light-blue: #F2F8FD;
   --color-yellow-mama: #FDE68A;
   --color-yellow-mama-dark: #FCD34D;
+  --color-light-yellow: #FEF9C3;
   --color-beige-mama: #FFFAF0;
   --color-beige-mama-dark: #ECC94B;
   --gradient-pink-mama: linear-gradient(180deg, #FE95B5 0%, #FF83A6 62.5%, #FF769D 100%);

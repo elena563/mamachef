@@ -5,16 +5,23 @@ const timerValue = document.getElementById('timer-value')
 
 function showStep(index) {
     const step = steps[index];
-    const nextStepText = index < totalSteps - 1 ? `Next: Step ${index + 2} <br> ${steps[index + 1].description.substring(0, 50)}...`
+    document.getElementById('used-ingredients-cont').innerHTML = '';
+    const nextStepText = index < totalSteps - 1 ? `Next: Step ${index + 2} <br> ${steps[index + 1].description.substring(0, 100)}...`
     : "This is the last step!";
     document.getElementById('step-title').textContent = `Step ${index + 1} of ${totalSteps}`;
     document.getElementById('step-description').textContent = step.description;
     document.getElementById('next-step-desc').innerHTML = nextStepText;
+    if (step.used_ingredients.length > 0) {
+        for (const ing of step.used_ingredients) {
+            document.getElementById('used-ingredients-cont').innerHTML += 
+            `<li class='inline-flex items-center px-3 py-1 bg-pink-mama text-white rounded-full text-xl font-jua'>${ing}</li>`;
+        }
+    }
 
     
     const timerDiv = document.getElementById('step-timer');
     if (step.timer) {
-        timerValue.textContent = step.timer;
+        timerValue.textContent = `${step.timer}:00`;
         timerDiv.classList.remove('hidden');
     } else {
         timerDiv.classList.add('hidden');
@@ -82,7 +89,8 @@ pauseBtn.addEventListener('click', () => {
 resetBtn.addEventListener('click', () => {
     const step = steps[currentStep];
     if (!step.timer) return;
-    timerValue.textContent = step.timer;
+    timerValue.textContent = `${step.timer}:00`;
+    timeInSeconds = parseInt(step.timer) * 60;
     if (timerInterval) {
         clearInterval(timerInterval);
         timerInterval = null;

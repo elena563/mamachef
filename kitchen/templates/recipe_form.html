@@ -1,12 +1,13 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}
-{% if object %}Modifica Ricetta{% else %}Nuova Ricetta{% endif %} - MamaChef
+{% if object %}Edit Recipe{% else %}New Recipe{% endif %} - MamaChef
 {% endblock %}
 
 {% block content %}
 <div class="max-w-3xl mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-6">
+    <h1 class="text-3xl font-bold mb-6">
         {% if object %}
             ✏️ Edit Recipe
         {% else %}
@@ -26,10 +27,10 @@
             <c-form-field :field="form.servings" />
         </div>
 
-        <hr class="my-6">
+        <hr class="my-6 border-dashed border-2 border-navy-mama">
 
         <div id="ingredients-container">
-            <h5 class="text-md font-semibold mb-4">Ingredients</h5>
+            <h5 class="text-xl font-semibold my-6">Ingredients</h5>
             {% if object %}
                 {% for ingredient in object.ingredients.all %}
                 <div class="flex flex-col md:flex-row gap-4 mb-4">
@@ -58,62 +59,110 @@
 
         <c-button class='add_btn' type="button" variant="secondary">+</c-button>
 
-        <hr class="my-6">
+        <hr class="my-6 border-dashed border-2 border-navy-mama">
 
         <div id="steps-container">
-            <h5 class="text-md font-semibold mb-4">Steps</h5>
+            <h5 class="text-xl font-semibold my-6">Steps</h5>
             {% if object %}
                 {% for step in object.steps.all %}
-                <div class="flex flex-col md:flex-row gap-4 mb-4">
-                    <c-form-field type="textarea" name="step" value="{{ step.description }}" placeholder="Step description"/>
-                    <span class="flex flex-col">
-                        <c-form-field type="number" name="timer" value="{{ step.timer }}" placeholder="10"/>
-                        <span class="flex gap-2">
-                            <c-button class='up_btn' type="button" variant="secondary">↑</c-button>
-                            <c-button class='down_btn' type="button" variant="secondary">↓</c-button>
+                <div class="step-wrapper mb-6">
+                    <div class="flex flex-wrap gap-2 mb-2">
+                        {% for ingredient in object.ingredients.all %}
+                            <c-form-field 
+                                type="checkbox" 
+                                name="ingredient_check"
+                                class="step-ingredient-checkbox" 
+                                label="{{ ingredient.ingredient.name }}" 
+                                value="{{ ingredient.ingredient.name }}"
+                                checked="{% if ingredient.ingredient in step.used_ingredients.all %}True{% else %}False{% endif %}"
+                            />
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" name="used_ingredients" class="used-ingredients-hidden" value="{% for ing in step.used_ingredients.all %}{{ ing.name }}{% if not forloop.last %},{% endif %}{% endfor %}">
+
+                    <div class="flex flex-col md:flex-row gap-4 mb-4">
+                        <c-form-field type="textarea" name="step" value="{{ step.description }}" placeholder="Step description"/>
+                        <span class="flex flex-col">
+                            <c-form-field type="number" name="timer" value="{{ step.timer }}" placeholder="10"/>
+                            <span class="flex gap-2">
+                                <c-button class='up_btn' type="button" variant="ghost">↑</c-button>
+                                <c-button class='down_btn' type="button" variant="ghost">↓</c-button>
+                            </span>
                         </span>
-                    </span>
-                    <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
+                        <c-button class='remove_btn' type="button" variant="ghost">-</c-button>
+                    </div>
                 </div>
                 {% endfor %}
             {% endif %}
             <template id="step-template">
+                <div class="step-wrapper mb-6">
+                    <div class="flex flex-wrap gap-2 mb-2">
+                        {% for ingredient in object.ingredients.all %}
+                            <c-form-field 
+                                type="checkbox" 
+                                name="ingredient_check"
+                                class="step-ingredient-checkbox" 
+                                label="{{ ingredient.ingredient.name }}" 
+                                value="{{ ingredient.ingredient.name }}"
+                                checked="False"
+                            />
+                        {% endfor %}
+                    </div>
+                    <input type="hidden" name="used_ingredients" class="used-ingredients-hidden" value="">
+
+                    <div class="flex flex-col md:flex-row gap-4 mb-4">
+                        <c-form-field type="textarea" name="step" placeholder="Step description"/>
+                        <span class="flex flex-col">
+                            <c-form-field type="number" name="timer" placeholder="10"/>
+                            <span class="flex gap-2">
+                                <c-button class='up_btn' type="button" variant="ghost">↑</c-button>
+                                <c-button class='down_btn' type="button" variant="ghost">↓</c-button>
+                                <span class="text-sm text-gray-500">You can add a timer, for example waiting or baking time</span>
+                            </span>
+                        </span>
+                        <c-button class='remove_btn' type="button" variant="ghost">-</c-button>
+                        <input type="hidden" name="order" value=""/>
+                    </div>
+                </div>
+            </template>
+            <div class="step-wrapper mb-6">
+                <div class="flex flex-wrap gap-2 mb-2">
+                    {% for ingredient in object.ingredients.all %}
+                        <c-form-field 
+                            type="checkbox" 
+                            name="ingredient_check"
+                            class="step-ingredient-checkbox" 
+                            label="{{ ingredient.ingredient.name }}" 
+                            value="{{ ingredient.ingredient.name }}"
+                            checked="False"
+                        />
+                    {% endfor %}
+                </div>
+                <input type="hidden" name="used_ingredients" class="used-ingredients-hidden" value="">
+
                 <div class="flex flex-col md:flex-row gap-4 mb-4">
                     <c-form-field type="textarea" name="step" placeholder="Step description"/>
                     <span class="flex flex-col">
                         <c-form-field type="number" name="timer" placeholder="10"/>
                         <span class="flex gap-2">
-                            <c-button class='up_btn' type="button" variant="secondary">↑</c-button>
-                            <c-button class='down_btn' type="button" variant="secondary">↓</c-button>
-                            <span class="text-sm text-gray-500">You can add a timer, for example waiting or baking time</span>
-                        </span>
+                                <c-button class='up_btn' type="button" variant="ghost">↑</c-button>
+                                <c-button class='down_btn' type="button" variant="ghost">↓</c-button>
+                                <span class="text-sm text-gray-500">You can add a timer, for example waiting or baking time</span>
+                            </span>
                     </span>
-                    <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
-                    <input type="hidden" name="order" value=""/>
+                    <c-button class='remove_btn' type="button" variant="ghost">-</c-button>
                 </div>
-            </template>
-            <div class="flex flex-col md:flex-row gap-4 mb-4">
-                <c-form-field type="textarea" name="step" placeholder="Step description"/>
-                 <span class="flex flex-col">
-                    <c-form-field type="number" name="timer" placeholder="10"/>
-                    <span class="flex gap-2">
-                            <c-button class='up_btn' type="button" variant="secondary">↑</c-button>
-                            <c-button class='down_btn' type="button" variant="secondary">↓</c-button>
-                            <span class="text-sm text-gray-500">You can add a timer, for example waiting or baking time</span>
-                        </span>
-                </span>
-                <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
             </div>
         </div>
 
-        <c-button class='add_btn' type="button" variant="secondary">+</c-button>
+        <c-button class='add_btn' type="button" variant="ghost">+</c-button>
         
         <div class="flex gap-4 mt-6">
             <c-button variant="primary" type="submit">
                 {% if object %}Update{% else %}Create Recipe{% endif %}
             </c-button>
             <a href="{% url 'Kitchen:home' %}">
-                <c-button variant="secondary" type="button">
+                <c-button variant="ghost" type="button">
                     Cancel
                 </c-button>
             </a>
@@ -121,61 +170,5 @@
     </form>
 </div>
 
-<script>
-function setupDynamicFields(addSelector, containerId, templateId){
-    const addBtn = document.querySelector(addSelector);
-    const container = document.getElementById(containerId);
-    const template = document.getElementById(templateId);
-
-    addBtn.addEventListener('click', () => {
-    const newEl = template.content.firstElementChild.cloneNode(true)
-    container.appendChild(newEl)
-    })
-
-    container.addEventListener('click', (e) => {
-    if (e.target.classList.contains('remove_btn')) {
-        e.target.parentElement.remove()
-    }
-    })
-}
-setupDynamicFields('.add_btn', 'ingredients-container', 'ingredient-template')
-setupDynamicFields('.add_btn', 'steps-container', 'step-template')
-
-const form = document.querySelector('form');
-form.addEventListener('submit', (e) => {
-    const stepDivs = document.querySelectorAll('#steps-container > div:not(h5):not(template)');
-    stepDivs.forEach((div, index) => {
-        const orderInput = div.querySelector('input[name="order"]');
-        if (orderInput) {
-            orderInput.value = index;
-        }
-    });
-});
-
-function swapSteps(step1, step2) {
-    const temp = document.createElement('div');
-    step1.parentNode.insertBefore(temp, step1);
-    step2.parentNode.insertBefore(step1, step2);
-    temp.parentNode.insertBefore(step2, temp);
-    temp.remove();
-}
-
-document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('up_btn')) {
-        const step = e.target.closest('div');
-        const prevStep = step.previousElementSibling;
-        if (prevStep) {
-            swapSteps(step, prevStep);
-        }
-    } else if (e.target.classList.contains('down_btn')) {
-        const step = e.target.closest('div');
-        const nextStep = step.nextElementSibling;
-        if (nextStep) {
-            swapSteps(step, nextStep);
-        }
-    }
-});
-
-</script>
-
+<script src="{% static 'js/recipe_form.js' %}"></script>
 {% endblock %}

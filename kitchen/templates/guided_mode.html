@@ -2,45 +2,76 @@
 {% load static %}
 {% block title %}Guided Cooking Mode - {{ recipe.name }} - MamaChef{% endblock %}
 
-{% block header %}{% endblock %}
+{% block extra_css %}
+<style>
+    body { 
+        overflow: hidden; 
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        background-image: url("{% static 'images/pattern-pink.svg' %}");
+        background-size: cover;
+        background-position: center;
+    }
+    main {
+        flex: 1;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}
+
+{% block header %}
+<div class="w-full bg-medium-pink mb-8 border-b-4 border-pink-mama border-dashed">
+    <div class='max-w-7xl mx-auto grid grid-cols-3 items-center flex-shrink-0 p-6'>
+        <div class="justify-self-start">
+            <c-button link="{% url 'Kitchen:recipe_detail' recipe.id %}" variant="ghost" size="sm">
+                ← Back to Recipe
+            </c-button>
+        </div>
+        <h1 class="text-3xl font-bold text-center">{{ recipe.name }}</h1>
+        <div></div>
+    </div>
+</div>
+{% endblock %}
 {% block footer %}{% endblock %}
 
 {% block content %}
-<div class="max-w-2xl mx-auto mt-10 px-4">
+<div class="max-w-7xl h-full mx-auto px-4 flex flex-col gap-4 box-border">
+    
 
-    <c-button link="{% url 'Kitchen:recipe_detail' recipe.id %}" variant="secondary" size="sm" class="mb-6">
-        ← Back to Recipe
-    </c-button>
-
-    <h1 class="text-3xl font-bold mb-6">Guided Cooking Mode: {{ recipe.name }}</h1>
-
-    <div id="guided-container" class="space-y-8">
-        <div class="border rounded-xl p-6 bg-gray-50 shadow-sm">
-            <div class="flex justify-between items-center mb-4">
-                <span id="step-title" class="font-semibold text-lg"></span>
+    <div id="guided-container" class="flex gap-6 items-center flex-1 min-h-0">
+        <div class="w-[70%] flex flex-col justify-between">
+            <h3 id="step-title" class="font-semibold text-2xl text-pink-mama-dark py-4"></h3>
+            <div class="flex items-center gap-4" id="used-ingredients-cont">
             </div>
-            <p id="step-description" class="text-gray-800 text-lg"></p>
+            <h2 id="step-description" class="text-4xl py-8"></h2>
             
-            <div id="step-timer" class="mt-4 p-3 bg-amber-100 rounded-lg hidden">
-                <span class="font-semibold">⏱️ Timer: <span id="timer-value"></span> minutes</span>
-                <c-button id="start-timer" variant="primary" size="sm" class="ml-4">Start</c-button> 
-                <c-button id="pause-timer" variant="primary" size="sm" class="ml-4">Pause</c-button>  
-                <c-button id="reset-timer" variant="primary" size="sm" class="ml-4">Reset</c-button>   
+            <div id="step-timer" class="flex flex-col items-center gap-4 mt-4 p-6 bg-yellow-mama rounded-[60px] w-fit hidden">
+                <span class="font-semibold w-full text-center bg-light-yellow px-6 py-3 mx-2 rounded-full text-navy-mama text-4xl font-jua" id="timer-value"></span>
+                <div class="inline-flex items-center gap-2 mx-2">
+                    <c-button id="start-timer" variant="primary" size="sm">▶︎</c-button> 
+                    <c-button id="pause-timer" variant="primary" size="sm">||</c-button>  
+                    <c-button id="reset-timer" variant="success" size="sm">↻</c-button>  
+                </div> 
+            </div>
+        </div>        
+
+        <div id='next-step-cont' class="w-[30%] self-end rounded-2xl p-2 bg-medium-pink">
+            <div class="border-4 border-dotted border-pink-mama rounded-xl p-6 bg-medium-pink">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="next-step-desc" class="font-semibold text-lg"></span>
+                </div>
             </div>
         </div>
     </div>
-    <div id='next-step-cont'>
-        <div class="border rounded-xl p-6 bg-gray-50 shadow-sm">
-            <div class="flex justify-between items-center mb-4">
-                <span id="next-step-desc" class="font-semibold text-lg"></span>
-            </div>
-        </div>
-    </div>
-    <div id='btns-container' class="flex justify-between mt-6">
-        <c-button id="prev-step" variant="secondary" size="md" disabled>
+    
+    <div id='btns-container' class="flex justify-between flex-shrink-0 pt-4">
+        <c-button id="prev-step" variant="ghost" disabled>
             ← Previous Step
         </c-button>
-        <c-button id="next-step" variant="primary" size="md">
+        <c-button id="next-step" variant="primary">
             Next Step →
         </c-button>
     </div>
@@ -52,7 +83,12 @@ const steps = [
     {% for step in steps %}
     {
         description: "{{ step.description|escapejs }}",
-        timer: {{ step.timer|default:"null" }}
+        timer: {{ step.timer|default:"null" }},
+        used_ingredients: [
+            {% for ing in step.used_ingredients.all %}
+                "{{ ing.name }}"{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ]
     }{% if not forloop.last %},{% endif %}
     {% endfor %}
 ];

@@ -8,6 +8,7 @@ def save_dynamic_fields(request_post, recipe):
 
     steps = request_post.getlist('step')
     timers = request_post.getlist('timer')
+    used_ingredients_list = request_post.getlist('used_ingredients')
 
     for i in range(len(names)):
         name = names[i].strip().lower()
@@ -21,7 +22,20 @@ def save_dynamic_fields(request_post, recipe):
         if not step:
             continue
         timer = timers[i] if i < len(timers) and timers[i] else None
-        recipe.steps.create(description=step, timer=timer, order=i)
+        step_obj = recipe.steps.create(description=step, timer=timer, order=i)
+        
+        if i < len(used_ingredients_list) and used_ingredients_list[i]:
+            ingredient_names = [name.strip().lower() for name in used_ingredients_list[i].split(',') if name.strip()]
+            ingredients_to_add = []
+            for name in ingredient_names:
+                try:
+                    ingredient = Ingredient.objects.get(name=name)
+                    ingredients_to_add.append(ingredient)
+                except Ingredient.DoesNotExist:
+                    pass
+            
+            if ingredients_to_add:
+                step_obj.used_ingredients.set(ingredients_to_add)
 
 
 def filter_recipes(recipes, search_query=None, ingredients=None, difficulty=None, preparation_time=None):
