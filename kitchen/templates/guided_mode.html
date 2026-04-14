@@ -92,6 +92,7 @@ const steps = [
     }{% if not forloop.last %},{% endif %}
     {% endfor %}
 ];
+const recipeDetailUrl = "{% url 'Kitchen:recipe_detail' recipe.id %}";
 </script>
 <script src="{% static 'js/guided_mode.js' %}" defer></script>
 

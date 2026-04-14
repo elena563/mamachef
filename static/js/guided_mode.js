@@ -11,6 +11,7 @@ function showStep(index) {
     document.getElementById('step-title').textContent = `Step ${index + 1} of ${totalSteps}`;
     document.getElementById('step-description').textContent = step.description;
     document.getElementById('next-step-desc').innerHTML = nextStepText;
+    document.getElementById('next-step').textContent = index < totalSteps - 1 ? `Next: Step ${index + 2}` : "Last Step";
     if (step.used_ingredients.length > 0) {
         for (const ing of step.used_ingredients) {
             document.getElementById('used-ingredients-cont').innerHTML += 
@@ -47,7 +48,9 @@ document.getElementById('next-step').addEventListener('click', () => {
         showStep(currentStep);
         document.getElementById('prev-step').disabled = false;
         if (currentStep === totalSteps - 1) {
-            document.getElementById('next-step').disabled = true;
+            const nextBtn = document.getElementById('next-step');
+            nextBtn.onclick = () => { window.location.href = recipeDetailUrl; };
+            nextBtn.textContent = "Finish Recipe";
         }
     }
 });

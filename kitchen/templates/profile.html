@@ -1,12 +1,39 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Profile - MamaChef{% endblock %}
 
+{% block extra_css %}
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        min-width: 100vw;
+        background: linear-gradient(180deg, #FFE586 10% 15%, #FFEEB2 20% 25%, #FFFCDB 30% 35%, var(--color-beige-mama) 40% 100%);
+    }
+</style>
+{% endblock %}
+
+{% block hero %}
+<div class="border-b-5 border-beige-mama-dark px-6 py-12" style="background-image: url('{% static 'images/bg-profile1.png' %}'); background-size: 110%; background-position: top; background-repeat: no-repeat;">
+<div class="max-w-7xl mx-auto">
+ <div class='w-fit bg-gray-50 rounded-3xl p-2'>
+            <div class='bg-gray-50 rounded-2xl p-6 border-4 border-blue-mama'>
+<h1 class=" text-4xl font-bold leading-relaxed">Hello {{ user.username }}! <br>What would you like to cook today?</h1>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}
+
+
 {% block content %}
-<h1>Hello {{ user.username }}!</h1>
 
-
-<h2>Your Recipes</h2>
+<section>
+<div class="flex justify-between items-center my-6 gap-4">
+    <h2 class="text-3xl font-semibold mb-2">Your Recipes</h2>
+    <c-button href="{% url 'Kitchen:new_recipe' %}" color="primary">Add New Recipe</c-button>
+</div>
 {% if recipes %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for recipe in recipes %}
@@ -16,9 +43,8 @@
 {% else %}
     <p>You haven't added any recipes yet. Let's try creating one!</p>
 {% endif %}
-<c-button href="{% url 'Kitchen:new_recipe' %}" color="primary">Add New Recipe</c-button>
 
-<h2>Your Favorite Recipes</h2>
+<h2 class="text-3xl font-semibold mb-2">Your Favorite Recipes</h2>
 {% if user.profile.favorite_recipes.exists %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for recipe in user.profile.favorite_recipes.all %}
@@ -28,5 +54,8 @@
 {% else %}
     <p>You haven't saved any recipes yet. Let's explore!</p>
 {% endif %}
+
+</section>
+
 
 {% endblock %}
