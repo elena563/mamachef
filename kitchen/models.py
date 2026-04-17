@@ -46,6 +46,7 @@ class RecipeIngredient(models.Model):
         ('tbsp', 'tablespoons'),
         ('cup', 'cups'),
         ('pcs', 'pieces'),
+        ('q.s.', 'quantum sufficit (as needed)'),
     ]
     id = models.AutoField(primary_key=True)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='ingredients', help_text='The recipe that this ingredient belongs to')

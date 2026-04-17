@@ -7,6 +7,9 @@
 
 {% block content %}
 <div class="max-w-3xl mx-auto px-4 py-8">
+
+    <c-messages-box></c-messages-box>
+
     <h1 class="text-3xl font-bold mb-6">
         {% if object %}
             ✏️ Edit Recipe
@@ -64,7 +67,7 @@
         <div id="steps-container">
             <h5 class="text-xl font-semibold my-6">Steps</h5>
             {% if object %}
-                {% for step in object.steps.all %}
+                {% for step in steps %}
                 <div class="step-wrapper mb-6">
                     <div class="flex flex-wrap gap-2 mb-2">
                         {% for ingredient in object.ingredients.all %}
@@ -74,7 +77,7 @@
                                 class="step-ingredient-checkbox" 
                                 label="{{ ingredient.ingredient.name }}" 
                                 value="{{ ingredient.ingredient.name }}"
-                                checked="{% if ingredient.ingredient in step.used_ingredients.all %}True{% else %}False{% endif %}"
+                                checked="{% if ingredient.ingredient.name in step.used_ingredient_names %}True{% else %}False{% endif %}"
                             />
                         {% endfor %}
                     </div>

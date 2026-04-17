@@ -1,27 +1,36 @@
 from kitchen.models import Ingredient, RecipeIngredient
 from django.db.models import Q, Count
+from django.contrib import messages
 
-def save_dynamic_fields(request_post, recipe):
-    names = request_post.getlist('ingredient')
-    quantities = request_post.getlist('quantity')
-    units = request_post.getlist('unit')
+def save_dynamic_fields(request, recipe):
+    names = request.POST.getlist('ingredient')
+    quantities = request.POST.getlist('quantity')
+    units = request.POST.getlist('unit')
 
-    steps = request_post.getlist('step')
-    timers = request_post.getlist('timer')
-    used_ingredients_list = request_post.getlist('used_ingredients')
+    steps = request.POST.getlist('step')
+    timers = request.POST.getlist('timer')
+    used_ingredients_list = request.POST.getlist('used_ingredients')
 
+    has_errors = False
+    
     for i in range(len(names)):
         name = names[i].strip().lower()
         if not name:
             continue
         ingredient, created = Ingredient.objects.get_or_create(name=name)
-        RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=quantities[i], unit=units[i])
+        
+        quantity = quantities[i] if quantities[i] and quantities[i].strip() else None
+        if quantity is None and units[i] != 'q.s.':
+            messages.error(request, f"Quantity is required for ingredient '{name}' unless unit is 'q.s.'")
+            has_errors = True
+        else:
+            RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=quantity, unit=units[i])
 
     for i in range(len(steps)):
         step = steps[i].strip()
         if not step:
             continue
-        timer = timers[i] if i < len(timers) and timers[i] else None
+        timer = timers[i] if i < len(timers) and timers[i] and timers[i].strip() else None
         step_obj = recipe.steps.create(description=step, timer=timer, order=i)
         
         if i < len(used_ingredients_list) and used_ingredients_list[i]:
@@ -36,6 +45,8 @@ def save_dynamic_fields(request_post, recipe):
             
             if ingredients_to_add:
                 step_obj.used_ingredients.set(ingredients_to_add)
+    
+    return not has_errors
 
 
 def filter_recipes(recipes, search_query=None, ingredients=None, difficulty=None, preparation_time=None):

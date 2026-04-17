@@ -79,6 +79,17 @@ class RecipeFormView:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['unit_choices'] = [choice[0] for choice in RecipeIngredient.UNIT_CHOICES]
+        
+        # Prepare used_ingredients names for each step to make template checks easier
+        if self.object and self.object.pk:
+            steps_with_used = []
+            for step in self.object.steps.all():
+                step.used_ingredient_names = list(step.used_ingredients.values_list('name', flat=True))
+                steps_with_used.append(step)
+            context['steps'] = steps_with_used
+        else:
+            context['steps'] = []
+        
         return context
 
 class RecipeCreateView(RecipeFormView,CreateView):
@@ -86,7 +97,9 @@ class RecipeCreateView(RecipeFormView,CreateView):
         form.instance.author = self.request.user
         response = super().form_valid(form)
         
-        save_dynamic_fields(self.request.POST, self.object)
+        if not save_dynamic_fields(self.request, self.object):
+            self.object.delete()
+            return self.form_invalid(form)
         return response
 
 class RecipeUpdateView(RecipeFormView,UpdateView):
@@ -95,7 +108,9 @@ class RecipeUpdateView(RecipeFormView,UpdateView):
 
         RecipeIngredient.objects.filter(recipe=self.object).delete()
         self.object.steps.all().delete()
-        save_dynamic_fields(self.request.POST, self.object)
+        
+        if not save_dynamic_fields(self.request, self.object):
+            return self.form_invalid(form)
         return super().form_valid(form)
 
 
