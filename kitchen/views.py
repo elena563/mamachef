@@ -1,11 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
-
+from django.http import JsonResponse
 from .models import Recipe, RecipeIngredient, Ingredient, RecipeIngredient, UserProfile
 from .forms import RecipeForm
 from functions.recipe_helpers import save_dynamic_fields, filter_recipes
@@ -112,6 +111,22 @@ class RecipeUpdateView(RecipeFormView,UpdateView):
         if not save_dynamic_fields(self.request, self.object):
             return self.form_invalid(form)
         return super().form_valid(form)
+    
+
+def ingredient_autocomplete(request):
+    query = request.GET.get('q', '').strip().lower()
+    
+    if len(query) < 2:  # Inizia a suggerire dopo almeno 2 caratteri
+        return JsonResponse({'ingredients': []})
+    
+    # Cerca ingredienti che contengono la query
+    ingredients = Ingredient.objects.filter(
+        name__icontains=query
+    ).values_list('name', flat=True)[:10]  # Limita a 10 risultati
+    
+    return JsonResponse({
+        'ingredients': list(ingredients)
+    })
 
 
 def recipe_delete(request, pk):

@@ -28,3 +28,4 @@ node_modules/
 
 #temporary
 bg/
+tests/

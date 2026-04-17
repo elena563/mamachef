@@ -16,6 +16,12 @@ class Recipe(models.Model):
         ('Medium', 'Medium'),
         ('Hard', 'Hard'),
     ]
+    COOKING_METHOD_CHOICES = [
+        ('oven', 'Baked'),
+        ('stovetop', 'Stovetop'),
+        ('microwave', 'Microwaved'),
+        ('no-cook', 'No Cook'),
+    ]
 
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, help_text='The name of the recipe')
@@ -24,6 +30,7 @@ class Recipe(models.Model):
     preparation_time = models.IntegerField(null=True, blank=True, verbose_name='Preparation Time (minutes)', help_text='The time required to prepare the recipe in minutes')
     servings = models.IntegerField(null=True, blank=True, verbose_name='Servings', help_text='The number of servings the recipe makes')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipes', help_text='The user who created the recipe')
+    cooking_method = models.CharField(max_length=50, choices=COOKING_METHOD_CHOICES, null=True, blank=True, verbose_name='Cooking Method', help_text='The cooking method used for the recipe (e.g., Baked, Stovetop, Microwaved, No Cook)')
 
     def __str__(self):
         return self.name
@@ -51,7 +58,7 @@ class RecipeIngredient(models.Model):
     id = models.AutoField(primary_key=True)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='ingredients', help_text='The recipe that this ingredient belongs to')
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name='recipes', help_text='The ingredient used in the recipe')
-    quantity = models.IntegerField(null=True, blank=True, verbose_name='Quantity', help_text='The quantity of the ingredient needed for the recipe (e.g., 2 cups, 1 tablespoon)')
+    quantity = models.FloatField(null=True, blank=True, verbose_name='Quantity', help_text='The quantity of the ingredient needed for the recipe (e.g., 2 cups, 1 tablespoon)')
     unit = models.CharField(max_length=10, choices=UNIT_CHOICES, null=True, blank=True, verbose_name='Unit', help_text='The unit of measurement for the ingredient (e.g., grams, cups)')
 
     def __str__(self):
@@ -82,7 +89,7 @@ class ShoppingListItem(models.Model):
     id = models.AutoField(primary_key=True)
     shopping_list = models.ForeignKey(ShoppingList, on_delete=models.CASCADE, related_name='items', help_text='The shopping list that this item belongs to')
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name='shopping_list_items', help_text='The ingredient that needs to be purchased')
-    quantity = models.IntegerField(null=True, blank=True, verbose_name='Quantity', help_text='The quantity of the ingredient needed for the shopping list (e.g., 2 cups, 1 tablespoon)')
+    quantity = models.FloatField(null=True, blank=True, verbose_name='Quantity', help_text='The quantity of the ingredient needed for the shopping list (e.g., 2 cups, 1 tablespoon)')
     unit = models.CharField(max_length=10, choices=RecipeIngredient.UNIT_CHOICES, null=True, blank=True, verbose_name='Unit', help_text='The unit of measurement for the ingredient (e.g., grams, cups)')
 
     def __str__(self):
