@@ -116,13 +116,12 @@ class RecipeUpdateView(RecipeFormView,UpdateView):
 def ingredient_autocomplete(request):
     query = request.GET.get('q', '').strip().lower()
     
-    if len(query) < 2:  # Inizia a suggerire dopo almeno 2 caratteri
+    if len(query) < 1: 
         return JsonResponse({'ingredients': []})
     
-    # Cerca ingredienti che contengono la query
     ingredients = Ingredient.objects.filter(
-        name__icontains=query
-    ).values_list('name', flat=True)[:10]  # Limita a 10 risultati
+        name__istartswith=query
+    ).values_list('name', flat=True)[:10]
     
     return JsonResponse({
         'ingredients': list(ingredients)

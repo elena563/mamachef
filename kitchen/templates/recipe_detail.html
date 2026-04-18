@@ -35,7 +35,8 @@
   <ul id="ingredients-list" class="list-disc pl-5 space-y-1">
     {% for qi in ingredients %}
       <li id="ingredient-{{ qi.id }}">
-        {{ qi.quantity|default_if_none:"" }} {% if qi.unit != "pcs" %}{{ qi.unit }} {% endif %}{{ qi.ingredient.name }}
+        {{ qi.quantity|default_if_none:""|floatformat }}
+        {% if qi.unit != "pcs" %}{{ qi.unit }} {% endif %}{{ qi.ingredient.name }}
       </li>
     {% endfor %}
   </ul>

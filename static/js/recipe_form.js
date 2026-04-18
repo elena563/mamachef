@@ -8,6 +8,7 @@ function setupDynamicFields(addSelector, containerId, templateId) {
     addBtn.addEventListener('click', () => {
         const newEl = template.content.firstElementChild.cloneNode(true);
         container.appendChild(newEl);
+        setupIngredientAutocomplete(newEl.querySelector('input[name="ingredient"]'));
     });
 
     container.addEventListener('click', (e) => {
@@ -26,7 +27,6 @@ function swapSteps(step1, step2) {
 }
 
 function initializeForm() {
-    // Setup dynamic fields for ingredients and steps
     setupDynamicFields('.add_btn', 'ingredients-container', 'ingredient-template');
     setupDynamicFields('.add_btn', 'steps-container', 'step-template');
 
@@ -70,7 +70,6 @@ function initializeForm() {
         }
     });
 
-    // Handle ingredient checkboxes
     document.addEventListener('change', (e) => {
         const checkbox = e.target;
         
@@ -90,9 +89,78 @@ function initializeForm() {
     });
 }
 
-// Initialize when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeForm);
 } else {
     initializeForm();
 }
+
+
+function setupIngredientSuggestions(inputElement) {
+    let timeout = null;
+    let suggestionsDiv = null;
+    
+    inputElement.addEventListener('input', function(e) {
+        const query = e.target.value.trim();
+        
+        if (suggestionsDiv) {
+            suggestionsDiv.remove();
+        }
+        
+        if (query.length < 1) return;
+        
+        // Debounce: wait 300ms
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            fetch(`/api/ingredients/autocomplete/?q=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ingredients.length > 0) {
+                        showSuggestions(inputElement, data.ingredients);
+                    }
+                });
+        }, 300);
+    });
+    
+    function showSuggestions(input, suggestions) {
+        suggestionsDiv = document.createElement('div');
+        suggestionsDiv.className = 'bg-base-50 border-2 border-light-blue rounded-md shadow-lg fixed z-50 max-h-48 overflow-y-auto';
+
+        const rect = input.getBoundingClientRect();
+        suggestionsDiv.style.top = `${rect.bottom +2}px`;
+        suggestionsDiv.style.left = `${rect.left}px`;
+        suggestionsDiv.style.width = `${rect.width}px`;
+        
+        suggestions.forEach(ingredient => {
+            const item = document.createElement('div');
+            item.className = 'px-4 py-2 bg-white rounded-sm hover:bg-blue-100 cursor-pointer z-50';
+            item.textContent = ingredient;
+            
+            item.addEventListener('click', () => {
+                input.value = ingredient;
+                suggestionsDiv.remove();
+            });
+            
+            suggestionsDiv.appendChild(item);
+        });
+        
+        document.body.appendChild(suggestionsDiv);
+    }
+    
+    // remove when clicking outside or scrolling
+    document.addEventListener('click', (e) => {
+        if (suggestionsDiv && !inputElement.contains(e.target)) {
+            suggestionsDiv.remove();
+        }
+    });
+
+    window.addEventListener('scroll', () => {
+        if (suggestionsDiv) {
+            suggestionsDiv.remove();
+        }
+    }, true);
+}
+
+document.querySelectorAll('input[name="ingredient"]').forEach(input => {
+    setupIngredientSuggestions(input);
+});
