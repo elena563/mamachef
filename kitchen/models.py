@@ -39,6 +39,7 @@ class Recipe(models.Model):
 class Ingredient(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, help_text='The name of the ingredient')
+    countable = models.BooleanField(default=True, help_text='Whether the ingredient is countable (e.g., 2 eggs) or uncountable (e.g., 200g flour)')
 
     def __str__(self):
         return self.name

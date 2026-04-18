@@ -16,8 +16,15 @@ def save_dynamic_fields(request, recipe):
     for i in range(len(names)):
         name = names[i].strip().lower()
         if not name:
-            continue
+            messages.error(request, f"Ingredient name is required for ingredient #{i+1}")
+            has_errors = True
         ingredient, created = Ingredient.objects.get_or_create(name=name)
+        # if validate_new_ingredient(name):
+        #     ingredient, created = Ingredient.objects.create(name=name)
+        #     ingredient.countable
+        # else:
+        #     messages.error(request, f"'{name}' is not recognized as a valid ingredient")
+        #     has_errors = True
         
         quantity = quantities[i] if quantities[i] and quantities[i].strip() else None
         if quantity is None and units[i] != 'q.s.':
