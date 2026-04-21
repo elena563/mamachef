@@ -49,7 +49,7 @@
                 </div>
                 <div class="ml-6 flex items-center gap-2">
                     {% if user.is_authenticated %}
-                        <span class="text-gray-700 mr-4">Ciao, {{ user.username }}!</span>
+                        <span class="text-gray-700 mr-4">Hi, {{ user.username }}!</span>
                         <c-button link="{% url 'Kitchen:logout' %}" variant="success">
                             Logout
                         </c-button>

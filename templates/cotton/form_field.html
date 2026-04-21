@@ -117,11 +117,11 @@
         {% endwith %}
         
         {% if field.help_text %}
-            <p class="text-gray-500 text-sm mt-1">{{ field.help_text }}</p>
+            <p class="text-gray-500 text-sm mb-2">{{ field.help_text }}</p>
         {% endif %}
         
         {% if field.errors %}
-            <p class="text-red-500 text-sm mt-1">{{ field.errors.0 }}</p>
+            <p class="text-red-500 text-sm mb-2">{{ field.errors.0 }}</p>
         {% endif %}
     </div>
 {% endif %}

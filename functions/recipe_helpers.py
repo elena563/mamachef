@@ -2,6 +2,8 @@ from kitchen.models import Ingredient, RecipeIngredient
 from django.db.models import Q, Count
 from django.contrib import messages
 
+from .ingredient_validation import get_or_validate_ingredient, validate_quantity_unit
+
 def save_dynamic_fields(request, recipe):
     names = request.POST.getlist('ingredient')
     quantities = request.POST.getlist('quantity')
@@ -18,17 +20,17 @@ def save_dynamic_fields(request, recipe):
         if not name:
             messages.error(request, f"Ingredient name is required for ingredient #{i+1}")
             has_errors = True
-        ingredient, created = Ingredient.objects.get_or_create(name=name)
-        # if validate_new_ingredient(name):
-        #     ingredient, created = Ingredient.objects.create(name=name)
-        #     ingredient.countable
-        # else:
-        #     messages.error(request, f"'{name}' is not recognized as a valid ingredient")
-        #     has_errors = True
+            continue
+        ingredient, error = get_or_validate_ingredient(name)
+        if error:
+            messages.error(request, error)
+            has_errors = True
+            continue
         
         quantity = quantities[i] if quantities[i] and quantities[i].strip() else None
-        if quantity is None and units[i] != 'q.s.':
-            messages.error(request, f"Quantity is required for ingredient '{name}' unless unit is 'q.s.'")
+        is_valid, error = validate_quantity_unit(quantity, units[i], ingredient)
+        if not is_valid:
+            messages.error(request, error)
             has_errors = True
         else:
             RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=quantity, unit=units[i])
