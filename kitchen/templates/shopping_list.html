@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{shopping_list.name}} - MamaChef{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">{{ shopping_list.name }}</h1>
+    {% if shopping_list.items.exists %}
+        <ul class="space-y-4">
+            {% for item in shopping_list.items.all %}
+                <li class="flex justify-between items-center bg-gray-100 rounded-lg p-4">
+                    <div>
+                        <span class="font-semibold">{{ item.ingredient.name }}</span> - {{ item.quantity }} {{ item.unit }}
+                    </div>
+                    <form method="post" action="{% url 'Kitchen:remove_from_shopping_list' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-500 hover:text-red-700">Remove</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Your shopping list is empty. Start adding ingredients from your recipes!</p>
+    {% endif %}
+</div>
+{% endblock %}

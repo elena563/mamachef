@@ -5,7 +5,7 @@ from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .models import Recipe, RecipeIngredient, Ingredient, RecipeIngredient, UserProfile
+from .models import Recipe, RecipeIngredient, Ingredient, RecipeIngredient, UserProfile, ShoppingList
 from .forms import RecipeForm
 from functions.recipe_helpers import save_dynamic_fields, filter_recipes
 
@@ -61,6 +61,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             UserProfile.objects.create(user=user)
+            ShoppingList.objects.create(user=user)
             login(request, user)
             return redirect('Kitchen:home')
     else:
@@ -145,3 +146,8 @@ def add_to_favorites(request, pk):
     if referer:
         return redirect(referer)
     return redirect('Kitchen:recipes')
+
+@login_required
+def shopping_list(request):
+    shopping_list = get_object_or_404(ShoppingList, user=request.user)
+    return render(request, 'shopping_list.html', {'shopping_list': shopping_list})
