@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from .variables import DIFFICULTY_CHOICES, COOKING_METHOD_CHOICES, UNIT_CHOICES
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', help_text='The user that this profile belongs to')
     bio = models.TextField(null=True, blank=True, verbose_name='Bio', help_text='A brief biography of the user (optional)')
@@ -11,18 +13,6 @@ class UserProfile(models.Model):
         return f"{self.user.username}'s Profile"
 
 class Recipe(models.Model):
-    DIFFICULTY_CHOICES = [
-        ('Easy', 'Easy'),
-        ('Medium', 'Medium'),
-        ('Hard', 'Hard'),
-    ]
-    COOKING_METHOD_CHOICES = [
-        ('oven', 'Baked'),
-        ('stovetop', 'Stovetop'),
-        ('microwave', 'Microwaved'),
-        ('no-cook', 'No Cook'),
-    ]
-
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, help_text='The name of the recipe')
     description = models.TextField(null=True, blank=True, verbose_name='Description', help_text='A brief description of the recipe')
@@ -45,17 +35,6 @@ class Ingredient(models.Model):
         return self.name
     
 class RecipeIngredient(models.Model):
-    UNIT_CHOICES = [
-        ('g', 'grams'),
-        ('kg', 'kilograms'),
-        ('ml', 'milliliters'),
-        ('l', 'liters'),
-        ('tsp', 'teaspoons'),
-        ('tbsp', 'tablespoons'),
-        ('cup', 'cups'),
-        ('pcs', 'pieces'),
-        ('q.s.', 'quantum sufficit (as needed)'),
-    ]
     id = models.AutoField(primary_key=True)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='ingredients', help_text='The recipe that this ingredient belongs to')
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name='recipes', help_text='The ingredient used in the recipe')

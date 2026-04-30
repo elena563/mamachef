@@ -1,8 +1,8 @@
-from kitchen.models import Ingredient, RecipeIngredient
+from kitchen.models import Ingredient, RecipeIngredient, ShoppingListItem
 from django.db.models import Q, Count
 from django.contrib import messages
 
-from .ingredient_validation import get_or_validate_ingredient, validate_quantity_unit
+from .ingredient_validation import get_or_validate_ingredient, get_ingredient_or_custom, validate_quantity_unit
 
 def save_dynamic_fields(request, recipe):
     names = request.POST.getlist('ingredient')
@@ -57,6 +57,37 @@ def save_dynamic_fields(request, recipe):
     
     return not has_errors
 
+def save_list_items(request, shop_list):
+    names = request.POST.getlist('item')
+    quantities = request.POST.getlist('quantity')
+    units = request.POST.getlist('unit')
+
+    has_errors = False
+    
+    for i in range(len(names)):
+        name = names[i].strip().lower()
+        if not name:
+            messages.error(request, f"Item name is required for item #{i+1}")
+            has_errors = True
+            continue
+        
+        item, is_custom = get_ingredient_or_custom(name)
+
+        quantity = quantities[i] if quantities[i] and quantities[i].strip() else None
+        if not is_custom:
+            is_valid, error = validate_quantity_unit(quantity, units[i], item)
+        if not is_valid:
+            messages.error(request, error)
+            has_errors = True
+        else:
+            ShoppingListItem.objects.create(
+                shopping_list=shop_list,
+                ingredient=item if isinstance(item, Ingredient) else None, 
+                custom_name=item if isinstance(item, str) else None, 
+                quantity=quantity, unit=units[i]
+            )
+    
+    return not has_errors
 
 def filter_recipes(recipes, search_query=None, ingredients=None, difficulty=None, preparation_time=None):
     if search_query:

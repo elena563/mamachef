@@ -89,6 +89,12 @@ def get_or_validate_ingredient(name):
     )
     return ingredient, None
 
+def get_ingredient_or_custom(name):
+    ingredient, error = get_or_validate_ingredient(name)
+    if error:
+        return name, True
+    return ingredient, False
+
 
 def validate_quantity_unit(quantity, unit, ingredient_name):
     if unit == 'q.s.':
