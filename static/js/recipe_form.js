@@ -9,7 +9,7 @@ export function setupDynamicFields(addSelector, containerId, templateId) {
         const newEl = template.content.firstElementChild.cloneNode(true);
         container.appendChild(newEl);
         if (templateId === 'ingredient-template') {
-            setupIngredientAutocomplete(newEl.querySelector('input[name="ingredient"]'));
+            setupIngredientSuggestions(newEl.querySelector('input[name="ingredient"]'));
         }
     });
 
@@ -29,8 +29,8 @@ function swapSteps(step1, step2) {
 }
 
 function initializeForm() {
-    setupDynamicFields('.add_btn', 'ingredients-container', 'ingredient-template');
-    setupDynamicFields('.add_btn', 'steps-container', 'step-template');
+    setupDynamicFields('.add-ingredient-btn', 'ingredients-container', 'ingredient-template');
+    setupDynamicFields('.add-step-btn', 'steps-container', 'step-template');
 
     const form = document.querySelector('form');
     if (form) {

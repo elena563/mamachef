@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <c-button class='add_btn' type="button" variant="secondary">+</c-button>
+        <c-button class='add-ingredient-btn' type="button" variant="secondary">+</c-button>
 
         <hr class="my-6 border-dashed border-2 border-navy-mama">
 
@@ -167,7 +167,7 @@
             </div>
         </div>
 
-        <c-button class='add_btn' type="button" variant="ghost">+</c-button>
+        <c-button class='add-step-btn' type="button" variant="ghost">+</c-button>
         
         <div class="flex gap-4 mt-6">
             <c-button variant="primary" type="submit">
@@ -182,5 +182,5 @@
     </form>
 </div>
 
-<script src="{% static 'js/recipe_form.js' %}"></script>
+<script type='module' src="{% static 'js/recipe_form.js' %}"></script>
 {% endblock %}

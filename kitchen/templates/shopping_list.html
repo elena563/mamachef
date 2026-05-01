@@ -14,18 +14,24 @@
         <c-button variant="primary" type="submit">Save Changes</c-button>
     </div>
 
-    <div id="items-container">
+    <div id="items-container" class="mt-6">
         {% if shopping_list.items.exists %}
-            <ul class="space-y-4">
+            <ul class="grid gap-4 md:grid-cols-2">
                 {% for item in shopping_list.items.all %}
-                    <li class="flex justify-between items-center bg-gray-100 rounded-lg p-4">
-                        <div>
-                            <span class="font-semibold">{{ item.ingredient.name }}</span> - {{ item.quantity }} {{ item.unit }}
+                    <li id="item-cont" class="mb-4">
+                        <div class="view-mode flex justify-between items-center">
+                            <span class="cursor-pointer text-xl flex-grow">
+                                <span class="font-semibold">{{ item.custom_name|default:item.ingredient.name }}</span>
+                                - {{ item.quantity }} {{ item.unit }}
+                            </span>
+                            <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
                         </div>
-                        <form method="post" action="{% url 'Kitchen:remove_from_shopping_list' item.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="text-red-500 hover:text-red-700">Remove</button>
-                        </form>
+                        <div class="edit-mode hidden flex flex-col md:flex-row gap-2">
+                            <c-form-field type="text" name="item" value="{{ item.custom_name|default:item.ingredient.name }}"/>
+                            <c-form-field type="number" name="quantity" value="{{ item.quantity }}"/>
+                            <c-form-field type="select" name="unit" :choices="unit_choices" value="{{ item.unit }}"/>
+                            <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
