@@ -1,4 +1,4 @@
-function setupDynamicFields(addSelector, containerId, templateId) {
+export function setupDynamicFields(addSelector, containerId, templateId) {
     const addBtn = document.querySelector(addSelector);
     const container = document.getElementById(containerId);
     const template = document.getElementById(templateId);
@@ -8,7 +8,9 @@ function setupDynamicFields(addSelector, containerId, templateId) {
     addBtn.addEventListener('click', () => {
         const newEl = template.content.firstElementChild.cloneNode(true);
         container.appendChild(newEl);
-        setupIngredientAutocomplete(newEl.querySelector('input[name="ingredient"]'));
+        if (templateId === 'ingredient-template') {
+            setupIngredientAutocomplete(newEl.querySelector('input[name="ingredient"]'));
+        }
     });
 
     container.addEventListener('click', (e) => {

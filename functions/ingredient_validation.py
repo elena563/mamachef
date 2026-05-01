@@ -96,11 +96,11 @@ def get_ingredient_or_custom(name):
     return ingredient, False
 
 
-def validate_quantity_unit(quantity, unit, ingredient_name):
+def validate_quantity_unit(quantity, unit, ingredient_name, for_list=False):
     if unit == 'q.s.':
         return True, None
     
-    if quantity is None or quantity.strip() == '':
+    if (quantity is None or quantity.strip() == '') and not for_list:
         return False, "Quantity is required unless unit is 'q.s.'"
     
     try:
@@ -108,7 +108,7 @@ def validate_quantity_unit(quantity, unit, ingredient_name):
     except ValueError:
         return False, f"'{quantity}' is not a valid number for quantity"
     
-    if not ingredient_name.countable and unit == 'pcs':
+    if not ingredient_name.countable and unit == 'pcs' and not for_list:
         return False, f"Unit '{unit}' is not appropriate for uncountable ingredient '{ingredient_name}'"
     
     return True, None

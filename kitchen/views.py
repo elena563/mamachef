@@ -5,9 +5,11 @@ from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .models import Recipe, RecipeIngredient, Ingredient, RecipeIngredient, UserProfile, ShoppingList
+
+from .variables import UNIT_LIST_CHOICES, UNIT_CHOICES
+from .models import Recipe, RecipeIngredient, Ingredient, RecipeIngredient, UserProfile, ShoppingList, ShoppingListItem
 from .forms import RecipeForm
-from functions.recipe_helpers import save_dynamic_fields, filter_recipes
+from functions.recipe_helpers import save_dynamic_fields, filter_recipes, save_list_items
 
 # pages
 
@@ -78,7 +80,7 @@ class RecipeFormView:
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['unit_choices'] = [choice[0] for choice in RecipeIngredient.UNIT_CHOICES]
+        context['unit_choices'] = [choice[0] for choice in UNIT_CHOICES]
         
         # Prepare used_ingredients names for each step to make template checks easier
         if self.object and self.object.pk:
@@ -149,5 +151,27 @@ def add_to_favorites(request, pk):
 
 @login_required
 def shopping_list(request):
-    shopping_list = get_object_or_404(ShoppingList, user=request.user)
-    return render(request, 'shopping_list.html', {'shopping_list': shopping_list})
+    shop_list = get_object_or_404(ShoppingList, user=request.user)
+
+    if request.method == 'POST':
+        list_name = request.POST.get('list_name', '').strip()
+        if list_name:
+            shop_list.name = list_name
+            shop_list.save()
+        
+        ShoppingListItem.objects.filter(shopping_list=shop_list).delete()
+
+        if not save_list_items(request, shop_list):
+                    return render(request, 'shopping_list.html', {
+                        'shopping_list': shop_list,
+                        'items': shop_list.items.all(),
+                        'unit_choices': [choice[0] for choice in UNIT_LIST_CHOICES]
+                    })
+        return redirect('Kitchen:shopping_list')
+    
+    items = shop_list.items.all()
+    return render(request, 'shopping_list.html', {
+        'shopping_list': shop_list,
+        'items': items,
+        'unit_choices': [choice[0] for choice in UNIT_LIST_CHOICES]
+    })

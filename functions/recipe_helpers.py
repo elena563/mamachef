@@ -75,7 +75,7 @@ def save_list_items(request, shop_list):
 
         quantity = quantities[i] if quantities[i] and quantities[i].strip() else None
         if not is_custom:
-            is_valid, error = validate_quantity_unit(quantity, units[i], item)
+            is_valid, error = validate_quantity_unit(quantity, units[i], item, for_list=True)
         if not is_valid:
             messages.error(request, error)
             has_errors = True
