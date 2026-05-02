@@ -18,14 +18,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const items = document.querySelectorAll('#item-cont')
-    console.log(items)
+    const items = document.querySelectorAll('.item-cont')
     items.forEach((item) => {
+        const label = item.querySelector('.item-label')
         const view = item.querySelector('.view-mode')
         const edit = item.querySelector('.edit-mode')
-        item.addEventListener('click', () => {
+        label.addEventListener('click', () => {
             view.classList.add('hidden')
             edit.classList.remove('hidden');
+        })
+
+        const checkbox = item.querySelector('.item-checkbox')
+        checkbox.addEventListener('change', () => {
+            item.classList.toggle('bought');
+            label.classList.toggle('line-through')
         })
     })
 });

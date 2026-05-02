@@ -16,6 +16,8 @@ export function setupDynamicFields(addSelector, containerId, templateId) {
     container.addEventListener('click', (e) => {
         if (e.target.classList.contains('remove_btn')) {
             e.target.parentElement.remove();
+        } else if (e.target.classList.contains('remove_parent_btn')){
+            e.target.parentElement.parentElement.remove();
         }
     });
 }

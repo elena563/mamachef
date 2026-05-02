@@ -42,6 +42,8 @@
             bg-gradient-blue-mama hover:bg-gradient-blue-mama-dark text-white focus:ring-blue-mama focus:outline-none focus:ring-2 focus:ring-offset-2
         {% elif variant == 'ghost' %}
             text-navy-mama hover:bg-pink-mama/10
+        {% elif variant == 'green' %}
+            bg-gradient-green-mama hover:bg-gradient-green-mama-dark text-white focus:ring-green-mama focus:outline-none focus:ring-2 focus:ring-offset-2
         {% endif %}
         {% if size == 'sm' %}
             {% if icon_only == 'True' %}p-1.5 text-sm{% else %}px-3 py-1.5 text-md{% endif %}

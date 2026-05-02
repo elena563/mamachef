@@ -4,33 +4,45 @@
 {% block title %}{{shopping_list.name}} - MamaChef{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto px-4 py-8">
+<div class="max-w-4xl mx-auto px-4 py-8 mt-6 bg-beige-mama border-4 border-yellow-mama rounded-3xl">
     <form method="post">
     {% csrf_token %}
-    <h1 id="listName" class="text-3xl font-bold mb-6 cursor-pointer">{{ shopping_list.name }}</h1>
-    <c-form-field name="list_name" type="text" class="hidden mb-6" value="{{ shopping_list.name }}" />
+    <h1 id="listName" class="text-3xl font-bold mt-4 mb-6 cursor-pointer">{{ shopping_list.name }}</h1>
+    <c-form-field name="list_name" type="text" class="hidden mt-4 mb-6" value="{{ shopping_list.name }}" />
 
-    <div>
-        <c-button variant="primary" type="submit">Save Changes</c-button>
+    <div class="flex justify-between gap-4 mb-6">
+        <div class="flex gap-4">
+            <c-button variant="success" type="submit">Save Changes</c-button>
+            <a href="{% url 'Kitchen:shopping_list' %}">
+                <c-button variant="ghost" type="button">
+                    Cancel
+                </c-button>
+            </a>
+        </div>
+        <div class="flex gap-4">
+            <c-button variant="green">Export PDF</c-button>
+            <c-button variant="primary">Clear List</c-button>
+        </div>
     </div>
 
     <div id="items-container" class="mt-6">
         {% if shopping_list.items.exists %}
-            <ul class="grid gap-4 md:grid-cols-2">
+            <ul class="grid gap-4 md:grid-cols-2 mb-6">
                 {% for item in shopping_list.items.all %}
-                    <li id="item-cont" class="mb-4">
+                    <li class="item-cont bg-medium-blue rounded-xl p-4">
                         <div class="view-mode flex justify-between items-center">
-                            <span class="cursor-pointer text-xl flex-grow">
-                                <span class="font-semibold">{{ item.custom_name|default:item.ingredient.name }}</span>
-                                - {{ item.quantity }} {{ item.unit }}
+                            <c-form-field class='item-checkbox' type="checkbox" name="bought" value="{{ item.id }}"/>
+                            <span class="item-label font-jua mx-2 cursor-pointer text-xl flex-grow flex items-center justify-between">
+                                <span class="text-2xl">{% if item.ingredient %}{{ item.ingredient.name }}{% else %}{{ item.custom_name }}{% endif %}</span>
+                                 {{ item.quantity|default_if_none:""|floatformat }} {{ item.unit }}
                             </span>
                             <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
                         </div>
                         <div class="edit-mode hidden flex flex-col md:flex-row gap-2">
-                            <c-form-field type="text" name="item" value="{{ item.custom_name|default:item.ingredient.name }}"/>
+                            <c-form-field type="text" name="item" value="{% if item.ingredient %}{{ item.ingredient.name }}{% else %}{{ item.custom_name }}{% endif %}"/>
                             <c-form-field type="number" name="quantity" value="{{ item.quantity }}"/>
                             <c-form-field type="select" name="unit" :choices="unit_choices" value="{{ item.unit }}"/>
-                            <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
+                            <c-button class='remove_parent_btn' type="button" variant="secondary">-</c-button>
                         </div>
                     </li>
                 {% endfor %}
@@ -52,8 +64,8 @@
             <c-form-field type="select" name="unit" :choices="unit_choices"/>
             <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
         </div>
-        <c-button class='add_btn' type="button" variant="secondary">+</c-button>
     </div>
+    <c-button class='add_btn' type="button" variant="secondary">+</c-button>
 </div>
 
 <script type="module" src="{% static 'js/shopping_list.js' %}"></script>

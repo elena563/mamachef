@@ -18,6 +18,7 @@
   --color-blue-mama: #A2D8FE;
   --color-blue-mama-dark: #82B8DE;
   --color-light-blue: #F2F8FD;
+  --color-medium-blue: #bee1fa;
   --color-yellow-mama: #FDE68A;
   --color-yellow-mama-dark: #FCD34D;
   --color-light-yellow: #FEF9C3;
@@ -28,8 +29,11 @@
   --font-family-heading: 'Jua', sans-serif;
   --color-navy-mama: #3B6BBA;
   --color-green-mama: #A0DC85;
+  --gradient-green-mama: linear-gradient(180deg, #B8E89F 0%, #9FDC7F 62.5%, #8BD46B 100%);
   --color-red-mama: #F87171;
   --color-white: #FFFFFF;
+  --color-light-gray: #e3e4e6;
+  --color-dark-gray: #374151;
 }
 
 @layer utilities {
@@ -45,12 +49,23 @@
   .hover\:bg-gradient-blue-mama-dark:hover {
     background: linear-gradient(180deg, #6BA5E5 0%, #4A8FDB 62.5%, #2979D1 100%);
   }
+  .bg-gradient-green-mama {
+    background: linear-gradient(180deg, #B8E89F 0%, #9FDC7F 62.5%, #8BD46B 100%);
+  }
+  .hover\:bg-gradient-green-mama-dark:hover {
+    background: linear-gradient(180deg, #8FD46B 0%, #7DCB5F 62.5%, #6CBF52 100%);
+  }
   .font-jua {
     font-family: 'Jua', sans-serif;
   }
   .gradient-blue-pink{
     background: linear-gradient(
   90deg, #A2D8FE 0%,#D6EEFE 13%,#F2F8FD 28%,#FFF4F6 50%,#F2F8FD 72%,#D6EEFE 87%,#A2D8FE 100%);
+  }
+
+  .bought{
+    background-color: var(--color-light-gray);
+    color: var(--color-dark-gray);
   }
 
   .scallop-down{
