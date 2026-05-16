@@ -1,9 +1,12 @@
+import json
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 
 from .variables import UNIT_LIST_CHOICES, UNIT_CHOICES
@@ -169,9 +172,18 @@ def shopping_list(request):
                     })
         return redirect('Kitchen:shopping_list')
     
-    items = shop_list.items.all()
+    bought_items = shop_list.items.filter(bought=True)
     return render(request, 'shopping_list.html', {
         'shopping_list': shop_list,
-        'items': items,
-        'unit_choices': [choice[0] for choice in UNIT_LIST_CHOICES]
+        'unit_choices': [choice[0] for choice in UNIT_LIST_CHOICES],
+        'bought_items': bought_items
     })
+
+@require_POST
+def toggle_item_bought(request, item_id):
+    item = get_object_or_404(ShoppingListItem, id=item_id)
+    data = json.loads(request.body)
+    item.bought = data.get('bought', False)
+    item.save()
+    print(item.bought)
+    return JsonResponse({'success': True, 'bought': item.bought})

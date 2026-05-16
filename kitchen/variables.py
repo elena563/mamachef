@@ -23,9 +23,9 @@ UNIT_CHOICES = [
 ]
 
 UNIT_LIST_CHOICES = [
+    ('pcs', 'pieces'),
     ('g', 'grams'),
     ('kg', 'kilograms'),
     ('ml', 'milliliters'),
     ('l', 'liters'),
-    ('pcs', 'pieces'),
 ]

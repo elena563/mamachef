@@ -29,9 +29,33 @@ document.addEventListener('DOMContentLoaded', () => {
         })
 
         const checkbox = item.querySelector('.item-checkbox')
-        checkbox.addEventListener('change', () => {
+        checkbox.addEventListener('change', async () => {
             item.classList.toggle('bought');
             label.classList.toggle('line-through')
+
+            const itemId = item.dataset.itemId;
+            try {
+                await fetch(`/shopping-list/item/${itemId}/bought/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({ bought: checkbox.closest('input').checked }),
+                });
+            } catch (err) {
+                item.classList.toggle('bought');
+                label.classList.toggle('line-through');
+            }
         })
     })
 });
+
+
+
+function getCookie(name) {
+    return document.cookie
+        .split('; ')
+        .find(row => row.startsWith(name + '='))
+        ?.split('=')[1];
+}

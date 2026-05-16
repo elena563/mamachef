@@ -75,7 +75,7 @@ class ShoppingListItem(models.Model):
     bought = models.BooleanField(default=False, help_text='Whether the item has been bought or not')
 
     def __str__(self):
-        return f"{self.quantity} {self.unit} of {self.ingredient.name} for {self.shopping_list.name}"
+        return f"{self.quantity} {self.unit} of {self.ingredient.name if self.ingredient else self.custom_name} for {self.shopping_list.name}"
     
 
 # ideas: meal planning, recipe categories, user ratings and reviews for recipes, recipe sharing with other users, dietary preferences (e.g., vegetarian, vegan, gluten-free), recipe tags (e.g., quick meals, desserts)
