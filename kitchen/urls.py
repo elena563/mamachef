@@ -26,7 +26,9 @@ urlpatterns = [
     path('recipe/<int:pk>/edit/', views.RecipeUpdateView.as_view(), name='edit_recipe'),
     path('recipe/<int:pk>/delete/', views.recipe_delete, name='delete_recipe'),
     path('recipe/<int:pk>/add_to_favorites/', views.add_to_favorites, name='add_to_favorites'),
+
     path('shopping-list/item/<int:item_id>/bought/', views.toggle_item_bought, name='toggle_item_bought'),
+    path('shopping-list/export_pdf/', views.export_pdf, name='export_pdf'),
 
     path('api/ingredients/autocomplete/', views.ingredient_autocomplete, name='ingredient_autocomplete'),
 ]

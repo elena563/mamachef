@@ -1,5 +1,15 @@
 import { setupDynamicFields } from './recipe_form.js';
 
+
+
+function updateDisabledBtn(btn, items) {
+    const isEmpty = items.length === 0;
+    
+    btn.classList.toggle('opacity-50', isEmpty);
+    btn.classList.toggle('cursor-not-allowed', isEmpty);
+    btn.classList.toggle('cursor-pointer', !isEmpty);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     setupDynamicFields('.add_btn', 'items-container', 'item-template');
 
@@ -18,7 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const removeBoughtBtn = document.querySelector('.remove_bought_btn');
     const items = document.querySelectorAll('.item-cont')
+
     items.forEach((item) => {
         const label = item.querySelector('.item-label')
         const view = item.querySelector('.view-mode')
@@ -43,9 +55,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     body: JSON.stringify({ bought: checkbox.closest('input').checked }),
                 });
+
+                // if there's at least one bought item, remove bought btn enabled
+                const boughtItems = document.querySelectorAll('.item-cont.bought');
+                removeBoughtBtn.disabled = boughtItems.length === 0;
+                updateDisabledBtn(removeBoughtBtn, boughtItems);
             } catch (err) {
                 item.classList.toggle('bought');
                 label.classList.toggle('line-through');
+                console.error(err);
+            }
+        })
+    })
+
+
+    const clearBtn = document.querySelector('.clear_btn');
+
+    clearBtn.addEventListener('click', () => {
+        items.forEach(item => item.remove());
+    })
+
+    removeBoughtBtn.addEventListener('click', () => {
+        items.forEach((item) => {
+            if (item.classList.contains('bought')) {
+                item.remove();
             }
         })
     })

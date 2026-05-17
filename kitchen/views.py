@@ -7,12 +7,13 @@ from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 
 from .variables import UNIT_LIST_CHOICES, UNIT_CHOICES
 from .models import Recipe, RecipeIngredient, Ingredient, RecipeIngredient, UserProfile, ShoppingList, ShoppingListItem
 from .forms import RecipeForm
 from functions.recipe_helpers import save_dynamic_fields, filter_recipes, save_list_items
+from functions.pdf import generate_list_pdf
 
 # pages
 
@@ -178,6 +179,12 @@ def shopping_list(request):
         'unit_choices': [choice[0] for choice in UNIT_LIST_CHOICES],
         'bought_items': bought_items
     })
+
+@login_required
+def export_pdf(request):
+    shop_list = get_object_or_404(ShoppingList, user=request.user)
+    pdf = generate_list_pdf(shop_list)
+    return FileResponse(pdf, as_attachment=True, filename=f"{shop_list.name}.pdf")
 
 @require_POST
 def toggle_item_bought(request, item_id):

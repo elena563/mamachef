@@ -20,11 +20,9 @@
             </a>
         </div>
         <div class="flex gap-4">
-            <c-button variant="green">Export PDF</c-button>
-            {% if bought_items %}
-                <c-button variant="primary">Delete Bought Items</c-button>
-            {% endif %}
-            <c-button variant="primary">Clear List</c-button>
+            <c-button link="{% url 'Kitchen:export_pdf' %}" variant="green">Export PDF</c-button>
+            <c-button class='remove_bought_btn' type="button" variant="primary" disabled="{% if not bought_items %}True{% endif %}">Delete Bought Items</c-button>
+            <c-button class='clear_btn' type="button" variant="primary">Clear List</c-button>
         </div>
     </div>
 

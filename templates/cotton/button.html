@@ -27,23 +27,30 @@
         {% endif %}
         font-medium
         transition-colors duration-200
-        cursor-pointer
         {% if variant == 'primary' %}
-            bg-gradient-pink-mama hover:bg-gradient-pink-mama-dark text-white focus:ring-pink-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+            bg-gradient-pink-mama text-white focus:ring-pink-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+            {% if disabled != 'True' %}hover:bg-gradient-pink-mama-dark{% endif %}
         {% elif variant == 'secondary-y' %}
-            bg-beige-mama hover:bg-beige-mama-dark text-beige-mama-dark hover:text-white border-beige-mama-dark border-2 focus:ring-beige-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+            bg-beige-mama text-beige-mama-dark border-beige-mama-dark border-2 focus:ring-beige-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+            {% if disabled != 'True' %}hover:bg-beige-mama-dark hover:text-white{% endif %}
         {% elif variant == 'secondary-b' %}
-            bg-light-blue hover:bg-blue-mama-dark hover:text-white text-blue-mama-dark border-blue-mama-dark border-2 focus:ring-blue-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+            bg-light-blue text-blue-mama-dark border-blue-mama-dark border-2 focus:ring-blue-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+            {% if disabled != 'True' %}hover:bg-blue-mama-dark hover:text-white{% endif %}
         {% elif variant == 'secondary-p' %}
-            bg-light-pink hover:bg-pink-mama-dark hover:text-white text-pink-mama-dark border-pink-mama-dark border-2 focus:ring-pink-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+            bg-light-pink text-pink-mama-dark border-pink-mama-dark border-2 focus:ring-pink-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+            {% if disabled != 'True' %}hover:bg-pink-mama-dark hover:text-white{% endif %}
         {% elif variant == 'danger' %}
-            bg-red-500 hover:bg-red-600 text-white focus:ring-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2
+            bg-red-500 text-white focus:ring-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2
+            {% if disabled != 'True' %}hover:bg-red-600{% endif %}
         {% elif variant == 'success' %}
-            bg-gradient-blue-mama hover:bg-gradient-blue-mama-dark text-white focus:ring-blue-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+            bg-gradient-blue-mama text-white focus:ring-blue-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+            {% if disabled != 'True' %}hover:bg-gradient-blue-mama-dark{% endif %}
         {% elif variant == 'ghost' %}
-            text-navy-mama hover:bg-pink-mama/10
+            text-navy-mama
+            {% if disabled != 'True' %}hover:bg-pink-mama/10{% endif %}
         {% elif variant == 'green' %}
-            bg-gradient-green-mama hover:bg-gradient-green-mama-dark text-white focus:ring-green-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+            bg-gradient-green-mama text-white focus:ring-green-mama focus:outline-none focus:ring-2 focus:ring-offset-2
+            {% if disabled != 'True' %}hover:bg-gradient-green-mama-dark{% endif %}
         {% endif %}
         {% if size == 'sm' %}
             {% if icon_only == 'True' %}p-1.5 text-sm{% else %}px-3 py-1.5 text-md{% endif %}
@@ -54,6 +61,8 @@
         {% endif %}
         {% if disabled == 'True' %}
             opacity-50 cursor-not-allowed
+        {% else %}
+            cursor-pointer
         {% endif %}
         {% if link == "" %}{{ class }}{% else %}w-full{% endif %}
     "

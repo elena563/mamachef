@@ -15,9 +15,9 @@ export function setupDynamicFields(addSelector, containerId, templateId) {
 
     container.addEventListener('click', (e) => {
         if (e.target.classList.contains('remove_btn')) {
-            e.target.parentElement.remove();
+            e.target.parentElement.remove();                            // recipe
         } else if (e.target.classList.contains('remove_parent_btn')){
-            e.target.parentElement.parentElement.remove();
+            e.target.parentElement.parentElement.remove();              // shopping-list
         }
     });
 }
