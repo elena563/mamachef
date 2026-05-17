@@ -96,4 +96,10 @@
     font-family: 'Jua', sans-serif;
     color: var(--color-navy-mama);
   }
+
+  form ul {
+    font-size: 0.875rem;
+    color: #6B7280;
+    margin-bottom: 0.5rem;
+  }
 }

@@ -29,11 +29,13 @@ def recipes(request):
     ingredients = [i.strip() for i in request.GET.getlist('ingredients') if i.strip()]
     difficulty = [d for d in request.GET.getlist('difficulty') if d != 'All difficulties']
     preparation_time = request.GET.get('preparation_time')
+    #cooking_method = [c for c in request.GET.getlist('cooking_method') if c != 'All cooking methods']
     
     recipes = filter_recipes(recipes, search_query, ingredients, difficulty, preparation_time)
 
     difficulty_levels = ['All difficulties'] + list(Recipe.objects.values_list('difficulty', flat=True).distinct())
     preparation_time_ranges = ['All preparation times', 'less than 30 minutes', '30-60 minutes', 'more than 60 minutes']
+
     
     return render(request, 'recipes.html', {
         'recipes': recipes,

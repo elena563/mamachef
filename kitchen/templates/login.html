@@ -1,20 +1,33 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    main {
+        height: 0;
+        margin: 0;
+        padding: 0;
+    }
+</style>
+{% endblock %}
 
 {% block title %}Login - MamaChef{% endblock %}
 
-{% block content %}
-    <div class="max-w-md mx-auto px-4 py-8">
-        <h2 class="text-2xl font-bold text-gray-900 mb-6">Login</h2>
-        <form method="post" class="bg-white rounded-lg shadow-md p-6">
-            {% csrf_token %}
-            {% for field in form %}
-                <c-form-field :field="field" />
-            {% endfor %}
-            <c-button variant="primary" type="submit">Login</c-button>
-        </form>
+{% block hero %}
+    <div class="w-full h-full bg-cover bg-center p-4 sm:p-8 md:p-12" style="background-image: url('{% static 'images/bg-blue-pois.png' %}')">
+        <div class="max-w-md mx-auto px-4 py-8">
+            <form method="post" class="bg-white rounded-lg shadow-md p-6 space-y-2">
+                <h2 class="text-3xl font-bold text-center mb-6 mt-2">Login</h2>
+                {% csrf_token %}
+                {% for field in form %}
+                    <c-form-field :field="field" label={{field}} />
+                {% endfor %}
+                <c-button class="mt-2" variant="primary" type="submit">Login</c-button>
+            </form>
 
-        <p class="text-center mt-4 text-gray-600">
-            Are you a new chef? <a href="{% url 'Kitchen:register' %}" class="text-pink-mama hover:underline">Register</a>
-        </p>
+            <p class="text-center mt-4 text-gray-600 bg-white/50 p-2 rounded-lg">
+                Are you a new chef? <a href="{% url 'Kitchen:register' %}" class="text-pink-mama hover:underline">Register</a>
+            </p>
+        </div>
     </div>
 {% endblock %}

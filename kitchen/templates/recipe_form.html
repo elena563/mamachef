@@ -24,15 +24,18 @@
 
         <h1 class="text-3xl font-bold mb-6 mt-2">
             {% if object %}
-                ✏️ Edit Recipe
+                <i class="fa-solid fa-pen-to-square fa-md mr-2" style="color: #feaac2;"></i> Edit Recipe
             {% else %}
-                ➕ New Recipe
+                <i class="fa-solid fa-circle-plus fa-md mr-2" style="color: #feaac2;"></i> New Recipe
             {% endif %}
         </h1>
         
         <c-form-field :field="form.name" />
         <c-form-field :field="form.description" />
-        <c-form-field :field="form.difficulty" />
+        <div class="flex gap-4 items-start [&>*]:flex-1">
+            <c-form-field :field="form.difficulty" />
+            <c-form-field :field="form.cooking_method" />
+        </div>
 
         <div class="flex gap-4 [&>*]:flex-1">
             <c-form-field :field="form.preparation_time" />
