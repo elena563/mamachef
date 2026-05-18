@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="max-w-4xl mx-auto mt-10 px-4">
+<div class="max-w-3xl mx-auto mt-10 px-4">
 
     <c-button link="{% url 'Kitchen:recipes' %}" variant="secondary" size="sm" class="mb-6">← Back to Recipes</c-button>
 
@@ -27,9 +27,13 @@
 
   <hr class="my-6 border-dashed border-2 border-navy-mama">
 
-
-  <h2 class="text-2xl font-semibold mb-3">Ingredients</h2>
-  <div class="flex items-center gap-4 mb-4">
+  <div class="flex justify-between gap-4">
+    <h2 class="text-2xl font-semibold mb-3">Ingredients</h2>
+    {% if user.is_authenticated %}
+      <c-button class="add-to-list-btn" variant="green">Add to Shopping List</c-button>
+    {% endif %}
+  </div>
+  <div class="flex items-center gap-2 mb-4">
     <p class="text-gray-700">Servings: <span id="servings">{{ recipe.servings }}</span></p>
     <c-form-field id="servings-input" class="hidden" type="number" name="servings" value="{{ recipe.servings }}"/>
     <c-button id="servings-btn" size="sm">Change</c-button>
@@ -87,6 +91,24 @@
 </div>
 
 {% endif %}
+<div class="hidden h-full w-full absolute inset-0 bg-black/20" id="popup-overlay"></div>
+<div id="add-to-list-popup" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+    <form method="POST" action="{% url 'Kitchen:add_to_list' %}">
+      {% csrf_token %}
+      <div class="relative p-6 bg-white shadow-md rounded-lg z-10 min-w-[300px] space-y-2">
+        <div class="flex justify-between items-center gap-4 mb-4">
+          <h3 class="text-2xl font-semibold">Choose ingredients</h3>
+          <c-button class="close-popup-btn !py-0" type="button" variant="secondary">✖</c-button>
+        </div>
+        {% for qi in ingredients %}
+          <p id="ingredient-{{ qi.id }}">
+            <c-form-field type="checkbox" name="ingredient" value="{{ qi.id }}" label="{{ qi.ingredient.name }}"/>
+          </p>
+        {% endfor %}
+        <c-button class="mt-2" type="submit" variant="green">Add selected</c-button>
+      </div>
+    </form>
+</div>
 
 <script>
 const servingsBtn = document.getElementById('servings-btn');
@@ -130,6 +152,33 @@ servingsBtn.addEventListener('click',() => {
     }
   }
 })
+</script>
+
+<script>
+  const openBtn = document.querySelector('.add-to-list-btn');
+  const closeBtn = document.querySelector('.close-popup-btn');
+  const popup = document.getElementById('add-to-list-popup');
+  const overlay = document.getElementById('popup-overlay');
+
+  openBtn.addEventListener('click', () => {
+    popup.classList.remove('hidden');
+    overlay.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    popup.classList.add('hidden');
+    overlay.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+  });
+
+  popup.addEventListener('click', (e) => {
+    if (e.target === popup) {
+      popup.classList.add('hidden');
+      overlay.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+  });
 </script>
 
 {% endblock %}

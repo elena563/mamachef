@@ -16,7 +16,7 @@
     {# Custom field #}
     <div>
         {% if label and type != 'checkbox' %}
-        <label {% if id %}for="{{ id }}"{% endif %} class="{{ class }} block text-gray-700 font-medium mb-4">
+        <label {% if id %}for="{{ id }}"{% endif %} class="{{ class }} block text-gray-700 font-medium mb-4 cursor-pointer">
             {{ label }}
             {% if required == "True" %}
                 <span class="text-red-500">*</span>
@@ -46,7 +46,7 @@
                 rows="4" cols="50"
             >{{ value }}</textarea>
         {% elif type == 'checkbox' %}
-            <label class="inline-flex items-center gap-1">
+            <label class="inline-flex items-center gap-1 cursor-pointer">
                 <input 
                     type="checkbox" 
                     name="{{ name }}" 

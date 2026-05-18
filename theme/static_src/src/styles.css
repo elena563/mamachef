@@ -68,6 +68,10 @@
     color: var(--color-dark-gray);
   }
 
+  .errorlist{
+    color: var(--color-red-mama);
+  }
+
   .scallop-down{
     height:50px;
     width:100%;

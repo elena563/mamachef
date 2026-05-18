@@ -29,11 +29,12 @@ def recipes(request):
     ingredients = [i.strip() for i in request.GET.getlist('ingredients') if i.strip()]
     difficulty = [d for d in request.GET.getlist('difficulty') if d != 'All difficulties']
     preparation_time = request.GET.get('preparation_time')
-    #cooking_method = [c for c in request.GET.getlist('cooking_method') if c != 'All cooking methods']
+    cooking_method = [c for c in request.GET.getlist('cooking_method') if c != 'All cooking methods']
     
-    recipes = filter_recipes(recipes, search_query, ingredients, difficulty, preparation_time)
+    recipes = filter_recipes(recipes, search_query, ingredients, difficulty, preparation_time, cooking_method)
 
     difficulty_levels = ['All difficulties'] + list(Recipe.objects.values_list('difficulty', flat=True).distinct())
+    cooking_method_choices = ['All cooking methods'] + list(Recipe.objects.values_list('cooking_method', flat=True).distinct())
     preparation_time_ranges = ['All preparation times', 'less than 30 minutes', '30-60 minutes', 'more than 60 minutes']
 
     
@@ -41,6 +42,7 @@ def recipes(request):
         'recipes': recipes,
         'search_query': search_query,
         'difficulty_levels': difficulty_levels,
+        'cooking_method_choices': cooking_method_choices,
         'preparation_time_ranges': preparation_time_ranges
     })
 
@@ -168,11 +170,11 @@ def shopping_list(request):
         ShoppingListItem.objects.filter(shopping_list=shop_list).delete()
 
         if not save_list_items(request, shop_list):
-                    return render(request, 'shopping_list.html', {
-                        'shopping_list': shop_list,
-                        'items': shop_list.items.all(),
-                        'unit_choices': [choice[0] for choice in UNIT_LIST_CHOICES]
-                    })
+            return render(request, 'shopping_list.html', {
+                'shopping_list': shop_list,
+                'items': shop_list.items.all(),
+                'unit_choices': [choice[0] for choice in UNIT_LIST_CHOICES]
+            })
         return redirect('Kitchen:shopping_list')
     
     bought_items = shop_list.items.filter(bought=True)
@@ -181,6 +183,35 @@ def shopping_list(request):
         'unit_choices': [choice[0] for choice in UNIT_LIST_CHOICES],
         'bought_items': bought_items
     })
+
+@login_required
+def add_to_list(request):
+    shopping_list = request.user.shopping_list
+    ingredient_ids = request.POST.getlist('ingredient')
+
+    for qi_id in ingredient_ids:
+        recipe_ing = RecipeIngredient.objects.get(id=qi_id)
+        ingredient = recipe_ing.ingredient
+        quantity = recipe_ing.quantity
+        unit = recipe_ing.unit
+        item, created = ShoppingListItem.objects.get_or_create(
+            shopping_list=shopping_list,
+            ingredient=ingredient,
+            defaults={
+                "quantity": quantity,
+                "unit": unit
+            }
+        )
+
+        #TODO: check on units, conversion
+
+        if not created:
+            item.quantity += quantity
+            item.save()
+    referer = request.META.get('HTTP_REFERER')
+    if referer:
+        return redirect(referer)
+    return redirect('Kitchen:recipes')
 
 @login_required
 def export_pdf(request):

@@ -59,7 +59,7 @@ class Step(models.Model):
 
 class ShoppingList(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='shopping_lists', help_text='The user who owns this shopping list')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='shopping_list', help_text='The user who owns this shopping list')
     name = models.CharField(default='My Shopping List', max_length=255, help_text='The name of the shopping list')
 
     def __str__(self):

@@ -22,6 +22,7 @@
                 {% for field in form %}
                     <c-form-field :field="field" label={{field}} />
                 {% endfor %}
+                {{ form.non_field_errors }}
                 <c-button class="mt-2" variant="primary" type="submit">Login</c-button>
             </form>
 

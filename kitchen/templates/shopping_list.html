@@ -32,18 +32,18 @@
                 {% for item in shopping_list.items.all %}
                     <li class="item-cont bg-medium-blue rounded-xl p-4 {% if item.bought %}bought{% endif %}" data-item-id="{{ item.id }}">
                         <div class="view-mode flex justify-between items-center">
-                            <c-form-field class='item-checkbox' type="checkbox" name="bought" value="{{ item.id }}" checked="{{ item.bought }}"/>
-                            <span class="item-label font-jua mx-2 cursor-pointer text-xl flex-grow flex items-center justify-between {% if item.bought %}line-through{% endif %}">
+                            <c-form-field class='item-checkbox' type="checkbox" name="bought_{{ forloop.counter0 }}" value="{{ item.id }}" checked="{{ item.bought }}"/>
+                            <span style="color: var(--color-dark-gray);" class="item-label font-jua mx-2 cursor-pointer text-xl flex-grow flex items-center justify-between {% if item.bought %}line-through{% endif %}">
                                 <span class="text-2xl">{% if item.ingredient %}{{ item.ingredient.name }}{% else %}{{ item.custom_name }}{% endif %}</span>
-                                 {{ item.quantity|default_if_none:""|floatformat }} {{ item.unit }}
+                                 {% if item.quantity %}{{ item.quantity|default_if_none:""|floatformat }} {{ item.unit }}{% endif %}
                             </span>
-                            <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
+                            <c-button class='remove_parent_btn' type="button" variant="secondary">✖</c-button>
                         </div>
                         <div class="edit-mode hidden flex flex-col md:flex-row gap-2">
                             <c-form-field type="text" name="item" value="{% if item.ingredient %}{{ item.ingredient.name }}{% else %}{{ item.custom_name }}{% endif %}"/>
                             <c-form-field type="number" name="quantity" value="{{ item.quantity }}"/>
                             <c-form-field type="select" name="unit" :choices="unit_choices" value="{{ item.unit }}"/>
-                            <c-button class='remove_parent_btn' type="button" variant="secondary">-</c-button>
+                            <c-button class='remove_parent_btn' type="button" variant="secondary">✖</c-button>
                         </div>
                     </li>
                 {% endfor %}
@@ -56,17 +56,17 @@
                 <c-form-field type="text" name="item" placeholder="flour"/>
                 <c-form-field type="number" name="quantity" placeholder="200"/>
                 <c-form-field type="select" name="unit" :choices="unit_choices"/>
-                <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
+                <c-button class='remove_parent_btn' type="button" variant="secondary">✖</c-button>
             </div>
         </template>
         <div class="flex flex-col md:flex-row gap-4 mb-4">
             <c-form-field type="text" name="item" placeholder="flour"/>
             <c-form-field type="number" name="quantity" placeholder="200"/>
             <c-form-field type="select" name="unit" :choices="unit_choices"/>
-            <c-button class='remove_btn' type="button" variant="secondary">-</c-button>
+            <c-button class='remove_btn' type="button" variant="secondary">✖</c-button>
         </div>
     </div>
-    <c-button class='add_btn' type="button" variant="secondary">+</c-button>
+    <c-button class='add_btn !text-3xl' type="button" variant="secondary">+</c-button>
 </div>
 
 <script type="module" src="{% static 'js/shopping_list.js' %}"></script>

@@ -4,10 +4,10 @@ DIFFICULTY_CHOICES = [
     ('Hard', 'Hard'),
 ]
 COOKING_METHOD_CHOICES = [
-    ('oven', 'Baked'),
-    ('stovetop', 'Stovetop'),
-    ('microwave', 'Microwaved'),
-    ('no-cook', 'No Cook'),
+    ('Baked', 'oven'),
+    ('Stovetop', 'stovetop'),
+    ('Microwaved', 'microwave'),
+    ('No Cook', 'no-cook'),
 ]
 
 UNIT_CHOICES = [

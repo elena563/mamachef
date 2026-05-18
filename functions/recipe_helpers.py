@@ -17,7 +17,11 @@ def save_dynamic_fields(request, recipe):
     
     for i in range(len(names)):
         name = names[i].strip().lower()
-        if not name:
+        quantity = quantities[i] if quantities[i] and quantities[i].strip() else None
+
+        if not quantity and not name:       # skip empty rows
+            continue
+        if quantity and not name:
             messages.error(request, f"Ingredient name is required for ingredient #{i+1}")
             has_errors = True
             continue
@@ -27,7 +31,6 @@ def save_dynamic_fields(request, recipe):
             has_errors = True
             continue
         
-        quantity = quantities[i] if quantities[i] and quantities[i].strip() else None
         is_valid, error = validate_quantity_unit(quantity, units[i], ingredient)
         if not is_valid:
             messages.error(request, error)
@@ -61,6 +64,7 @@ def save_list_items(request, shop_list):
     names = request.POST.getlist('item')
     quantities = request.POST.getlist('quantity')
     units = request.POST.getlist('unit')
+    boughts = request.POST.getlist('bought')
 
     has_errors = False
     
@@ -72,24 +76,28 @@ def save_list_items(request, shop_list):
             continue
         
         item, is_custom = get_ingredient_or_custom(name)
-
+        
         quantity = quantities[i] if quantities[i] and quantities[i].strip() else None
-        if not is_custom:
-            is_valid, error = validate_quantity_unit(quantity, units[i], item, for_list=True)
-        if not is_valid:
-            messages.error(request, error)
-            has_errors = True
-        else:
-            ShoppingListItem.objects.create(
-                shopping_list=shop_list,
-                ingredient=item if isinstance(item, Ingredient) else None, 
-                custom_name=item if isinstance(item, str) else None, 
-                quantity=quantity, unit=units[i]
-            )
+        if quantity:
+            if not is_custom:
+                is_valid, error = validate_quantity_unit(quantity, units[i], item, for_list=True)
+            if not is_valid:
+                messages.error(request, error)
+                has_errors = True
+
+        bought = f'bought_{i}' in request.POST 
+        
+        ShoppingListItem.objects.create(
+            shopping_list=shop_list,
+            ingredient=item if isinstance(item, Ingredient) else None, 
+            custom_name=item if isinstance(item, str) else None, 
+            quantity=quantity, unit=units[i],
+            bought=bought
+        )
     
     return not has_errors
 
-def filter_recipes(recipes, search_query=None, ingredients=None, difficulty=None, preparation_time=None):
+def filter_recipes(recipes, search_query=None, ingredients=None, difficulty=None, preparation_time=None, cooking_method=None):
     if search_query:
         recipes = recipes.filter(
             Q(name__icontains=search_query) |
@@ -103,6 +111,9 @@ def filter_recipes(recipes, search_query=None, ingredients=None, difficulty=None
     
     if difficulty:
         recipes = recipes.filter(difficulty__in=difficulty)
+
+    if cooking_method:
+        recipes = recipes.filter(cooking_method__in=cooking_method)
 
     if preparation_time and preparation_time != 'All preparation times':
         if preparation_time == 'less than 30 minutes':
