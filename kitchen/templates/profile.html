@@ -17,11 +17,38 @@
 {% block hero %}
 <div class="w-full border-b-5 border-beige-mama-dark px-6 py-12" style="background-image: url('{% static 'images/bg-profile1.png' %}'); background-size: 100%; background-position: top; background-repeat: no-repeat;">
 <div class="max-w-7xl mx-auto">
- <div class='w-fit bg-gray-50 rounded-3xl p-2'>
-            <div class='bg-gray-50 rounded-2xl p-6 border-4 border-blue-mama'>
-<h1 class=" text-4xl font-bold leading-relaxed">Hello {{ user.username }}! <br>What would you like to cook today?</h1>
-</div>
-</div>
+    <form id="profileForm" method="post" enctype="multipart/form-data" class='w-fit bg-gray-50 rounded-3xl p-2'>
+        {% csrf_token %}
+        <div class='bg-gray-50 rounded-2xl p-6 border-4 border-blue-mama'>
+            <div class="flex flex-col md:flex-row gap-8 items-center">
+                <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-blue-mama relative">
+                    {% if profile.profile_picture %}
+                        <img id="profileImage" src="{{ profile.profile_picture.url }}" alt="{{ user.username }}'s picture" class="w-full h-full object-cover" />
+                    {% else %}
+                        <div id="profilePlaceholder" class="w-full h-full flex items-center justify-center text-3xl">🍽️</div>
+                        <img id="profileImage" src="" alt="profile image" class="hidden w-full h-full object-cover" />
+                    {% endif %}
+                        <input id="profileInput" name="profile_picture" type="file" accept="image/*" aria-label="Change profile picture" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                </div>
+
+                
+
+                <div class="flex-1">
+                    <h1 class=" text-4xl font-bold leading-relaxed">Hello {{ user.username }}, tell us more about yourself!</h1>
+                    <div class="mt-4 space-y-2">
+                        <c-form-field :field="uform.username" label="Username" />
+                        <c-form-field :field="pform.bio" label="Bio" />
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-2">
+                <c-button type="button" id="cancelBtn" variant="ghost">Cancel</c-button>
+                <c-button type="submit" variant="success">Save Changes</c-button>
+            </div>
+            </div>
+            
+        </div>
+    </form>
 </div>
 </div>
 {% endblock %}
@@ -69,4 +96,58 @@
 </section>
 
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const profileInput = document.getElementById('profileInput');
+    const profileImage = document.getElementById('profileImage');
+    const profilePlaceholder = document.getElementById('profilePlaceholder');
+    const cancelBtn = document.getElementById('cancelBtn');
+
+    const usernameInput = document.querySelector('input[name="username"]');
+    const bioTextarea = document.querySelector('textarea[name="bio"]');
+
+    const initial = {
+        username: usernameInput ? usernameInput.value : '',
+        bio: bioTextarea ? bioTextarea.value : '',
+        imageSrc: profileImage ? profileImage.src : null,
+        imageVisible: profileImage && !profileImage.classList.contains('hidden')
+    };
+
+    if (profileInput) {
+        profileInput.addEventListener('change', () => {
+            const file = profileInput.files && profileInput.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                if (profileImage) {
+                    profileImage.src = e.target.result;
+                    profileImage.classList.remove('hidden');
+                }
+                if (profilePlaceholder) profilePlaceholder.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            if (usernameInput) usernameInput.value = initial.username;
+            if (bioTextarea) bioTextarea.value = initial.bio;
+            if (profileInput) profileInput.value = '';
+            if (profileImage) {
+                if (initial.imageSrc) {
+                    profileImage.src = initial.imageSrc;
+                    profileImage.classList.remove('hidden');
+                } else {
+                    profileImage.classList.add('hidden');
+                }
+            }
+            if (profilePlaceholder) profilePlaceholder.style.display = initial.imageVisible ? 'none' : '';
+        });
+    }
+});
+</script>
 {% endblock %}

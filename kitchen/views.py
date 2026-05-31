@@ -11,7 +11,8 @@ from django.http import JsonResponse, FileResponse
 
 from .variables import UNIT_LIST_CHOICES, UNIT_CHOICES
 from .models import Recipe, RecipeIngredient, Ingredient, RecipeIngredient, UserProfile, ShoppingList, ShoppingListItem
-from .forms import RecipeForm
+from .forms import RecipeForm, UserForm, UserProfileForm
+from django.contrib import messages
 from functions.recipe_helpers import save_dynamic_fields, filter_recipes, save_list_items
 from functions.pdf import generate_list_pdf
 
@@ -60,8 +61,29 @@ def guided_mode(request, pk):
 @login_required
 def profile(request):
     user = request.user
+    profile_obj, _ = UserProfile.objects.get_or_create(user=user)
     recipes = Recipe.objects.filter(author=user)
-    return render(request, 'profile.html', {'recipes': recipes})
+
+    if request.method == 'POST':
+        uform = UserForm(request.POST, instance=user)
+        pform = UserProfileForm(request.POST, request.FILES, instance=profile_obj)
+        if uform.is_valid() and pform.is_valid():
+            uform.save()
+            pform.save()
+            messages.success(request, 'Profile updated successfully.')
+            return redirect('Kitchen:profile')
+        else:
+            messages.error(request, 'There were errors saving your profile.')
+    else:
+        uform = UserForm(instance=user)
+        pform = UserProfileForm(instance=profile_obj)
+
+    return render(request, 'profile.html', {
+        'recipes': recipes,
+        'uform': uform,
+        'pform': pform,
+        'profile': profile_obj,
+    })
 
 # CRUD
 
