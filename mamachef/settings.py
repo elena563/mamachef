@@ -131,6 +131,8 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 # Tailwind CSS settings
 TAILWIND_APP_NAME = 'theme'
 
