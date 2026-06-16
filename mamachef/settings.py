@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['mamachef.alwaysdata.net']
 
+CSRF_TRUSTED_ORIGINS = ['https://mamachef.alwaysdata.net']
 
 # Application definition
 
