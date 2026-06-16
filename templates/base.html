@@ -1,4 +1,9 @@
-{% load static tailwind_tags django_browser_reload %}
+{% if debug %}
+    {% load static tailwind_tags django_browser_reload %}
+{% else %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+{% endif %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
