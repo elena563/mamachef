@@ -73,7 +73,7 @@
     {% else %}
         <div class="py-6 space-y-4">
             <p>You haven't added any recipes yet. Let's try creating one!</p>
-            <c-button href="{% url 'Kitchen:new_recipe' %}" variant="primary">Add New Recipe</c-button>
+            <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary">Add New Recipe</c-button>
         </div>
     {% endif %}
 </section>
@@ -89,7 +89,7 @@
 {% else %}
     <div class="py-6 space-y-4">
         <p>You haven't saved any recipes yet.</p>
-        <c-button href="{% url 'Kitchen:recipes' %}" variant="success">Let's explore!</c-button>
+        <c-button link="{% url 'Kitchen:recipes' %}" variant="success">Let's explore!</c-button>
     </div>
 {% endif %}
 

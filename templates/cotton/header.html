@@ -37,9 +37,10 @@
             <div class="hidden lg:flex ml-6 items-center gap-2">
                 {% if user.is_authenticated %}
                     <span class="text-gray-700 mr-4">Hi, {{ user.username }}!</span>
-                    <c-button link="{% url 'Kitchen:logout' %}" variant="success">
-                        Logout
-                    </c-button>
+                    <form method="post" action="{% url 'Kitchen:logout' %}" class="inline-block">
+                        {% csrf_token %}
+                        <c-button type="submit" variant="success">Logout</c-button>
+                    </form>
                 {% else %}
                     <c-button link="{% url 'Kitchen:login' %}" variant="success">
                         Login
@@ -96,9 +97,10 @@
                 <div class="px-4 py-2 text-center text-gray-700 ">
                     Hi, {{ user.username }}!
                 </div>
-                <c-button href="{% url 'Kitchen:logout' %}" variant="success">
-                    Logout
-                </c-button>
+                 <form method="post" action="{% url 'Kitchen:logout' %}" class="inline-block">
+                    {% csrf_token %}
+                    <c-button type="submit" variant="success">Logout</c-button>
+                </form>
             {% else %}
                 <c-button href="{% url 'Kitchen:login' %}" variant="success">
                     Login

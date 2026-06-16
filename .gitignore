@@ -18,7 +18,7 @@ db.sqlite3
 /staticfiles/
 
 # Tailwind CSS
-theme/static/
+#theme/static/
 node_modules/
 
 # IDE

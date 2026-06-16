@@ -113,45 +113,70 @@
 <script>
 const servingsBtn = document.getElementById('servings-btn');
 const servingsText = document.getElementById('servings');
-const servingsInput = document.getElementById('servings-input');
 const ingredientsList = document.getElementById('ingredients-list');
 
-servingsBtn.addEventListener('click',() => {
-  servingsText.classList.toggle('hidden');
-  servingsInput.classList.toggle('hidden');
-  if (servingsBtn.textContent === 'Change') {
-    servingsBtn.textContent = 'Apply';
-  } else if (servingsBtn.textContent === 'Apply'){
-    servingsBtn.textContent = 'Change';
-    const newServings = parseInt(servingsInput.value);
-    if (!isNaN(newServings) && newServings > 0) {
-      servingsText.textContent = newServings;
-      const originalServings = {{ recipe.servings }};
-      const ingredients = [
-        {% for qi in ingredients %}
-        {
-          id: {{ qi.id }},
-          quantity: {{ qi.quantity|default:"null" }},
-          unit: "{{ qi.unit }}",
-          name: "{{ qi.ingredient.name }}"
-        }{% if not forloop.last %},{% endif %}
-        {% endfor %}
-      ];
-      ingredients.forEach(ing => {
-        const ingredientEl = document.getElementById(`ingredient-${ing.id}`);
-        if (ingredientEl && ing.quantity) {
-          const newQuantity = (ing.quantity / originalServings) * newServings;
-          if (newQuantity % 1 === 0) {
-            ing.quantity = newQuantity.toFixed(0);
-          } else {
-            ing.quantity = newQuantity.toFixed(2);
-          }
-          ingredientEl.textContent = `${ing.quantity} ${ing.unit} ${ing.name}`;
-        }
-      });
+// find the servings input robustly: by id, by name, or any number input near the servings text
+function locateServingsInput() {
+  let el = document.getElementById('servings-input');
+  if (el) return el;
+  el = document.querySelector('input[name="servings"]');
+  if (el) return el;
+  // try inputs with id containing 'servings'
+  el = document.querySelector('input[id*="servings"]');
+  if (el) return el;
+  // fallback: any number input inside the same container
+  const container = servingsText ? servingsText.parentElement : document;
+  return container.querySelector('input[type="number"]');
+}
+
+let servingsInput = locateServingsInput();
+
+if (servingsBtn) {
+  servingsBtn.addEventListener('click', () => {
+    // re-locate in case component rendered differently
+    servingsInput = servingsInput || locateServingsInput();
+    if (servingsText) servingsText.classList.toggle('hidden');
+    if (servingsInput) {
+      servingsInput.classList.toggle('hidden');
     }
-  }
-})
+
+    if (servingsBtn.textContent.trim() === 'Change') {
+      servingsBtn.textContent = 'Apply';
+      return;
+    }
+
+    if (servingsBtn.textContent.trim() === 'Apply') {
+      servingsBtn.textContent = 'Change';
+      const newServings = servingsInput ? parseInt(servingsInput.value) : NaN;
+      if (!isNaN(newServings) && newServings > 0) {
+        servingsText.textContent = newServings;
+        const originalServings = {{ recipe.servings }};
+        const ingredients = [
+          {% for qi in ingredients %}
+          {
+            id: {{ qi.id }},
+            quantity: {{ qi.quantity|default:"null" }},
+            unit: "{{ qi.unit }}",
+            name: "{{ qi.ingredient.name }}"
+          }{% if not forloop.last %},{% endif %}
+          {% endfor %}
+        ];
+        ingredients.forEach(ing => {
+          const ingredientEl = document.getElementById(`ingredient-${ing.id}`);
+          if (ingredientEl && ing.quantity) {
+            const newQuantity = (ing.quantity / originalServings) * newServings;
+            if (newQuantity % 1 === 0) {
+              ing.quantity = newQuantity.toFixed(0);
+            } else {
+              ing.quantity = newQuantity.toFixed(2);
+            }
+            ingredientEl.textContent = `${ing.quantity} ${ing.unit} ${ing.name}`;
+          }
+        });
+      }
+    }
+  });
+}
 </script>
 
 <script>
@@ -160,17 +185,20 @@ servingsBtn.addEventListener('click',() => {
   const popup = document.getElementById('add-to-list-popup');
   const overlay = document.getElementById('popup-overlay');
 
-  openBtn.addEventListener('click', () => {
-    popup.classList.remove('hidden');
-    overlay.classList.remove('hidden');
-    document.body.classList.add('overflow-hidden');
-  });
-
-  closeBtn.addEventListener('click', () => {
-    popup.classList.add('hidden');
-    overlay.classList.add('hidden');
-    document.body.classList.remove('overflow-hidden');
-  });
+  if (openBtn) {
+    openBtn.addEventListener('click', () => {
+      popup.classList.remove('hidden');
+      overlay.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    });
+  }
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      popup.classList.add('hidden');
+      overlay.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    });
+  }
 
   popup.addEventListener('click', (e) => {
     if (e.target === popup) {
