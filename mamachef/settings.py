@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-6@if^@k$o-90rftzmbr8m^^d-x12=02c&8#%sy31qo+vinp=9r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mamachef.alwaysdata.net']
 
 
 # Application definition
