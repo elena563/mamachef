@@ -53,7 +53,7 @@
 
     <!-- Mobile menu -->
             <div class="lg:hidden flex items-center">
-                <button type="button" class="inline-flex items-center justify-center p-2 text-pink-mama hover:bg-pink-mama hover:text-white transition-colors" aria-controls="mobile-menu" aria-expanded="false" onclick="toggleMobileMenu()">
+                <button type="button" class="inline-flex items-center justify-center p-2 text-pink-mama hover:bg-pink-mama hover:text-white transition-colors" aria-controls="mobile-menu" aria-expanded="false">
                     <span class="sr-only">Open main menu</span>
                     <svg class="block h-8 w-8" id="menu-icon" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -63,13 +63,13 @@
         </nav>
     </div>
 
-    <div class="hidden lg:hidden fixed inset-0 z-50" id="mobile-menu-overlay" onclick="toggleMobileMenu()">
+    <div class="hidden lg:hidden fixed inset-0 z-50" id="mobile-menu-overlay">
         <div class="absolute inset-0 bg-black/20 backdrop-blur-sm"></div>
     </div>
 
     <div class="hidden lg:hidden fixed top-20 right-4 z-50 w-80 max-w-[calc(100vw-2rem)]" id="mobile-menu">
         <div class="bg-white rounded-3xl shadow-2xl shadow-pink-mama/50 border-4 border-pink-mama p-4 space-y-2 relative">
-            <button onclick="toggleMobileMenu()" class="absolute -top-6 -right-3 bg-pink-mama text-white rounded-full p-2 hover:bg-pink-mama/90 transition-colors shadow-lg border-3 border-white">
+            <button id="close-icon" class="absolute -top-6 -right-3 bg-pink-mama text-white rounded-full p-2 hover:bg-pink-mama/90 transition-colors shadow-lg border-3 border-white">
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -81,10 +81,10 @@
             <a href="/recipes/" class="block px-4 py-3 rounded-full text-center font-jua border-3 {% if request.path == '/recipes/' %}border-solid bg-pink-mama text-white{% else %}border-dashed border-pink-mama text-pink-mama hover:bg-pink-mama hover:text-white{% endif %} transition-colors">
                 Recipes
             </a>
-            <a href="#" class="block px-4 py-3 rounded-full text-center font-jua border-3 border-dotted border-pink-mama text-pink-mama hover:bg-pink-mama hover:text-white transition-colors">
+            {% if user.is_authenticated %}
+            <a href="/shopping-list/" class="block px-4 py-3 rounded-full text-center font-jua border-3 border-dotted border-pink-mama text-pink-mama hover:bg-pink-mama hover:text-white transition-colors">
                 Shopping List
             </a>
-            {% if user.is_authenticated %}
             <a href="/profile/" class="block px-4 py-3 rounded-full text-center font-jua border-3 {% if request.path == '/profile/' %}border-solid bg-pink-mama text-white{% else %}border-dashed border-pink-mama text-pink-mama hover:bg-pink-mama hover:text-white{% endif %} transition-colors">
                 Profile
             </a>
@@ -102,12 +102,14 @@
                     <c-button type="submit" variant="success">Logout</c-button>
                 </form>
             {% else %}
-                <c-button href="{% url 'Kitchen:login' %}" variant="success">
-                    Login
-                </c-button>
-                <c-button href="{% url 'Kitchen:register' %}" variant="primary">
-                    Sign up
-                </c-button>
+                <div class="flex items-center w-full gap-2">
+                    <c-button link="{% url 'Kitchen:login' %}" variant="success" class="flex-1">
+                        Login
+                    </c-button>
+                    <c-button link="{% url 'Kitchen:register' %}" variant="primary" class="flex-1">
+                        Sign up
+                    </c-button>
+                </div>
             {% endif %}
             </div>
         </div>
@@ -115,17 +117,26 @@
 </header>
 
 <script>
-function toggleMobileMenu() {
-    const menu = document.getElementById('mobile-menu');
-    const overlay = document.getElementById('mobile-menu-overlay');
-    const menuIcon = document.getElementById('menu-icon');
-    const closeIcon = document.getElementById('close-icon');
-    
-    menu.classList.toggle('hidden');
-    overlay.classList.toggle('hidden');
-    menuIcon.classList.toggle('hidden');
-    closeIcon.classList.toggle('hidden');
-    
-    document.body.classList.toggle('overflow-hidden');
-}
+   document.addEventListener('DOMContentLoaded', () => {
+        const menuIcon = document.getElementById('menu-icon');
+        const closeIcon = document.getElementById('close-icon');
+        const overlay = document.getElementById('mobile-menu-overlay');
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const overlay = document.getElementById('mobile-menu-overlay');
+            
+            if (menu && overlay) {
+                menu.classList.toggle('hidden');
+                overlay.classList.toggle('hidden');
+                document.body.classList.toggle('overflow-hidden');
+            } else {
+                console.error("Errore: Elemento menu o overlay non trovato nel DOM!");
+            }
+        }
+
+        if (menuIcon) menuIcon.addEventListener('click', toggleMobileMenu);
+        if (closeIcon) closeIcon.addEventListener('click', toggleMobileMenu);
+        if (overlay) overlay.addEventListener('click', toggleMobileMenu);
+    });
 </script>

@@ -60,7 +60,7 @@
     <div class="flex justify-between items-center my-6 gap-4">
         <h2 class="text-3xl font-semibold mb-2">Your Recipes</h2>
         {% if recipes %}
-        <c-button href="{% url 'Kitchen:new_recipe' %}" variant="primary">Add New Recipe</c-button>
+        <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary">Add New Recipe</c-button>
         {% endif %}
     </div>
     

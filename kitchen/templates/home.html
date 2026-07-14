@@ -10,7 +10,7 @@
             <div class='bg-gray-50 rounded-2xl p-6 border-4 border-dashed border-green-mama'>
                 <h1 class="text-4xl font-bold mb-4">Welcome to MamaChef!</h1>
                 <p class="text-xl mb-6">Discover, create, and share your favorite recipes</p>
-                <c-button variant="primary" size="lg">
+                <c-button variant="primary" size="lg" link="{% url 'Kitchen:recipes' %}">
                     Start Cooking!
                 </c-button>
             </div>
@@ -34,10 +34,16 @@
     <h2 class="text-3xl font-bold mb-4">Do you have a recipe to share?</h2>
     <p class="text-xl mb-6">Join our community of home chefs!</p>
     <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <c-button variant="primary">
-            Add Recipe
+        {% if user.is_authenticated %}
+        <c-button variant="primary" link="{% url 'Kitchen:new_recipe' %}">
+            Share a Recipe
         </c-button>
-        <c-button variant="secondary-y">
+        {% else %}
+        <c-button variant="primary" link="{% url 'Kitchen:login' %}">
+            Start Sharing
+        </c-button>
+        {% endif %}
+        <c-button variant="secondary-y" link="{% url 'Kitchen:recipes' %}">
             Explore Recipes
         </c-button>
     </div>

@@ -13,11 +13,9 @@
     <div class="flex justify-between gap-4 mb-6">
         <div class="flex gap-4">
             <c-button variant="success" type="submit">Save Changes</c-button>
-            <a href="{% url 'Kitchen:shopping_list' %}">
-                <c-button variant="ghost" type="button">
-                    Cancel
-                </c-button>
-            </a>
+            <c-button variant="ghost" type="button" link="{% url 'Kitchen:shopping_list' %}">
+                Cancel
+            </c-button>
         </div>
         <div class="flex gap-4">
             <c-button link="{% url 'Kitchen:export_pdf' %}" variant="green">Export PDF</c-button>

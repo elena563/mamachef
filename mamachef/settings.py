@@ -10,7 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6@if^@k$o-90rftzmbr8m^^d-x12=02c&8#%sy31qo+vinp=9r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = ['mamachef.alwaysdata.net']
+ALLOWED_HOSTS = ['mamachef.alwaysdata.net', 'localhost', '127.0.0.1']
 
 CSRF_TRUSTED_ORIGINS = ['https://mamachef.alwaysdata.net']
 

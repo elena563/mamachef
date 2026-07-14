@@ -176,11 +176,9 @@
             <c-button variant="primary" type="submit">
                 {% if object %}Update{% else %}Create Recipe{% endif %}
             </c-button>
-            <a href="{% url 'Kitchen:home' %}">
-                <c-button variant="ghost" type="button">
-                    Cancel
-                </c-button>
-            </a>
+            <c-button variant="ghost" type="button" link="{% url 'Kitchen:home' %}">
+                Cancel
+            </c-button>
         </div>
     </form>
 </div>
