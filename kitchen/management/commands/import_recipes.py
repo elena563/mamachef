@@ -27,22 +27,22 @@ class Command(BaseCommand):
 
                 meal = data["meals"][0]
 
-                print(meal['strMeal'], map_category(meal['strCategory']), meal['strMealThumb'])
-                '''
+                #print(meal['strMeal'], map_category(meal['strCategory']), meal['strMealThumb'])
+                
                 recipe = Recipe.objects.create(
                     name=meal['strMeal'],
                     category=map_category(meal['strCategory']),
                     servings=4,
                     image_url=meal['strMealThumb'],
-                    )'''
+                    )
                 
                 ingredients = get_ingredients(meal)
                 for ingredient_name, ingredient_measure in ingredients:
                     #print(f"Ingredient: {ingredient_name}, Measure: {ingredient_measure}")
 
                     quantity, unit, note = parse_measure(ingredient_measure)
-                    print(f"Ingredient: {ingredient_name}, Quantity: {quantity}, Unit: {unit}, Note: {note}")
-                    '''
+                    #print(f"Ingredient: {ingredient_name}, Quantity: {quantity}, Unit: {unit}, Note: {note}")
+                    
                     ingredient, created = Ingredient.objects.get_or_create(name=ingredient_name)
                     RecipeIngredient.objects.create(
                         recipe=recipe,
@@ -50,11 +50,17 @@ class Command(BaseCommand):
                         quantity=quantity,
                         unit=unit,
                     )
-                '''
+                
                 
                 instructions = meal['strInstructions']
 
                 clean_steps = parse_steps(instructions)
+                for step_number, step_text in enumerate(clean_steps, start=1):
+                    Step.objects.create(
+                        recipe=recipe,
+                        description=step_text,
+                        order=step_number,
+                    )
                 
                 #print(f"Recipe: {meal['strMeal']}, Steps: {len(clean_steps) if clean_steps else 0}")
-                print(f"Steps: {clean_steps if clean_steps else 0}")
+                #print(f"Steps: {clean_steps if clean_steps else 0}")

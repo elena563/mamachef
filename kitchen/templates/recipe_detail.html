@@ -91,7 +91,7 @@
 </div>
 
 {% endif %}
-<div class="hidden h-full w-full absolute inset-0 bg-black/20" id="popup-overlay"></div>
+<div class="hidden h-full w-full fixed inset-0 bg-black/20" id="popup-overlay"></div>
 <div id="add-to-list-popup" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
     <form method="POST" action="{% url 'Kitchen:add_to_list' %}">
       {% csrf_token %}
