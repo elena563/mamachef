@@ -75,8 +75,9 @@
   .scallop-down{
     height:50px;
     width:100%;
-    background: -webkit-gradient(radial, 50% 0, 10, 50% 0, 40, from(#D6EEFE), color-stop(0.49, #D6EEFE), color-stop(0.51, #F9FAFB), to(#F9FAFB));
-    -webkit-background-size: 49px 100%;
+    background-image: radial-gradient(circle at 50% 0, #D6EEFE 49%, #F9FAFB 51%);
+    background-size: 50px 100%; 
+    background-repeat: repeat-x;
   }
 
   @keyframes slide-in {
