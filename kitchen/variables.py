@@ -29,3 +29,15 @@ UNIT_LIST_CHOICES = [
     ('ml', 'milliliters'),
     ('l', 'liters'),
 ]
+
+RECIPE_CATEGORY_CHOICES = [
+    ('Meat', 'Meat'),
+    ('Fish', 'Fish'),
+    ('Vegetarian', 'Vegetarian'),
+    ('Vegan', 'Vegan'),
+    ('Dessert', 'Dessert'),
+    ('Side', 'Side'),
+    ('Starter', 'Starter'),
+    ('Pasta', 'Pasta'),
+    ('Breakfast', 'Breakfast'),
+]

@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from .variables import DIFFICULTY_CHOICES, COOKING_METHOD_CHOICES, UNIT_CHOICES, UNIT_LIST_CHOICES
+from .variables import DIFFICULTY_CHOICES, COOKING_METHOD_CHOICES, UNIT_CHOICES, UNIT_LIST_CHOICES, RECIPE_CATEGORY_CHOICES
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', help_text='The user that this profile belongs to')
@@ -19,8 +19,10 @@ class Recipe(models.Model):
     difficulty = models.CharField(max_length=50, choices=DIFFICULTY_CHOICES, null=True, blank=True, verbose_name='Difficulty Level', help_text='The difficulty level of the recipe (e.g., Easy, Medium, Hard)')
     preparation_time = models.IntegerField(null=True, blank=True, verbose_name='Preparation Time (minutes)', help_text='The time required to prepare the recipe in minutes')
     servings = models.IntegerField(null=True, blank=True, verbose_name='Servings', help_text='The number of servings the recipe makes')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipes', help_text='The user who created the recipe')
+    author = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='recipes', help_text='The user who created the recipe')
     cooking_method = models.CharField(max_length=50, choices=COOKING_METHOD_CHOICES, null=True, blank=True, verbose_name='Cooking Method', help_text='The cooking method used for the recipe (e.g., Baked, Stovetop, Microwaved, No Cook)')
+    category = models.CharField(max_length=50, choices=RECIPE_CATEGORY_CHOICES, null=True, blank=True, verbose_name='Category', help_text='The category of the recipe (e.g., Beef, Chicken, Dessert)')
+    image_url = models.URLField(null=True, blank=True, verbose_name='Image URL', help_text='A URL to an image of the finished dish (optional)')
 
     def __str__(self):
         return self.name
