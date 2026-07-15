@@ -1,5 +1,4 @@
 import requests
-import re
 from django.core.management.base import BaseCommand
 from kitchen.models import Recipe, Ingredient, RecipeIngredient, Step
 from functions.recipe_parsing import get_ingredients, parse_measure, map_category
