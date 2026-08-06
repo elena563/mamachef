@@ -71,17 +71,24 @@ def find_similar_ingredients(name, threshold=0.85):
 
 
 def get_or_validate_ingredient(name):
+    print(f"Validating ingredient: {name}")
     name_clean = name.strip()
+    print(f"Cleaned name: {name_clean}")
 
     countable = is_countable(name_clean)
     if countable:
-        pluralized = _inflect.plural_noun(name_clean)
-        if pluralized:
-            name_clean = pluralized
+        singular_form = _inflect.singular_noun(name_clean)
+        
+        if not singular_form:
+            pluralized = _inflect.plural_noun(name_clean)
+            if pluralized:
+                name_clean = pluralized
 
     target_name = name_clean.title()
+    print(f"Target name for search: {target_name}")
 
     # get if exists
+    print(f"Searching for ingredient: {target_name}")
     existing = Ingredient.objects.filter(name__iexact=target_name).first()
     if existing:
         return existing, None  

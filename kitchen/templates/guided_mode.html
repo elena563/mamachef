@@ -6,7 +6,7 @@
 <style>
     body { 
         overflow: hidden; 
-        height: 100vh;
+        height: 100dvh;
         margin: 0;
         padding: 0;
         display: flex;
@@ -23,14 +23,14 @@
 {% endblock %}
 
 {% block header %}
-<div class="w-full bg-medium-pink mb-8 border-b-4 border-pink-mama border-dashed">
-    <div class='max-w-7xl mx-auto grid grid-cols-3 items-center flex-shrink-0 p-6'>
+<div class="w-full bg-medium-pink mb-4 border-b-4 border-pink-mama border-dashed">
+    <div class='max-w-7xl mx-auto grid grid-rows-2 md:grid-cols-3 md:grid-rows-1 items-center flex-shrink-0 p-4 md:p-6'>
         <div class="justify-self-start">
             <c-button link="{% url 'Kitchen:recipe_detail' recipe.id %}" variant="ghost" size="sm">
                 ← Back to Recipe
             </c-button>
         </div>
-        <h1 class="text-3xl font-bold text-center">{{ recipe.name }}</h1>
+        <h1 class="text-2xl md:text-3xl font-bold text-center">{{ recipe.name }}</h1>
         <div></div>
     </div>
 </div>
@@ -38,18 +38,26 @@
 {% block footer %}{% endblock %}
 
 {% block content %}
-<div class="max-w-7xl h-full mx-auto px-4 flex flex-col gap-4 box-border">
+<div class="max-w-7xl h-full mx-auto md:px-4 flex flex-col gap-4 box-border">
     
 
-    <div id="guided-container" class="flex gap-6 items-center flex-1 min-h-0">
-        <div class="w-[70%] flex flex-col justify-between">
-            <h3 id="step-title" class="font-semibold text-2xl text-pink-mama-dark py-4"></h3>
+    <div id="guided-container" class="flex flex-col md:flex-row gap-6 items-center flex-1 min-h-0">
+        <div class="md:w-[70%] flex flex-col justify-between self-start">
+            <h3 id="step-title" class="font-semibold text-xl md:text-2xl text-pink-mama-dark"></h3>
             <div class="flex items-center gap-4" id="used-ingredients-cont">
             </div>
-            <h2 id="step-description" class="text-4xl py-8"></h2>
+            <h2 id="step-description" class="text-[clamp(1.5rem,3.5vh,2.5rem)] md:text-3xl py-6"></h2>
             
-            <div id="step-timer" class="flex flex-col items-center gap-4 mt-4 p-6 bg-yellow-mama rounded-[60px] w-fit hidden">
+            <!--<div id="step-timer" class="flex flex-col items-center gap-4 mt-4 p-6 bg-yellow-mama rounded-[60px] w-fit hidden">
                 <span class="font-semibold w-full text-center bg-light-yellow px-6 py-3 mx-2 rounded-full text-navy-mama text-4xl font-jua" id="timer-value"></span>
+                <div class="inline-flex items-center gap-2 mx-2">
+                    <c-button id="start-timer" variant="primary" size="sm">▶︎</c-button> 
+                    <c-button id="pause-timer" variant="primary" size="sm">||</c-button>  
+                    <c-button id="reset-timer" variant="success" size="sm">↻</c-button>  
+                </div> 
+            </div>-->
+            <div id="step-timer" class="flex flex-row items-center mb-4 p-3 bg-yellow-mama rounded-[40px] w-fit hidden">
+                <span class="font-semibold w-[100px] text-center bg-light-yellow px-4 py-2 mx-2 rounded-full text-navy-mama text-2xl font-jua" id="timer-value"></span>
                 <div class="inline-flex items-center gap-2 mx-2">
                     <c-button id="start-timer" variant="primary" size="sm">▶︎</c-button> 
                     <c-button id="pause-timer" variant="primary" size="sm">||</c-button>  
@@ -58,7 +66,7 @@
             </div>
         </div>        
 
-        <div id='next-step-cont' class="w-[30%] self-end rounded-2xl p-2 bg-medium-pink">
+        <div id='next-step-cont' class="hidden md:block md:w-[30%] self-end rounded-2xl p-2 bg-medium-pink">
             <div class="border-4 border-dotted border-pink-mama rounded-xl p-6 bg-medium-pink">
                 <div class="flex justify-between items-center mb-4">
                     <span id="next-step-desc" class="font-semibold text-lg"></span>

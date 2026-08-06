@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto px-4 py-8">
+<div class="max-w-3xl mx-auto md:px-4 py-8">
 
     <c-messages-box></c-messages-box>
     <form method="post" class="bg-white rounded-lg p-6">
@@ -32,12 +32,12 @@
         
         <c-form-field :field="form.name" />
         <c-form-field :field="form.description" />
-        <div class="flex gap-4 items-start [&>*]:flex-1">
+        <div class="flex flex-col md:flex-row gap-4 items-start [&>*]:flex-1">
             <c-form-field :field="form.difficulty" />
             <c-form-field :field="form.cooking_method" />
         </div>
 
-        <div class="flex gap-4 [&>*]:flex-1">
+        <div class="flex flex-col md:flex-row gap-4 [&>*]:flex-1">
             <c-form-field :field="form.preparation_time" />
             <c-form-field :field="form.servings" />
         </div>
@@ -173,10 +173,10 @@
         <c-button class='add-step-btn' type="button" variant="ghost">+</c-button>
         
         <div class="flex gap-4 mt-6">
-            <c-button variant="primary" type="submit">
+            <c-button variant="primary" type="submit" class='flex-1 sm:flex-none'>
                 {% if object %}Update{% else %}Create Recipe{% endif %}
             </c-button>
-            <c-button variant="ghost" type="button" link="{% url 'Kitchen:home' %}">
+            <c-button variant="ghost" type="button" link="{% url 'Kitchen:home' %}" class='flex-1 sm:flex-none'>
                 Cancel
             </c-button>
         </div>
