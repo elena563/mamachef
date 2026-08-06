@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.functions import Lower
 
 from .variables import DIFFICULTY_CHOICES, COOKING_METHOD_CHOICES, UNIT_CHOICES, UNIT_LIST_CHOICES, RECIPE_CATEGORY_CHOICES
 
@@ -35,6 +36,14 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                Lower('name'),
+                name='unique_lower_ingredient_name'
+            )
+        ]
     
 class RecipeIngredient(models.Model):
     id = models.AutoField(primary_key=True)
