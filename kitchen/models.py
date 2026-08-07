@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.functions import Lower
+from django.core.validators import validate_image_file_extension
 
 from .variables import DIFFICULTY_CHOICES, COOKING_METHOD_CHOICES, UNIT_CHOICES, UNIT_LIST_CHOICES, RECIPE_CATEGORY_CHOICES
 
@@ -23,7 +24,14 @@ class Recipe(models.Model):
     author = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='recipes', help_text='The user who created the recipe')
     cooking_method = models.CharField(max_length=50, choices=COOKING_METHOD_CHOICES, null=True, blank=True, verbose_name='Cooking Method', help_text='The cooking method used for the recipe (e.g., Baked, Stovetop, Microwaved, No Cook)')
     category = models.CharField(max_length=50, choices=RECIPE_CATEGORY_CHOICES, null=True, blank=True, verbose_name='Category', help_text='The category of the recipe (e.g., Beef, Chicken, Dessert)')
+    image_asset = models.ImageField(upload_to='dishes/', null=True, blank=True, validators=[validate_image_file_extension])
     image_url = models.URLField(null=True, blank=True, verbose_name='Image URL', help_text='A URL to an image of the finished dish (optional)')
+
+    @property
+    def image(self):
+        if self.image_asset:
+            return self.image_asset.url
+        return self.image_url or None
 
     def __str__(self):
         return self.name

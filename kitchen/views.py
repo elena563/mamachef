@@ -105,6 +105,11 @@ class RecipeFormView:
     form_class = RecipeForm
     template_name = 'recipe_form.html'
 
+    def form_invalid(self, form):
+        for error in form.non_field_errors():
+            messages.error(self.request, error)
+        return super().form_invalid(form)
+
     def get_success_url(self):
         return reverse_lazy('Kitchen:recipe_detail', kwargs={'pk': self.object.pk})
     
@@ -121,6 +126,13 @@ class RecipeFormView:
             context['steps'] = steps_with_used
         else:
             context['steps'] = []
+
+        if self.object and self.object.image_asset:
+            context['image_asset_url'] = self.object.image_asset.url
+        elif self.object and self.object.image_url:
+            context['image_asset_url'] = self.object.image_url
+        else:
+            context['image_asset_url'] = ''
         
         return context
 

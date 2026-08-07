@@ -30,6 +30,10 @@
             {% endif %}
         </h1>
         
+        <div class="flex flex-col gap-4 mb-4">
+            <c-form-field :field="form.image_asset" :current_url="image_asset_url" />
+            <c-form-field :field="form.image_url" />
+        </div>
         <c-form-field :field="form.name" />
         <c-form-field :field="form.description" />
         <div class="flex flex-col md:flex-row gap-4 items-start [&>*]:flex-1">
