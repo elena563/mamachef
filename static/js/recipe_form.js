@@ -37,18 +37,16 @@ function initializeForm() {
     const form = document.querySelector('form');
     if (form) {
         form.addEventListener('submit', (e) => {
-            // Update all hidden fields
-            document.querySelectorAll('.step-wrapper').forEach((wrapper) => {
-                const hiddenInput = wrapper.querySelector('.used-ingredients-hidden');
-                const checkedBoxes = wrapper.querySelectorAll('input[type="checkbox"]:checked');
+            // Assign each step a per-index used_ingredients field and refresh
+            // its value from the checked checkboxes before submitting.
+            document.querySelectorAll('#steps-container > .step-wrapper').forEach((div, index) => {
+                const hiddenInput = div.querySelector('.used-ingredients-hidden');
+                const checkedBoxes = div.querySelectorAll('input[type="checkbox"]:checked');
                 const ingredients = Array.from(checkedBoxes).map(cb => cb.value).filter(v => v);
                 if (hiddenInput) {
                     hiddenInput.value = ingredients.join(',');
+                    hiddenInput.name = `used_ingredients_${index}`;
                 }
-            });
-            
-            const stepDivs = document.querySelectorAll('#steps-container > .step-wrapper');
-            stepDivs.forEach((div, index) => {
                 const orderInput = div.querySelector('input[name="order"]');
                 if (orderInput) {
                     orderInput.value = index;

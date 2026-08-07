@@ -59,21 +59,19 @@ def is_countable(name):
 
 def find_similar_ingredients(name, threshold=0.85):
     """avoid duplicates and typos by finding similar existing ingredients"""
-    first_letter = name[0] if name else ''  # reduce comparisons
+    first_letter = name[0].lower() if name else ''  # reduce comparisons
     candidates = Ingredient.objects.filter(name__istartswith=first_letter)
 
     similar = []
     for ing in candidates:
-        ratio = SequenceMatcher(None, name, ing.name).ratio()
+        ratio = SequenceMatcher(None, name.lower(), ing.name.lower()).ratio()
         if ratio > threshold:
             similar.append((ing, ratio))
     return sorted(similar, key=lambda x: x[1], reverse=True)
 
 
 def get_or_validate_ingredient(name):
-    print(f"Validating ingredient: {name}")
     name_clean = name.strip()
-    print(f"Cleaned name: {name_clean}")
 
     countable = is_countable(name_clean)
     if countable:
@@ -85,10 +83,8 @@ def get_or_validate_ingredient(name):
                 name_clean = pluralized
 
     target_name = name_clean.title()
-    print(f"Target name for search: {target_name}")
 
     # get if exists
-    print(f"Searching for ingredient: {target_name}")
     existing = Ingredient.objects.filter(name__iexact=target_name).first()
     if existing:
         return existing, None  
