@@ -12,6 +12,7 @@
     id=''
     current_url=""
     rounded="False"
+    password_toggle="False"
 />
 
 {% if name %}
@@ -156,14 +157,30 @@
                     <p class="text-gray-500 text-sm mt-2">Click to change</p>
                 </div>
             {% else %}
-                <input 
-                    type="{{ field.field.widget.input_type|default:'text' }}" 
-                    name="{{ field.name }}" 
-                    id="{{ field.id_for_label }}"
-                    value="{{ field.value|default:'' }}"
-                    class="{{ class }} w-full px-3 py-2 bg-gray-50 border-3 border-blue-mama rounded-md focus:outline-none focus:ring-3 focus:ring-blue-mama focus:border-transparent"
-                    {% if field.field.required %}required{% endif %}
-                />
+                 {% if field.field.widget.input_type == 'password' %}
+                <div class="relative">
+                    <input
+                        type="password"
+                        name="{{ field.name }}"
+                        id="{{ field.id_for_label }}"
+                        value="{{ field.value|default:'' }}"
+                        class="{{ class }} w-full px-3 py-2 pr-10 bg-gray-50 border-3 border-blue-mama rounded-md focus:outline-none focus:ring-3 focus:ring-blue-mama focus:border-transparent"
+                        {% if field.field.required %}required{% endif %}
+                    />
+                    <button type="button" class="password-toggle absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+                {% else %}
+                    <input
+                        type="{{ field.field.widget.input_type|default:'text' }}"
+                        name="{{ field.name }}"
+                        id="{{ field.id_for_label }}"
+                        value="{{ field.value|default:'' }}"
+                        class="{{ class }} w-full px-3 py-2 bg-gray-50 border-3 border-blue-mama rounded-md focus:outline-none focus:ring-3 focus:ring-blue-mama focus:border-transparent"
+                        {% if field.field.required %}required{% endif %}
+                    />
+                {% endif %}
             {% endif %}
         {% endwith %}
         
