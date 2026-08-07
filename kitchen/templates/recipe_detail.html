@@ -5,7 +5,11 @@
 <div class="max-w-3xl mx-auto mt-6 md:mt-10 px-4">
 
     <c-button link="{% url 'Kitchen:recipes' %}" variant="secondary" size="sm" class="mb-6">← Back to Recipes</c-button>
-
+  {% if recipe.category %}
+      <span class="text-md font-medium text-pink-mama-dark opacity-50 block mb-2">
+          {{ recipe.category | upper }}
+      </span>
+  {% endif %}
   <h1 class="text-3xl font-bold mb-2">{{ recipe.name }}</h1>
 
   {% if user.is_authenticated and user == recipe.author %}
@@ -36,11 +40,13 @@
       <c-button class="!hidden sm:!inline-flex add-to-list-btn" variant="green">Add to Shopping List</c-button>
     {% endif %}
   </div>
+  {% if servings %}
   <div class="flex items-center gap-2 mb-4">
     <p class="text-gray-700">Servings: <span id="servings">{{ recipe.servings }}</span></p>
     <c-form-field id="servings-input" class="hidden" type="number" name="servings" value="{{ recipe.servings }}"/>
     <c-button id="servings-btn" size="sm">Change</c-button>
   </div>
+  {% endif %}
   <ul id="ingredients-list" class="list-disc pl-5 space-y-1">
     {% for qi in ingredients %}
       <li id="ingredient-{{ qi.id }}">

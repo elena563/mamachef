@@ -106,7 +106,7 @@ def save_list_items(request, shop_list):
     
     return not has_errors
 
-def filter_recipes(recipes, search_query=None, ingredients=None, difficulty=None, preparation_time=None, cooking_method=None):
+def filter_recipes(recipes, search_query=None, ingredients=None, difficulty=None, preparation_time=None, cooking_method=None, category=None):
     if search_query:
         recipes = recipes.filter(
             Q(name__icontains=search_query) |
@@ -123,6 +123,9 @@ def filter_recipes(recipes, search_query=None, ingredients=None, difficulty=None
 
     if cooking_method:
         recipes = recipes.filter(cooking_method__in=cooking_method)
+
+    if category:
+        recipes = recipes.filter(category__in=category)
 
     if preparation_time and preparation_time != 'All preparation times':
         if preparation_time == 'less than 30 minutes':

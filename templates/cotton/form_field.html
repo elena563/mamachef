@@ -142,7 +142,7 @@
                         class="hidden"
                         {% if field.field.required %}required{% endif %}
                     />
-                    <div class="w-48 h-48 overflow-hidden border-4 border-blue-mama relative cursor-pointer"
+                    <div class="w-48 h-48 {% if rounded == "True" %}rounded-full{% endif %} overflow-hidden border-4 border-blue-mama relative cursor-pointer"
                         onclick="document.getElementById('{{ field.id_for_label }}').click()">
                         <img id="{{ field.id_for_label }}_preview"
                             src="{{ current_url|default:'' }}"

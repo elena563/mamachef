@@ -8,7 +8,7 @@ from functions.image_helpers import compress_image
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
-        fields = ['image_asset', 'image_url', 'name', 'description', 'difficulty', 'cooking_method','preparation_time', 'servings']
+        fields = ['image_asset', 'image_url', 'name', 'description', 'difficulty', 'cooking_method','preparation_time', 'servings', 'category']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4}),
         }
@@ -21,6 +21,7 @@ class RecipeForm(forms.ModelForm):
             'cooking_method': 'Cooking Method',
             'preparation_time': 'Preparation Time (minutes)',
             'servings': 'Servings',
+            'category': 'Category',
         }
         help_texts = {
             'preparation_time': 'Enter the time in minutes',

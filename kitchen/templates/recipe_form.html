@@ -31,20 +31,21 @@
         </h1>
         
         <div class="flex flex-col gap-4 mb-4">
-            <c-form-field :field="form.image_asset" :current_url="image_asset_url" />
-            <c-form-field :field="form.image_url" />
+            <c-form-field :field="form.image_asset" :current_url="image_asset_url" label="Image" />
+            <c-form-field :field="form.image_url" label="Image URL" />
         </div>
-        <c-form-field :field="form.name" />
-        <c-form-field :field="form.description" />
+        <c-form-field :field="form.name" label="Recipe Name" />
+        <c-form-field :field="form.description" label="Description" />
         <div class="flex flex-col md:flex-row gap-4 items-start [&>*]:flex-1">
-            <c-form-field :field="form.difficulty" />
-            <c-form-field :field="form.cooking_method" />
+            <c-form-field :field="form.difficulty" label="Difficulty" />
+            <c-form-field :field="form.cooking_method" label="Cooking Method" />
         </div>
 
         <div class="flex flex-col md:flex-row gap-4 [&>*]:flex-1">
-            <c-form-field :field="form.preparation_time" />
-            <c-form-field :field="form.servings" />
+            <c-form-field :field="form.preparation_time" label="Preparation Time" />
+            <c-form-field :field="form.servings" label="Servings" />
         </div>
+        <c-form-field :field="form.category" label="Category" />
 
         <hr class="my-6 border-dashed border-2 border-navy-mama">
 

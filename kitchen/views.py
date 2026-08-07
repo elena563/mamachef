@@ -31,12 +31,14 @@ def recipes(request):
     difficulty = [d for d in request.GET.getlist('difficulty') if d != 'All difficulties']
     preparation_time = request.GET.get('preparation_time')
     cooking_method = [c for c in request.GET.getlist('cooking_method') if c != 'All cooking methods']
+    category = [c for c in request.GET.getlist('category') if c != 'All categories']
     
-    recipes = filter_recipes(recipes, search_query, ingredients, difficulty, preparation_time, cooking_method)
+    recipes = filter_recipes(recipes, search_query, ingredients, difficulty, preparation_time, cooking_method, category)
 
     difficulty_levels = ['All difficulties'] + list(Recipe.objects.values_list('difficulty', flat=True).distinct())
     cooking_method_choices = ['All cooking methods'] + list(Recipe.objects.values_list('cooking_method', flat=True).distinct())
     preparation_time_ranges = ['All preparation times', 'less than 30 minutes', '30-60 minutes', 'more than 60 minutes']
+    category_choices = ['All categories'] + list(Recipe.objects.values_list('category', flat=True).distinct())
 
     
     return render(request, 'recipes.html', {
@@ -44,7 +46,12 @@ def recipes(request):
         'search_query': search_query,
         'difficulty_levels': difficulty_levels,
         'cooking_method_choices': cooking_method_choices,
-        'preparation_time_ranges': preparation_time_ranges
+        'preparation_time_ranges': preparation_time_ranges,
+        'category_choices': category_choices,
+        'selected_difficulty': request.GET.get('difficulty', 'All difficulties'),
+        'selected_cooking_method': request.GET.get('cooking_method', 'All cooking methods'),
+        'selected_preparation_time': request.GET.get('preparation_time', 'All preparation times'),
+        'selected_category': request.GET.get('category', 'All categories'),
     })
 
 def recipe_detail(request, pk):

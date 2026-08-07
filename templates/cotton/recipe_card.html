@@ -9,6 +9,11 @@
     
     <div class="p-3 flex flex-grow flex-col justify-between">
         <div>
+            {% if recipe.category %}
+                <span class="text-sm font-medium text-pink-mama-dark opacity-60">
+                    {{ recipe.category|upper }}
+                </span>
+            {% endif %}
             <h3 class="text-2xl font-semibold my-2">{{ recipe.name }}</h3>
             
             {% if recipe.description %}
