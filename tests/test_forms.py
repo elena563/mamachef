@@ -1,8 +1,15 @@
-from django.test import TestCase, RequestFactory
+import os
+import tempfile
+from io import BytesIO
+from PIL import Image
+
+from django.test import TestCase, RequestFactory, override_settings
 from django.contrib.messages.storage.fallback import FallbackStorage
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from functions.recipe_helpers import save_dynamic_fields
 from kitchen.models import Recipe, Ingredient, RecipeIngredient
+from kitchen.forms import RecipeForm
 
 
 class SaveDynamicFieldsTest(TestCase):
@@ -68,3 +75,32 @@ class SaveDynamicFieldsTest(TestCase):
 
         self.assertEqual(RecipeIngredient.objects.filter(recipe=self.recipe).count(), 0)
         self.assertEqual(self.recipe.steps.count(), 0)
+
+
+class RecipeImageCompressionTest(TestCase):
+    def _make_image(self):
+        buffer = BytesIO()
+        Image.new('RGB', (400, 400), 'red').save(buffer, 'PNG')
+        buffer.seek(0)
+        return buffer
+
+    def test_upload_compresses_to_webp(self):
+        upload = SimpleUploadedFile('dish.png', self._make_image().read(), content_type='image/png')
+        form = RecipeForm(data={'name': 'Test'}, files={'image_asset': upload})
+        self.assertTrue(form.is_valid(), form.errors)
+
+        recipe = form.save()
+        self.assertTrue(recipe.image_asset.name.endswith('.webp'))
+        recipe.image_asset.open()
+        self.assertEqual(Image.open(recipe.image_asset).format, 'WEBP')
+
+    def test_replacing_image_deletes_old_file(self):
+        with tempfile.TemporaryDirectory() as media, override_settings(MEDIA_ROOT=media):
+            first = RecipeForm(data={'name': 'First'}, files={'image_asset': SimpleUploadedFile('a.png', self._make_image().read(), content_type='image/png')})
+            recipe = first.save()
+            old_path = recipe.image_asset.path
+            self.assertTrue(os.path.exists(old_path))
+
+            second = RecipeForm(data={'name': 'First'}, files={'image_asset': SimpleUploadedFile('b.png', self._make_image().read(), content_type='image/png')}, instance=recipe)
+            second.save()
+            self.assertFalse(os.path.exists(old_path))
