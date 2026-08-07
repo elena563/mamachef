@@ -19,7 +19,7 @@
 <div class="max-w-3xl mx-auto md:px-4 py-8">
 
     <c-messages-box></c-messages-box>
-    <form method="post" class="bg-white rounded-lg p-6">
+    <form method="post"  enctype="multipart/form-data" class="bg-white rounded-lg p-6">
         {% csrf_token %}
 
         <h1 class="text-3xl font-bold mb-6 mt-2">
