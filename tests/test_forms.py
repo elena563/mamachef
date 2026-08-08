@@ -11,6 +11,77 @@ from functions.recipe_helpers import save_dynamic_fields
 from kitchen.models import Recipe, Ingredient, RecipeIngredient
 from kitchen.forms import RecipeForm
 
+from tests.helpers import ImageMixin
+
+class RecipeFormTest(TestCase, ImageMixin):
+
+    def valid_data(self):
+        return {
+            'name': 'Test Recipe',
+            'description': 'This is a test recipe.',
+            'difficulty': 'Easy',
+            'preparation_time': 30,
+            'servings': 4,
+            'cooking_method': 'Baked',
+            'category': 'Dessert',
+        }
+    
+    def test_recipe_form_valid(self):
+        form = RecipeForm(data=self.valid_data())
+        self.assertTrue(form.is_valid())
+        recipe = form.save()
+        self.assertEqual(Recipe.objects.count(), 1)
+        self.assertEqual(recipe.name, 'Test Recipe')
+
+    def test_update_recipe(self):
+        recipe = Recipe.objects.create(name='Old Name')
+        data = self.valid_data()
+        data['name'] = 'New Name'
+        form = RecipeForm(data=data, instance=recipe)
+        self.assertTrue(form.is_valid(), form.errors)
+        form.save()
+        recipe.refresh_from_db()
+        self.assertEqual(recipe.name, 'New Name')
+
+    def test_recipe_form_required_fields(self):
+        form_data = {
+            'name': '',
+            'description': 'This is a test recipe.',
+            'difficulty': 'Easy',
+            'preparation_time': 30,
+            'servings': 4,
+            'cooking_method': 'Baked',
+            'category': 'Dessert',
+        }
+        form = RecipeForm(data=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('name', form.errors)
+
+    def test_recipe_form_validation_errors(self):
+        form_data = {
+            'name': 'A' * 256,  # Exceeds max_length
+            'description': 'This is a test recipe.',
+            'difficulty': 'InvalidChoice',  # Not in choices
+            'preparation_time': -5,  # Invalid negative value
+            'servings': 0,  # Invalid value less than min
+            'cooking_method': 'Baked',
+            'category': 'Dessert',
+        }
+        form = RecipeForm(data=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('name', form.errors)
+        self.assertIn('difficulty', form.errors)
+        self.assertIn('preparation_time', form.errors)
+        self.assertIn('servings', form.errors)
+
+    def test_image_asset_and_url_not_both(self):
+        data = self.valid_data()
+        data['image_url'] = 'https://example.com/x.jpg'
+        upload = self.make_upload(name='dish.png')
+        form = RecipeForm(data=data, files={'image_asset': upload})
+        self.assertFalse(form.is_valid())
+        self.assertIn('__all__', form.errors)
+        
 
 class SaveDynamicFieldsTest(TestCase):
     def setUp(self):
@@ -77,15 +148,10 @@ class SaveDynamicFieldsTest(TestCase):
         self.assertEqual(self.recipe.steps.count(), 0)
 
 
-class RecipeImageCompressionTest(TestCase):
-    def _make_image(self):
-        buffer = BytesIO()
-        Image.new('RGB', (400, 400), 'red').save(buffer, 'PNG')
-        buffer.seek(0)
-        return buffer
+class RecipeImageCompressionTest(TestCase, ImageMixin):
 
     def test_upload_compresses_to_webp(self):
-        upload = SimpleUploadedFile('dish.png', self._make_image().read(), content_type='image/png')
+        upload = self.make_upload(name='dish.png')
         form = RecipeForm(data={'name': 'Test'}, files={'image_asset': upload})
         self.assertTrue(form.is_valid(), form.errors)
 
@@ -96,11 +162,11 @@ class RecipeImageCompressionTest(TestCase):
 
     def test_replacing_image_deletes_old_file(self):
         with tempfile.TemporaryDirectory() as media, override_settings(MEDIA_ROOT=media):
-            first = RecipeForm(data={'name': 'First'}, files={'image_asset': SimpleUploadedFile('a.png', self._make_image().read(), content_type='image/png')})
+            first = RecipeForm(data={'name': 'First'}, files={'image_asset': self.make_upload(name='a.png')})
             recipe = first.save()
             old_path = recipe.image_asset.path
             self.assertTrue(os.path.exists(old_path))
 
-            second = RecipeForm(data={'name': 'First'}, files={'image_asset': SimpleUploadedFile('b.png', self._make_image().read(), content_type='image/png')}, instance=recipe)
+            second = RecipeForm(data={'name': 'First'}, files={'image_asset': self.make_upload(name='b.png')}, instance=recipe)
             second.save()
             self.assertFalse(os.path.exists(old_path))
