@@ -29,3 +29,5 @@ node_modules/
 #temporary
 bg/
 *.ipynb
+
+django-errors.log
