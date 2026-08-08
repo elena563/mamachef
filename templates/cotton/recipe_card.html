@@ -1,6 +1,6 @@
 <div class="flex flex-col bg-white p-3 rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-    {% if recipe.image_url %}
-        <img src="{{ recipe.image_url }}" alt="{{ recipe.name }}" class="w-full h-48 object-cover rounded-xl">
+    {% if recipe.image %}
+        <img src="{{ recipe.image }}" alt="{{ recipe.name }}" class="w-full h-48 object-cover rounded-xl">
     {% else %}
         <div class="w-full h-48 bg-light-pink flex items-center justify-center rounded-xl">
             <span class="text-6xl">🍽️</span>
@@ -9,6 +9,11 @@
     
     <div class="p-3 flex flex-grow flex-col justify-between">
         <div>
+            {% if recipe.category %}
+                <span class="text-sm font-medium text-pink-mama-dark opacity-60">
+                    {{ recipe.category|upper }}
+                </span>
+            {% endif %}
             <h3 class="text-2xl font-semibold my-2">{{ recipe.name }}</h3>
             
             {% if recipe.description %}

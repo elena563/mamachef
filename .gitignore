@@ -16,9 +16,7 @@ db.sqlite3
 *.ps1
 *.md
 /staticfiles/
-
-# Tailwind CSS
-#theme/static/
+/media/
 node_modules/
 
 # IDE
@@ -30,4 +28,4 @@ node_modules/
 
 #temporary
 bg/
-tests/
+*.ipynb

@@ -16,7 +16,7 @@ def save_dynamic_fields(request, recipe):
     has_errors = False
     
     for i in range(len(names)):
-        name = names[i].strip().lower()
+        name = names[i].strip()
         quantity = quantities[i] if quantities[i] and quantities[i].strip() else None
 
         if not quantity and not name:       # skip empty rows
@@ -38,23 +38,32 @@ def save_dynamic_fields(request, recipe):
         else:
             RecipeIngredient.objects.create(recipe=recipe, ingredient=ingredient, quantity=quantity, unit=units[i])
 
+    if has_errors:
+        return False
+
     for i in range(len(steps)):
         step = steps[i].strip()
         if not step:
             continue
         timer = timers[i] if i < len(timers) and timers[i] and timers[i].strip() else None
-        step_obj = recipe.steps.create(description=step, timer=timer, order=i)
-        
-        if i < len(used_ingredients_list) and used_ingredients_list[i]:
-            ingredient_names = [name.strip().lower() for name in used_ingredients_list[i].split(',') if name.strip()]
+        step_obj = recipe.steps.create(description=step, timer=timer, order=i+1)
+
+        used = request.POST.get(f'used_ingredients_{i}')
+        if used is None and i < len(used_ingredients_list):
+            used = used_ingredients_list[i]
+
+        if used:
+            ingredient_names = [name.strip() for name in used.split(',') if name.strip()]
+            recipe_ingredient_ids = set(
+                RecipeIngredient.objects.filter(recipe=recipe).values_list('ingredient_id', flat=True)
+            )
             ingredients_to_add = []
             for name in ingredient_names:
-                try:
-                    ingredient = Ingredient.objects.get(name=name)
+                ingredient = Ingredient.objects.filter(
+                    id__in=recipe_ingredient_ids, name__iexact=name
+                ).first()
+                if ingredient:
                     ingredients_to_add.append(ingredient)
-                except Ingredient.DoesNotExist:
-                    pass
-            
             if ingredients_to_add:
                 step_obj.used_ingredients.set(ingredients_to_add)
     
@@ -97,7 +106,7 @@ def save_list_items(request, shop_list):
     
     return not has_errors
 
-def filter_recipes(recipes, search_query=None, ingredients=None, difficulty=None, preparation_time=None, cooking_method=None):
+def filter_recipes(recipes, search_query=None, ingredients=None, difficulty=None, preparation_time=None, cooking_method=None, category=None):
     if search_query:
         recipes = recipes.filter(
             Q(name__icontains=search_query) |
@@ -114,6 +123,9 @@ def filter_recipes(recipes, search_query=None, ingredients=None, difficulty=None
 
     if cooking_method:
         recipes = recipes.filter(cooking_method__in=cooking_method)
+
+    if category:
+        recipes = recipes.filter(category__in=category)
 
     if preparation_time and preparation_time != 'All preparation times':
         if preparation_time == 'less than 30 minutes':

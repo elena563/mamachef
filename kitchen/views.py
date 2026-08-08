@@ -19,24 +19,29 @@ from functions.pdf import generate_list_pdf
 # pages
 
 def home(request):
-    recipes = Recipe.objects.all()
-    return render(request, 'home.html', {'recipes':recipes})
+    recipes = Recipe.objects.all().order_by('-created_at')[:6]
+    meat_recipes = Recipe.objects.filter(category='Meat')[:3]
+    pasta_recipes = Recipe.objects.filter(category='Pasta')[:3]
+    dessert_recipes = Recipe.objects.filter(category='Dessert')[:3]
+    return render(request, 'home.html', {'recipes':recipes, 'meat_recipes': meat_recipes, 'pasta_recipes': pasta_recipes, 'dessert_recipes': dessert_recipes})
 
 def recipes(request):
     """Recipes page view with search functionality"""
-    recipes = Recipe.objects.all()
+    recipes = Recipe.objects.all().order_by('-created_at')
     
     search_query = request.GET.get('q', '').strip()
     ingredients = [i.strip() for i in request.GET.getlist('ingredients') if i.strip()]
     difficulty = [d for d in request.GET.getlist('difficulty') if d != 'All difficulties']
     preparation_time = request.GET.get('preparation_time')
     cooking_method = [c for c in request.GET.getlist('cooking_method') if c != 'All cooking methods']
+    category = [c for c in request.GET.getlist('category') if c != 'All categories']
     
-    recipes = filter_recipes(recipes, search_query, ingredients, difficulty, preparation_time, cooking_method)
+    recipes = filter_recipes(recipes, search_query, ingredients, difficulty, preparation_time, cooking_method, category)
 
     difficulty_levels = ['All difficulties'] + list(Recipe.objects.values_list('difficulty', flat=True).distinct())
     cooking_method_choices = ['All cooking methods'] + list(Recipe.objects.values_list('cooking_method', flat=True).distinct())
     preparation_time_ranges = ['All preparation times', 'less than 30 minutes', '30-60 minutes', 'more than 60 minutes']
+    category_choices = ['All categories'] + list(Recipe.objects.values_list('category', flat=True).distinct())
 
     
     return render(request, 'recipes.html', {
@@ -44,7 +49,12 @@ def recipes(request):
         'search_query': search_query,
         'difficulty_levels': difficulty_levels,
         'cooking_method_choices': cooking_method_choices,
-        'preparation_time_ranges': preparation_time_ranges
+        'preparation_time_ranges': preparation_time_ranges,
+        'category_choices': category_choices,
+        'selected_difficulty': request.GET.get('difficulty', 'All difficulties'),
+        'selected_cooking_method': request.GET.get('cooking_method', 'All cooking methods'),
+        'selected_preparation_time': request.GET.get('preparation_time', 'All preparation times'),
+        'selected_category': request.GET.get('category', 'All categories'),
     })
 
 def recipe_detail(request, pk):
@@ -105,6 +115,11 @@ class RecipeFormView:
     form_class = RecipeForm
     template_name = 'recipe_form.html'
 
+    def form_invalid(self, form):
+        for error in form.non_field_errors():
+            messages.error(self.request, error)
+        return super().form_invalid(form)
+
     def get_success_url(self):
         return reverse_lazy('Kitchen:recipe_detail', kwargs={'pk': self.object.pk})
     
@@ -121,6 +136,13 @@ class RecipeFormView:
             context['steps'] = steps_with_used
         else:
             context['steps'] = []
+
+        if self.object and self.object.image_asset:
+            context['image_asset_url'] = self.object.image_asset.url
+        elif self.object and self.object.image_url:
+            context['image_asset_url'] = self.object.image_url
+        else:
+            context['image_asset_url'] = ''
         
         return context
 

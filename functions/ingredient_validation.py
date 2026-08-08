@@ -12,7 +12,8 @@ _nlp = spacy.load("en_core_web_sm")
 _inflect = inflect.engine()
 
 def validate_new_ingredient(name):
-    synsets = wn.synsets(name, pos=wn.NOUN)
+    formatted_name = name.lower().strip().replace(' ', '_')
+    synsets = wn.synsets(formatted_name, pos=wn.NOUN)
     if not synsets:
         return False
     
@@ -20,13 +21,13 @@ def validate_new_ingredient(name):
 
     for synset in synsets:
         synset_word = synset.name().split('.')[0]
-        if synset_word == name and synset.lexname() in food_categories:
+        if synset_word == formatted_name and synset.lexname() in food_categories:
             return True # exact match
         
     primary_synset = synsets[0]
     if primary_synset.lexname() in food_categories:
         lemma_names = [lemma.name() for lemma in primary_synset.lemmas()]
-        if name in lemma_names or name.replace('_', ' ') in lemma_names:
+        if formatted_name in lemma_names or formatted_name.replace('_', ' ') in lemma_names:
             return True # match with lemma names
         
     return False
@@ -58,21 +59,35 @@ def is_countable(name):
 
 def find_similar_ingredients(name, threshold=0.85):
     """avoid duplicates and typos by finding similar existing ingredients"""
-    first_letter = name[0] if name else ''  # reduce comparisons
+    first_letter = name[0].lower() if name else ''  # reduce comparisons
     candidates = Ingredient.objects.filter(name__istartswith=first_letter)
 
     similar = []
     for ing in candidates:
-        ratio = SequenceMatcher(None, name, ing.name).ratio()
+        ratio = SequenceMatcher(None, name.lower(), ing.name.lower()).ratio()
         if ratio > threshold:
             similar.append((ing, ratio))
     return sorted(similar, key=lambda x: x[1], reverse=True)
 
 
 def get_or_validate_ingredient(name):
+    name_clean = name.strip()
+
+    countable = is_countable(name_clean)
+    if countable:
+        singular_form = _inflect.singular_noun(name_clean)
+        
+        if not singular_form:
+            pluralized = _inflect.plural_noun(name_clean)
+            if pluralized:
+                name_clean = pluralized
+
+    target_name = name_clean.title()
+
     # get if exists
-    if Ingredient.objects.filter(name__iexact=name).exists():
-        return Ingredient.objects.get(name__iexact=name), None  
+    existing = Ingredient.objects.filter(name__iexact=target_name).first()
+    if existing:
+        return existing, None  
     
     # find existing match
     similar = find_similar_ingredients(name)
@@ -82,7 +97,8 @@ def get_or_validate_ingredient(name):
     # if totally new
     if not validate_new_ingredient(name):
         return None, f"'{name}' is not a valid ingredient"
-    
+
+    name = name.title().strip()
     ingredient = Ingredient.objects.create(
         name=name if not is_countable(name) else _inflect.plural_noun(name) or name,
         countable=is_countable(name)
@@ -92,7 +108,7 @@ def get_or_validate_ingredient(name):
 def get_ingredient_or_custom(name):
     ingredient, error = get_or_validate_ingredient(name)
     if error:
-        return name, True
+        return name.title(), True
     return ingredient, False
 
 

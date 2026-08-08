@@ -2,10 +2,14 @@
 
 {% block content %}
 
-<div class="max-w-3xl mx-auto mt-10 px-4">
+<div class="max-w-3xl mx-auto mt-6 md:mt-10 px-4">
 
     <c-button link="{% url 'Kitchen:recipes' %}" variant="secondary" size="sm" class="mb-6">← Back to Recipes</c-button>
-
+  {% if recipe.category %}
+      <span class="text-md font-medium text-pink-mama-dark opacity-50 block mb-2">
+          {{ recipe.category | upper }}
+      </span>
+  {% endif %}
   <h1 class="text-3xl font-bold mb-2">{{ recipe.name }}</h1>
 
   {% if user.is_authenticated and user == recipe.author %}
@@ -22,22 +26,27 @@
     {% if recipe.cooking_method %}<span><i class="fa-solid fa-fire mr-1" style="color: #feaac2;"></i> {{ recipe.cooking_method }}</span>{% endif %}
   </div>
 
+  {% if recipe.image %}
+    <img src="{{ recipe.image }}" alt="{{ recipe.name }}" class="h-64 rounded-lg mb-4">
+  {% endif %}
 
   <p class="text-gray-800 mb-6">{{ recipe.description }}</p>
 
   <hr class="my-6 border-dashed border-2 border-navy-mama">
 
-  <div class="flex justify-between gap-4">
-    <h2 class="text-2xl font-semibold mb-3">Ingredients</h2>
+  <div class="flex justify-between gap-4 mb-3">
+    <h2 class="text-2xl font-semibold">Ingredients</h2>
     {% if user.is_authenticated %}
-      <c-button class="add-to-list-btn" variant="green">Add to Shopping List</c-button>
+      <c-button class="!hidden sm:!inline-flex add-to-list-btn" variant="green">Add to Shopping List</c-button>
     {% endif %}
   </div>
+  {% if servings %}
   <div class="flex items-center gap-2 mb-4">
     <p class="text-gray-700">Servings: <span id="servings">{{ recipe.servings }}</span></p>
     <c-form-field id="servings-input" class="hidden" type="number" name="servings" value="{{ recipe.servings }}"/>
     <c-button id="servings-btn" size="sm">Change</c-button>
   </div>
+  {% endif %}
   <ul id="ingredients-list" class="list-disc pl-5 space-y-1">
     {% for qi in ingredients %}
       <li id="ingredient-{{ qi.id }}">
@@ -46,6 +55,9 @@
       </li>
     {% endfor %}
   </ul>
+  {% if user.is_authenticated %}
+    <c-button class="add-to-list-btn sm:hidden mt-4" variant="green">Add to Shopping List</c-button>
+  {% endif %}
 
 {% if steps %}
   <hr class="my-6 border-dashed border-2 border-navy-mama">
