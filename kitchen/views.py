@@ -19,12 +19,15 @@ from functions.pdf import generate_list_pdf
 # pages
 
 def home(request):
-    recipes = Recipe.objects.all()
-    return render(request, 'home.html', {'recipes':recipes})
+    recipes = Recipe.objects.all().order_by('-created_at')[:6]
+    meat_recipes = Recipe.objects.filter(category='Meat')[:3]
+    pasta_recipes = Recipe.objects.filter(category='Pasta')[:3]
+    dessert_recipes = Recipe.objects.filter(category='Dessert')[:3]
+    return render(request, 'home.html', {'recipes':recipes, 'meat_recipes': meat_recipes, 'pasta_recipes': pasta_recipes, 'dessert_recipes': dessert_recipes})
 
 def recipes(request):
     """Recipes page view with search functionality"""
-    recipes = Recipe.objects.all()
+    recipes = Recipe.objects.all().order_by('-created_at')
     
     search_query = request.GET.get('q', '').strip()
     ingredients = [i.strip() for i in request.GET.getlist('ingredients') if i.strip()]

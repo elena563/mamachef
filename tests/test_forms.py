@@ -1,17 +1,16 @@
 import os
 import tempfile
-from io import BytesIO
 from PIL import Image
 
 from django.test import TestCase, RequestFactory, override_settings
 from django.contrib.messages.storage.fallback import FallbackStorage
-from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.auth.models import User
 
-from functions.recipe_helpers import save_dynamic_fields
-from kitchen.models import Recipe, Ingredient, RecipeIngredient
+from functions.recipe_helpers import save_dynamic_fields, save_list_items
+from kitchen.models import Recipe, Ingredient, RecipeIngredient, ShoppingList
 from kitchen.forms import RecipeForm
 
-from tests.helpers import ImageMixin
+from tests.helpers import ImageMixin, KitchenTestCase
 
 class RecipeFormTest(TestCase, ImageMixin):
 
@@ -83,11 +82,9 @@ class RecipeFormTest(TestCase, ImageMixin):
         self.assertIn('__all__', form.errors)
         
 
-class SaveDynamicFieldsTest(TestCase):
+class SaveDynamicFieldsTest(KitchenTestCase):
     def setUp(self):
-        self.recipe = Recipe.objects.create(name="Test Recipe")
-        self.tomato = Ingredient.objects.create(name="Tomato")
-        self.onion = Ingredient.objects.create(name="Onion")
+        super().setUp()
         self.factory = RequestFactory()
 
     def _request(self, data):
@@ -98,13 +95,13 @@ class SaveDynamicFieldsTest(TestCase):
 
     def test_save_dynamic_fields_with_valid_data(self):
         data = {
-            'ingredient': ['Tomato', 'Onion'],
+            'ingredient': ['Tomatoes', 'Flour'],
             'quantity': ['2', '1'],
             'unit': ['pieces', 'pieces'],
-            'step': ['Chop the tomatoes.', 'Slice the onions.'],
+            'step': ['Chop the tomatoes.', 'Mix the flour.'],
             'timer': ['5', '3'],
-            'used_ingredients_0': 'Tomato',
-            'used_ingredients_1': 'Onion',
+            'used_ingredients_0': 'Tomatoes',
+            'used_ingredients_1': 'Flour',
         }
         request = self._request(data)
         save_dynamic_fields(request, self.recipe)
@@ -112,25 +109,25 @@ class SaveDynamicFieldsTest(TestCase):
         self.assertEqual(RecipeIngredient.objects.filter(recipe=self.recipe).count(), 2)
         self.assertEqual(self.recipe.steps.count(), 2)
 
-        step0 = self.recipe.steps.get(order=0)
         step1 = self.recipe.steps.get(order=1)
-        self.assertEqual(list(step0.used_ingredients.all()), [self.tomato])
-        self.assertEqual(list(step1.used_ingredients.all()), [self.onion])
+        step2 = self.recipe.steps.get(order=2)
+        self.assertEqual(list(step1.used_ingredients.all()), [self.tomato])
+        self.assertEqual(list(step2.used_ingredients.all()), [self.flour])
 
     def test_save_dynamic_fields_falls_back_to_plain_list(self):
         data = {
-            'ingredient': ['Tomato'],
+            'ingredient': ['Tomatoes'],
             'quantity': ['2'],
             'unit': ['pieces'],
             'step': ['Chop the tomatoes.'],
             'timer': ['5'],
-            'used_ingredients': ['Tomato'],
+            'used_ingredients': ['Tomatoes'],
         }
         request = self._request(data)
         save_dynamic_fields(request, self.recipe)
 
-        step0 = self.recipe.steps.get(order=0)
-        self.assertEqual(list(step0.used_ingredients.all()), [self.tomato])
+        step1 = self.recipe.steps.get(order=1)
+        self.assertEqual(list(step1.used_ingredients.all()), [self.tomato])
 
     def test_save_dynamic_fields_with_invalid_ingredient(self):
         data = {
@@ -147,6 +144,20 @@ class SaveDynamicFieldsTest(TestCase):
         self.assertEqual(RecipeIngredient.objects.filter(recipe=self.recipe).count(), 0)
         self.assertEqual(self.recipe.steps.count(), 0)
 
+    def test_save_list_items(self):
+        data = {
+            'item': ['Sugar', 'Whey Flour'],
+            'quantity': ['1', '2'],
+            'unit': ['kg', 'kg'],
+            'bought': [False, False],
+        }
+        request = self._request(data)
+        result = save_list_items(request, self.shopping_list)
+
+        self.assertTrue(result)
+        self.assertEqual(self.shopping_list.items.count(), 2)
+        self.assertEqual(self.shopping_list.items.first().ingredient.name, "Sugar")
+        self.assertEqual(self.shopping_list.items.last().custom_name, "Whey Flour")
 
 class RecipeImageCompressionTest(TestCase, ImageMixin):
 

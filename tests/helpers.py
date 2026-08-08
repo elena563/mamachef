@@ -1,6 +1,20 @@
 from io import BytesIO
 from PIL import Image
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import TestCase
+from django.contrib.auth.models import User
+
+from kitchen.models import Recipe, Ingredient, ShoppingList
+
+
+class KitchenTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpass123')
+        self.shopping_list = ShoppingList.objects.create(user=self.user)
+        self.recipe = Recipe.objects.create(name='Test Recipe')
+        self.tomato = Ingredient.objects.create(name='Tomatoes')
+        self.flour = Ingredient.objects.create(name='Flour')
+
 
 class ImageMixin:
     def make_image(self, size=(400, 400), color='red'):

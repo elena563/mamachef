@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="mb-8">
+<div class="my-8">
     <h2 class="text-3xl font-bold mb-6">Featured Recipes</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for recipe in recipes %}
@@ -48,4 +48,27 @@
         </c-button>
     </div>
 </div>
+
+<div class="mb-8 mt-12">
+    <h2 class="text-3xl font-bold mb-6">Discover Categories</h2>
+    <span class="text-2xl font-medium text-pink-mama-dark opacity-40 block my-4">MEAT</span> 
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4 mb-8">
+        {% for recipe in meat_recipes %}
+            <c-recipe-card recipe = recipe/>
+        {% endfor %}
+    </div>
+    <span class="text-2xl font-medium text-pink-mama-dark opacity-40 block my-4">PASTA</span> 
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4 mb-8">
+        {% for recipe in pasta_recipes %}
+            <c-recipe-card recipe = recipe/>
+        {% endfor %}
+    </div>
+    <span class="text-2xl font-medium text-pink-mama-dark opacity-40 block my-4">DESSERT</span> 
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4 mb-8">
+        {% for recipe in dessert_recipes %}
+            <c-recipe-card recipe = recipe/>
+        {% endfor %}
+    </div>
+</div>
+
 {% endblock %}

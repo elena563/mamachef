@@ -26,6 +26,7 @@ class Recipe(models.Model):
     category = models.CharField(max_length=50, choices=RECIPE_CATEGORY_CHOICES, null=True, blank=True, verbose_name='Category', help_text='The category of the recipe (e.g., Beef, Chicken, Dessert)')
     image_asset = models.ImageField(upload_to='dishes/', null=True, blank=True, validators=[validate_image_file_extension])
     image_url = models.URLField(null=True, blank=True, verbose_name='Image URL', help_text='A URL to an image of the finished dish (optional)')
+    created_at = models.DateTimeField(auto_now_add=True, help_text='The date and time when the recipe was created')
 
     @property
     def image(self):

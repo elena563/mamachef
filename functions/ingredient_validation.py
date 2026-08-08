@@ -108,7 +108,7 @@ def get_or_validate_ingredient(name):
 def get_ingredient_or_custom(name):
     ingredient, error = get_or_validate_ingredient(name)
     if error:
-        return name, True
+        return name.title(), True
     return ingredient, False
 
 

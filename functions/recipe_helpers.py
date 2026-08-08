@@ -46,7 +46,7 @@ def save_dynamic_fields(request, recipe):
         if not step:
             continue
         timer = timers[i] if i < len(timers) and timers[i] and timers[i].strip() else None
-        step_obj = recipe.steps.create(description=step, timer=timer, order=i)
+        step_obj = recipe.steps.create(description=step, timer=timer, order=i+1)
 
         used = request.POST.get(f'used_ingredients_{i}')
         if used is None and i < len(used_ingredients_list):
