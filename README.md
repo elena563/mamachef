@@ -85,10 +85,9 @@ Run tests with: `python manage.py test` to ensure everything is working correctl
  
 ## Future Improvements
 
-- Recipe categories and tags
+- More Recipe categories and tags
 - Meal planner
 - Unit conversion
-- Automated test suite
 
 ### License
 
