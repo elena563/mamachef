@@ -1,11 +1,14 @@
 import os
-from openai import OpenAI
-from functions.llms.llm_base import LLM_Base
-from dotenv import load_dotenv
 from pathlib import Path
+
+from dotenv import load_dotenv
+from openai import OpenAI
+
+from functions.llms.llm_base import LLM_Base
 
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
 
 class Groq(LLM_Base):
     def get_client(self):

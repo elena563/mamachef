@@ -1,5 +1,7 @@
-from functions.llms.llm import LLM
 import json
+
+from functions.llms.llm import LLM
+
 
 def generate(recipe, model_name="llama-3.3-70b-versatile"):
     """
@@ -15,10 +17,11 @@ def generate(recipe, model_name="llama-3.3-70b-versatile"):
         Respond with raw JSON only. No markdown, no backticks, no extra text.
         """)
 
-        #print(f"Generated recipe for '{recipe}' using model '{model_name}': {result}")
+        # print(f"Generated recipe for '{recipe}' using model '{model_name}': {result}")
         return json.loads(result)
     except Exception as e:
         print(f"Error: {e}")
         raise
 
-#generate("Pizza Margherita")
+
+# generate("Pizza Margherita")

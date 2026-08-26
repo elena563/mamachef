@@ -1,6 +1,8 @@
-from reportlab.pdfgen import canvas
-from io import BytesIO
 from datetime import datetime
+from io import BytesIO
+
+from reportlab.pdfgen import canvas
+
 
 def generate_list_pdf(shop_list):
     buffer = BytesIO()

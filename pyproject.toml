@@ -1,0 +1,14 @@
+[tool.ruff]
+line-length = 111
+target-version = "py312"
+exclude = ["*/migrations/*"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]   # pycodestyle, pyflakes, isort
+ignore = []
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = ["F401"]

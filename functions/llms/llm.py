@@ -1,8 +1,8 @@
-from functions.llms.llm_base import LLM_Base
 from functions.llms.groq_config import Groq
+from functions.llms.llm_base import LLM_Base
+
 
 class LLM:
-
     __llms = [
         Groq("llama-3.3-70b-versatile"),
     ]
@@ -20,7 +20,7 @@ class LLM:
         if self.model is None:
             raise Exception("LLM not found")
         return self.model.ask(prompt)
-    
+
     @staticmethod
-    def get_all_models() -> list[str]:        
+    def get_all_models() -> list[str]:
         return [llm.get_name() for llm in LLM.__llms]
