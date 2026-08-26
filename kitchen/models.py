@@ -59,6 +59,13 @@ class Recipe(models.Model):
         verbose_name="Description",
         help_text="A brief description of the recipe",
     )
+    notes = models.TextField(
+        validators=[MaxLengthValidator(1500)],
+        null=True,
+        blank=True,
+        verbose_name="Notes",
+        help_text="Additional notes or tips for the recipe (optional)",
+    )
     difficulty = models.CharField(
         max_length=50,
         choices=DIFFICULTY_CHOICES,

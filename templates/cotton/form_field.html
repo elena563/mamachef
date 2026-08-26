@@ -7,6 +7,7 @@
         required="False"
         choices=""
         checked="False"
+        rows=""
         class=''
         id=''
         current_url=""
@@ -36,7 +37,7 @@
                 {% if id %}id="{{ id }}"{% endif %}
                 class="{{ class }} w-full px-3 py-2 bg-gray-50 border-3 border-blue-mama rounded-md focus:outline-none focus:ring-3 focus:ring-blue-mama focus:border-transparent"
                 {% if required == "True" %}required{% endif %}
-                rows="4"
+                rows="{{ rows|default:4 }}"
                 cols="50">{{ value }}</textarea>
     {% elif type == 'checkbox' %}
       <label class="inline-flex items-center gap-1 cursor-pointer">
@@ -96,7 +97,7 @@
                   id="{{ field.id_for_label }}"
                   class="{{ class }} w-full px-3 py-2 bg-gray-50 border-3 border-blue-mama rounded-md focus:outline-none focus:ring-3 focus:ring-blue-mama focus:border-transparent"
                   {% if field.field.required %}required{% endif %}
-                  rows="4">{{ field.value|default:'' }}</textarea>
+                  rows="{{ field.field.widget.attrs.rows|default:4 }}">{{ field.value|default:'' }}</textarea>
       {% elif 'Select' in widget_name %}
         <select name="{{ field.name }}"
                 id="{{ field.id_for_label }}"

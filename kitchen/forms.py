@@ -14,6 +14,7 @@ class RecipeForm(forms.ModelForm):
             "image_url",
             "name",
             "description",
+            "notes",
             "difficulty",
             "cooking_method",
             "preparation_time",
@@ -22,12 +23,14 @@ class RecipeForm(forms.ModelForm):
         ]
         widgets = {
             "description": forms.Textarea(attrs={"rows": 4}),
+            "notes": forms.Textarea(attrs={"rows": 3}),
         }
         labels = {
             "image_asset": "Image",
             "image_url": "Image URL",
             "name": "Recipe Name",
             "description": "Description",
+            "notes": "Notes",
             "difficulty": "Difficulty",
             "cooking_method": "Cooking Method",
             "preparation_time": "Preparation Time (minutes)",

@@ -41,6 +41,9 @@
               Logout
             </c-button>
           </form>
+          <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary">
+            Add Recipe
+          </c-button>
         {% else %}
           <c-button link="{% url 'Kitchen:login' %}" variant="success">
             Login
