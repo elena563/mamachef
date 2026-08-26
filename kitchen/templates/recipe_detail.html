@@ -13,8 +13,9 @@
       <div class="mb-4">
         <a href="{% url 'Kitchen:edit_recipe' recipe.id %}"
            class="font-jua text-xl text-blue-mama-dark hover:underline mr-4">Edit</a>
-        <a href="{% url 'Kitchen:delete_recipe' recipe.id %}"
-           class="font-jua text-xl text-red-mama hover:underline">Delete</a>
+        <button type="button"
+                data-open-popup="delete-popup"
+                class="font-jua text-xl text-red-mama hover:underline cursor-pointer">Delete</button>
       </div>
     {% endif %}
     <div class="text-gray-600 mb-6 space-x-4">
@@ -41,9 +42,11 @@
   <div class="flex justify-between gap-4 mb-3">
     <h2 class="text-2xl font-semibold">Ingredients</h2>
     {% if user.is_authenticated %}
-      <c-button class="!hidden sm:!inline-flex add-to-list-btn" variant="green">
-        Add to Shopping List
-      </c-button>
+      <span data-open-popup="add-to-list-popup">
+        <c-button class="!hidden sm:!inline-flex" variant="green">
+          Add to Shopping List
+        </c-button>
+      </span>
     {% endif %}
   </div>
   {% if servings %}
@@ -71,9 +74,11 @@
     {% endfor %}
   </ul>
   {% if user.is_authenticated %}
-    <c-button class="add-to-list-btn sm:hidden mt-4" variant="green">
-      Add to Shopping List
-    </c-button>
+    <span data-open-popup="add-to-list-popup" class="sm:hidden mt-4 inline-block">
+      <c-button variant="green">
+        Add to Shopping List
+      </c-button>
+    </span>
   {% endif %}
   {% if steps %}
     <hr class="my-6 border-dashed border-2 border-navy-mama">
@@ -108,33 +113,33 @@
               size="lg">Start Guided Mode!</c-button>
     </div>
   {% endif %}
-  <div class="hidden h-full w-full fixed inset-0 bg-black/20"
-       id="popup-overlay"></div>
-  <div id="add-to-list-popup"
-       class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+  <c-popup id="add-to-list-popup" title="Choose ingredients">
     <form method="POST" action="{% url 'Kitchen:add_to_list' %}">
       {% csrf_token %}
-      <div class="relative p-6 bg-white shadow-md rounded-lg z-10 min-w-[300px] space-y-2">
-        <div class="flex justify-between items-center gap-4 mb-4">
-          <h3 class="text-2xl font-semibold">Choose ingredients</h3>
-          <c-button class="close-popup-btn !py-0" type="button" variant="secondary">
-            ✖
-          </c-button>
-        </div>
-        {% for qi in ingredients %}
-          <p id="ingredient-{{ qi.id }}">
-            <c-form-field type="checkbox"
-                          name="ingredient"
-                          value="{{ qi.id }}"
-                          label="{{ qi.ingredient.name }}" />
-          </p>
-        {% endfor %}
-        <c-button class="mt-2" type="submit" variant="green">
-          Add selected
-        </c-button>
+      {% for qi in ingredients %}
+        <p id="ingredient-{{ qi.id }}">
+          <c-form-field type="checkbox"
+                        name="ingredient"
+                        value="{{ qi.id }}"
+                        label="{{ qi.ingredient.name }}" />
+        </p>
+      {% endfor %}
+      <c-button class="mt-2" type="submit" variant="green">
+        Add selected
+      </c-button>
+    </form>
+  </c-popup>
+
+  <c-popup id="delete-popup" title="Delete recipe">
+    <p class="text-gray-700 mb-4">Are you sure you want to delete "{{ recipe.name }}"?</p>
+    <form method="POST" action="{% url 'Kitchen:delete_recipe' recipe.id %}">
+      {% csrf_token %}
+      <div class="flex gap-2">
+        <c-button class="close-popup-btn" variant="ghost">Cancel</c-button>
+        <c-button type="submit" variant="danger">Confirm delete</c-button>
       </div>
     </form>
-  </div>
+  </c-popup>
   <script>
 const servingsBtn = document.getElementById('servings-btn');
 const servingsText = document.getElementById('servings');
@@ -202,34 +207,5 @@ if (servingsBtn) {
     }
   });
 }
-  </script>
-  <script>
-  const openBtn = document.querySelector('.add-to-list-btn');
-  const closeBtn = document.querySelector('.close-popup-btn');
-  const popup = document.getElementById('add-to-list-popup');
-  const overlay = document.getElementById('popup-overlay');
-
-  if (openBtn) {
-    openBtn.addEventListener('click', () => {
-      popup.classList.remove('hidden');
-      overlay.classList.remove('hidden');
-      document.body.classList.add('overflow-hidden');
-    });
-  }
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      popup.classList.add('hidden');
-      overlay.classList.add('hidden');
-      document.body.classList.remove('overflow-hidden');
-    });
-  }
-
-  popup.addEventListener('click', (e) => {
-    if (e.target === popup) {
-      popup.classList.add('hidden');
-      overlay.classList.add('hidden');
-      document.body.classList.remove('overflow-hidden');
-    }
-  });
   </script>
 {% endblock %}
