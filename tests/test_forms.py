@@ -5,9 +5,10 @@ from PIL import Image
 from django.test import TestCase, RequestFactory, override_settings
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 from functions.recipe_helpers import save_dynamic_fields, save_list_items
-from kitchen.models import Recipe, Ingredient, RecipeIngredient, ShoppingList
+from kitchen.models import Recipe, RecipeIngredient
 from kitchen.forms import RecipeForm
 
 from tests.helpers import ImageMixin, KitchenTestCase
@@ -80,6 +81,15 @@ class RecipeFormTest(TestCase, ImageMixin):
         form = RecipeForm(data=data, files={'image_asset': upload})
         self.assertFalse(form.is_valid())
         self.assertIn('__all__', form.errors)
+
+    def test_update_other_user_recipe_denied(self):
+        other_user = User.objects.create_user(username='other', password='pass')
+        recipe = Recipe.objects.create(name='tomato pasta', author=other_user)
+        self.client.login(username='myuser', password='pass')
+        response = self.client.post(reverse('Kitchen:edit_recipe', args=[recipe.pk]), self.valid_data())
+        self.assertIn(response.status_code, [302, 403])
+        recipe.refresh_from_db()
+        self.assertEqual(recipe.name, 'tomato pasta') # unchanged
         
 
 class SaveDynamicFieldsTest(KitchenTestCase):

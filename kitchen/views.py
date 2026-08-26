@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse, FileResponse
 
@@ -110,7 +111,7 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
 
-class RecipeFormView:
+class RecipeFormView(LoginRequiredMixin):
     model = Recipe
     form_class = RecipeForm
     template_name = 'recipe_form.html'
@@ -146,7 +147,7 @@ class RecipeFormView:
         
         return context
 
-class RecipeCreateView(RecipeFormView,CreateView):
+class RecipeCreateView(RecipeFormView, CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         response = super().form_valid(form)
@@ -156,7 +157,14 @@ class RecipeCreateView(RecipeFormView,CreateView):
             return self.form_invalid(form)
         return response
 
-class RecipeUpdateView(RecipeFormView,UpdateView):
+class RecipeUpdateView(RecipeFormView, UpdateView):
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.author != request.user:
+            messages.error(request, "You do not have permission to edit this recipe.")
+            return redirect('Kitchen:recipe_detail', pk=self.object.pk)
+        return super().dispatch(request, *args, **kwargs)
+    
     def form_valid(self, form):
         self.object = form.save()
 
@@ -183,8 +191,13 @@ def ingredient_autocomplete(request):
     })
 
 
+@login_required
+@require_POST
 def recipe_delete(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
+    if recipe.author != request.user:
+        messages.error(request, "You do not have permission to delete this recipe.")
+        return redirect('Kitchen:recipe_detail', pk=pk)
     recipe.delete()
     return redirect('Kitchen:recipes')
 
@@ -264,10 +277,12 @@ def export_pdf(request):
     return FileResponse(pdf, as_attachment=True, filename=f"{shop_list.name}.pdf")
 
 @require_POST
+@login_required
 def toggle_item_bought(request, item_id):
     item = get_object_or_404(ShoppingListItem, id=item_id)
+    if item.shopping_list.user != request.user:
+        return JsonResponse({'success': False, 'error': 'Unauthorized'}, status=403)
     data = json.loads(request.body)
     item.bought = data.get('bought', False)
     item.save()
-    print(item.bought)
     return JsonResponse({'success': True, 'bought': item.bought})
