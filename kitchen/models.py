@@ -69,8 +69,6 @@ class Recipe(models.Model):
     difficulty = models.CharField(
         max_length=50,
         choices=DIFFICULTY_CHOICES,
-        null=True,
-        blank=True,
         verbose_name="Difficulty Level",
         help_text="The difficulty level of the recipe (e.g., Easy, Medium, Hard)",
     )
@@ -107,8 +105,6 @@ class Recipe(models.Model):
     category = models.CharField(
         max_length=50,
         choices=RECIPE_CATEGORY_CHOICES,
-        null=True,
-        blank=True,
         verbose_name="Category",
         help_text="The category of the recipe (e.g., Beef, Chicken, Dessert)",
     )

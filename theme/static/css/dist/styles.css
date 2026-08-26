@@ -1027,6 +1027,9 @@
     --tw-tracking: var(--tracking-normal);
     letter-spacing: var(--tracking-normal);
   }
+  .whitespace-nowrap {
+    white-space: nowrap;
+  }
   .text-beige-mama-dark {
     color: var(--color-beige-mama-dark);
   }

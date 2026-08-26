@@ -213,8 +213,10 @@
       <c-button class='add-step-btn' type="button" variant="ghost">
         +
       </c-button>
-      <div class="flex gap-4 mt-6">
-        <c-button variant="primary" type="submit" class='flex-1 sm:flex-none'>
+      <div class="flex gap-4 mt-6 flex-wrap">
+        <c-button variant="primary"
+                  type="submit"
+                  class='flex-1 sm:flex-none whitespace-nowrap'>
           {% if object %}
             Update
           {% else %}

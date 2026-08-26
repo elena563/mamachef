@@ -120,7 +120,8 @@ function setupIngredientSuggestions(inputElement) {
       fetch(`/api/ingredients/autocomplete/?q=${encodeURIComponent(query)}`)
         .then((response) => response.json())
         .then((data) => {
-          if (data.ingredients.length > 0) {
+          const queryLower = query.toLowerCase();
+          if (data.ingredients.length > 0 && !data.ingredients.some((s) => s.toLowerCase() === queryLower)) {
             showSuggestions(inputElement, data.ingredients);
           }
         });
@@ -153,17 +154,17 @@ function setupIngredientSuggestions(inputElement) {
     document.body.appendChild(suggestionsDiv);
   }
 
-  // remove when clicking outside or scrolling
-  document.addEventListener('click', (e) => {
-    if (suggestionsDiv && !inputElement.contains(e.target)) {
+  // remove when clicking outside
+  document.addEventListener('mousedown', (e) => {
+    if (suggestionsDiv && !inputElement.contains(e.target) && !suggestionsDiv.contains(e.target)) {
       suggestionsDiv.remove();
     }
   });
 
   window.addEventListener(
     'scroll',
-    () => {
-      if (suggestionsDiv) {
+    (e) => {
+      if (suggestionsDiv && !suggestionsDiv.contains(e.target)) {
         suggestionsDiv.remove();
       }
     },

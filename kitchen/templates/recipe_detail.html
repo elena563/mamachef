@@ -74,7 +74,8 @@
     {% endfor %}
   </ul>
   {% if user.is_authenticated %}
-    <span data-open-popup="add-to-list-popup" class="sm:hidden mt-4 inline-block">
+    <span data-open-popup="add-to-list-popup"
+          class="sm:hidden mt-4 inline-block">
       <c-button variant="green">
         Add to Shopping List
       </c-button>
@@ -129,14 +130,17 @@
       </c-button>
     </form>
   </c-popup>
-
   <c-popup id="delete-popup" title="Delete recipe">
     <p class="text-gray-700 mb-4">Are you sure you want to delete "{{ recipe.name }}"?</p>
     <form method="POST" action="{% url 'Kitchen:delete_recipe' recipe.id %}">
       {% csrf_token %}
       <div class="flex gap-2">
-        <c-button class="close-popup-btn" variant="ghost">Cancel</c-button>
-        <c-button type="submit" variant="danger">Confirm delete</c-button>
+        <c-button class="close-popup-btn" variant="ghost">
+          Cancel
+        </c-button>
+        <c-button type="submit" variant="danger">
+          Confirm delete
+        </c-button>
       </div>
     </form>
   </c-popup>
