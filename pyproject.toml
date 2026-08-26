@@ -12,3 +12,9 @@ quote-style = "double"
 
 [tool.ruff.lint.per-file-ignores]
 "**/__init__.py" = ["F401"]
+
+[tool.djlint]
+templates_dir = "templates,kitchen/templates"
+ignore = "H006,H030,H031"  
+indent = 2
+max_line_length = 111

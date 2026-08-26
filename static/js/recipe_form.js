@@ -1,168 +1,176 @@
 export function setupDynamicFields(addSelector, containerId, templateId) {
-    const addBtn = document.querySelector(addSelector);
-    const container = document.getElementById(containerId);
-    const template = document.getElementById(templateId);
+  const addBtn = document.querySelector(addSelector);
+  const container = document.getElementById(containerId);
+  const template = document.getElementById(templateId);
 
-    if (!addBtn || !container || !template) return;
+  if (!addBtn || !container || !template) return;
 
-    addBtn.addEventListener('click', () => {
-        const newEl = template.content.firstElementChild.cloneNode(true);
-        container.appendChild(newEl);
-        if (templateId === 'ingredient-template') {
-            setupIngredientSuggestions(newEl.querySelector('input[name="ingredient"]'));
-        }
-    });
+  addBtn.addEventListener('click', () => {
+    const newEl = template.content.firstElementChild.cloneNode(true);
+    container.appendChild(newEl);
+    if (templateId === 'ingredient-template') {
+      setupIngredientSuggestions(newEl.querySelector('input[name="ingredient"]'));
+    }
+  });
 
-    container.addEventListener('click', (e) => {
-        if (e.target.classList.contains('remove_btn')) {
-            e.target.parentElement.remove();                            // recipe
-        } else if (e.target.classList.contains('remove_parent_btn')){
-            e.target.parentElement.parentElement.remove();              // shopping-list
-        }
-    });
+  container.addEventListener('click', (e) => {
+    if (e.target.classList.contains('remove_btn')) {
+      e.target.parentElement.remove(); // recipe
+    } else if (e.target.classList.contains('remove_parent_btn')) {
+      e.target.parentElement.parentElement.remove(); // shopping-list
+    }
+  });
 }
 
 function swapSteps(step1, step2) {
-    const temp = document.createElement('div');
-    step1.parentNode.insertBefore(temp, step1);
-    step2.parentNode.insertBefore(step1, step2);
-    temp.parentNode.insertBefore(step2, temp);
-    temp.remove();
+  const temp = document.createElement('div');
+  step1.parentNode.insertBefore(temp, step1);
+  step2.parentNode.insertBefore(step1, step2);
+  temp.parentNode.insertBefore(step2, temp);
+  temp.remove();
 }
 
 function initializeForm() {
-    setupDynamicFields('.add-ingredient-btn', 'ingredients-container', 'ingredient-template');
-    setupDynamicFields('.add-step-btn', 'steps-container', 'step-template');
+  setupDynamicFields('.add-ingredient-btn', 'ingredients-container', 'ingredient-template');
+  setupDynamicFields('.add-step-btn', 'steps-container', 'step-template');
 
-    const form = document.querySelector('form');
-    if (form) {
-        form.addEventListener('submit', (e) => {
-            // Assign each step a per-index used_ingredients field and refresh
-            // its value from the checked checkboxes before submitting.
-            document.querySelectorAll('#steps-container > .step-wrapper').forEach((div, index) => {
-                const hiddenInput = div.querySelector('.used-ingredients-hidden');
-                const checkedBoxes = div.querySelectorAll('input[type="checkbox"]:checked');
-                const ingredients = Array.from(checkedBoxes).map(cb => cb.value).filter(v => v);
-                if (hiddenInput) {
-                    hiddenInput.value = ingredients.join(',');
-                    hiddenInput.name = `used_ingredients_${index}`;
-                }
-                const orderInput = div.querySelector('input[name="order"]');
-                if (orderInput) {
-                    orderInput.value = index;
-                }
-            });
-        });
+  const form = document.querySelector('form');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      // Assign each step a per-index used_ingredients field and refresh
+      // its value from the checked checkboxes before submitting.
+      document.querySelectorAll('#steps-container > .step-wrapper').forEach((div, index) => {
+        const hiddenInput = div.querySelector('.used-ingredients-hidden');
+        const checkedBoxes = div.querySelectorAll('input[type="checkbox"]:checked');
+        const ingredients = Array.from(checkedBoxes)
+          .map((cb) => cb.value)
+          .filter((v) => v);
+        if (hiddenInput) {
+          hiddenInput.value = ingredients.join(',');
+          hiddenInput.name = `used_ingredients_${index}`;
+        }
+        const orderInput = div.querySelector('input[name="order"]');
+        if (orderInput) {
+          orderInput.value = index;
+        }
+      });
+    });
+  }
+
+  // Handle step reordering (up/down buttons)
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('up_btn')) {
+      const stepWrapper = e.target.closest('.step-wrapper');
+      const prevStep = stepWrapper?.previousElementSibling;
+      if (prevStep && prevStep.classList.contains('step-wrapper')) {
+        swapSteps(stepWrapper, prevStep);
+      }
+    } else if (e.target.classList.contains('down_btn')) {
+      const stepWrapper = e.target.closest('.step-wrapper');
+      const nextStep = stepWrapper?.nextElementSibling;
+      if (nextStep && nextStep.classList.contains('step-wrapper')) {
+        swapSteps(stepWrapper, nextStep);
+      }
     }
+  });
 
-    // Handle step reordering (up/down buttons)
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('up_btn')) {
-            const stepWrapper = e.target.closest('.step-wrapper');
-            const prevStep = stepWrapper?.previousElementSibling;
-            if (prevStep && prevStep.classList.contains('step-wrapper')) {
-                swapSteps(stepWrapper, prevStep);
-            }
-        } else if (e.target.classList.contains('down_btn')) {
-            const stepWrapper = e.target.closest('.step-wrapper');
-            const nextStep = stepWrapper?.nextElementSibling;
-            if (nextStep && nextStep.classList.contains('step-wrapper')) {
-                swapSteps(stepWrapper, nextStep);
-            }
-        }
-    });
+  document.addEventListener('change', (e) => {
+    const checkbox = e.target;
 
-    document.addEventListener('change', (e) => {
-        const checkbox = e.target;
-        
-        if (checkbox.type === 'checkbox') {
-            const stepWrapper = checkbox.closest('.step-wrapper');
-            if (!stepWrapper) return;
-            
-            const hiddenInput = stepWrapper.querySelector('.used-ingredients-hidden');
-            if (!hiddenInput) return;
-            
-            // Get all checked checkboxes in this step wrapper
-            const checkedBoxes = stepWrapper.querySelectorAll('input[type="checkbox"]:checked');
-            const ingredients = Array.from(checkedBoxes).map(cb => cb.value).filter(v => v);
-            
-            hiddenInput.value = ingredients.join(',');
-        }
-    });
+    if (checkbox.type === 'checkbox') {
+      const stepWrapper = checkbox.closest('.step-wrapper');
+      if (!stepWrapper) return;
+
+      const hiddenInput = stepWrapper.querySelector('.used-ingredients-hidden');
+      if (!hiddenInput) return;
+
+      // Get all checked checkboxes in this step wrapper
+      const checkedBoxes = stepWrapper.querySelectorAll('input[type="checkbox"]:checked');
+      const ingredients = Array.from(checkedBoxes)
+        .map((cb) => cb.value)
+        .filter((v) => v);
+
+      hiddenInput.value = ingredients.join(',');
+    }
+  });
 }
 
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeForm);
+  document.addEventListener('DOMContentLoaded', initializeForm);
 } else {
-    initializeForm();
+  initializeForm();
 }
-
 
 function setupIngredientSuggestions(inputElement) {
-    let timeout = null;
-    let suggestionsDiv = null;
-    
-    inputElement.addEventListener('input', function(e) {
-        const query = e.target.value.trim();
-        
-        if (suggestionsDiv) {
-            suggestionsDiv.remove();
-        }
-        
-        if (query.length < 1) return;
-        
-        // Debounce: wait 300ms
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            fetch(`/api/ingredients/autocomplete/?q=${encodeURIComponent(query)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.ingredients.length > 0) {
-                        showSuggestions(inputElement, data.ingredients);
-                    }
-                });
-        }, 300);
-    });
-    
-    function showSuggestions(input, suggestions) {
-        suggestionsDiv = document.createElement('div');
-        suggestionsDiv.className = 'bg-base-50 border-2 border-light-blue rounded-md shadow-lg fixed z-50 max-h-48 overflow-y-auto';
+  let timeout = null;
+  let suggestionsDiv = null;
 
-        const rect = input.getBoundingClientRect();
-        suggestionsDiv.style.top = `${rect.bottom +2}px`;
-        suggestionsDiv.style.left = `${rect.left}px`;
-        suggestionsDiv.style.width = `${rect.width}px`;
-        
-        suggestions.forEach(ingredient => {
-            const item = document.createElement('div');
-            item.className = 'px-4 py-2 bg-white rounded-sm hover:bg-blue-100 cursor-pointer z-50';
-            item.textContent = ingredient;
-            
-            item.addEventListener('click', () => {
-                input.value = ingredient;
-                suggestionsDiv.remove();
-            });
-            
-            suggestionsDiv.appendChild(item);
-        });
-        
-        document.body.appendChild(suggestionsDiv);
+  inputElement.addEventListener('input', function (e) {
+    const query = e.target.value.trim();
+
+    if (suggestionsDiv) {
+      suggestionsDiv.remove();
     }
-    
-    // remove when clicking outside or scrolling
-    document.addEventListener('click', (e) => {
-        if (suggestionsDiv && !inputElement.contains(e.target)) {
-            suggestionsDiv.remove();
-        }
+
+    if (query.length < 1) return;
+
+    // Debounce: wait 300ms
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      fetch(`/api/ingredients/autocomplete/?q=${encodeURIComponent(query)}`)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.ingredients.length > 0) {
+            showSuggestions(inputElement, data.ingredients);
+          }
+        });
+    }, 300);
+  });
+
+  function showSuggestions(input, suggestions) {
+    suggestionsDiv = document.createElement('div');
+    suggestionsDiv.className =
+      'bg-base-50 border-2 border-light-blue rounded-md shadow-lg fixed z-50 max-h-48 overflow-y-auto';
+
+    const rect = input.getBoundingClientRect();
+    suggestionsDiv.style.top = `${rect.bottom + 2}px`;
+    suggestionsDiv.style.left = `${rect.left}px`;
+    suggestionsDiv.style.width = `${rect.width}px`;
+
+    suggestions.forEach((ingredient) => {
+      const item = document.createElement('div');
+      item.className = 'px-4 py-2 bg-white rounded-sm hover:bg-blue-100 cursor-pointer z-50';
+      item.textContent = ingredient;
+
+      item.addEventListener('click', () => {
+        input.value = ingredient;
+        suggestionsDiv.remove();
+      });
+
+      suggestionsDiv.appendChild(item);
     });
 
-    window.addEventListener('scroll', () => {
-        if (suggestionsDiv) {
-            suggestionsDiv.remove();
-        }
-    }, true);
+    document.body.appendChild(suggestionsDiv);
+  }
+
+  // remove when clicking outside or scrolling
+  document.addEventListener('click', (e) => {
+    if (suggestionsDiv && !inputElement.contains(e.target)) {
+      suggestionsDiv.remove();
+    }
+  });
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (suggestionsDiv) {
+        suggestionsDiv.remove();
+      }
+    },
+    true
+  );
 }
 
-document.querySelectorAll('input[name="ingredient"]').forEach(input => {
-    setupIngredientSuggestions(input);
+document.querySelectorAll('input[name="ingredient"]').forEach((input) => {
+  setupIngredientSuggestions(input);
 });

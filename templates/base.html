@@ -1,50 +1,52 @@
 {% if debug %}
-    {% load static tailwind_tags django_browser_reload %}
+  {% load static tailwind_tags django_browser_reload %}
 {% else %}
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
 {% endif %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}MamaChef - Your Recipes{% endblock %}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.png' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+          integrity="sha512-..."
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+    <link rel="icon"
+          type="image/svg+xml"
+          href="{% static 'images/favicon.png' %}">
     {% tailwind_css %}
     {% block extra_css %}{% endblock %}
-    {% block head %}{% endblock head %}
-</head>
-
-<body class="bg-gray-50 text-gray-900 antialiased">
+    {% block head %}
+    {% endblock head %}
+  </head>
+  <body class="bg-gray-50 text-gray-900 antialiased">
     {% block header %}
-    <c-header />
+      <c-header />
     {% endblock header %}
-
     {% block hero %}{% endblock %}
-
     {% block main %}
-    <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-        {% block content %}
-        {% endblock %}
-    </main>
+      <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+        {% block content %}{% endblock %}
+      </main>
     {% endblock %}
-
     {% block footer %}
-    <footer class="bg-white shadow-lg">
+      <footer class="bg-white shadow-lg">
         <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-            <p class="text-center text-gray-500 text-sm">
-                © 2026 MamaChef. All recipes are made with love by our community
-            </p>
+          <p class="text-center text-gray-500 text-sm">
+            © 2026 MamaChef. All recipes are made with love by our community
+          </p>
         </div>
-    </footer>
+      </footer>
     {% endblock footer %}
-
     {% block extra_js %}{% endblock %}
-</body>
+  </body>
 </html>

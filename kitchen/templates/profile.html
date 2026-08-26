@@ -1,96 +1,90 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block title %}Profile - MamaChef{% endblock %}
-
 {% block extra_css %}
-<style>
+  <style>
     body {
         margin: 0;
         padding: 0;
         width: 100%;
         background: linear-gradient(180deg, #FFE586 10% 15%, #FFEEB2 20% 25%, #FFFCDB 30% 35%, var(--color-beige-mama) 40% 100%);
     }
-</style>
+  </style>
 {% endblock %}
-
 {% block hero %}
-<div class="w-full border-b-5 border-beige-mama-dark px-6 py-12" style="background-image: url('{% static 'images/bg-profile1.png' %}'); background-size: 100%; background-position: top; background-repeat: no-repeat;">
-<div class="max-w-6xl mx-auto">
-    <form id="profileForm" method="post" enctype="multipart/form-data" class='w-full bg-gray-50 rounded-3xl p-2'>
+  <div class="w-full border-b-5 border-beige-mama-dark px-6 py-12"
+       style="background-image: url('{% static 'images/bg-profile1.png' %}');
+              background-size: 100%;
+              background-position: top;
+              background-repeat: no-repeat">
+    <div class="max-w-6xl mx-auto">
+      <form id="profileForm"
+            method="post"
+            enctype="multipart/form-data"
+            class='w-full bg-gray-50 rounded-3xl p-2'>
         {% csrf_token %}
         <div class='bg-gray-50 rounded-2xl p-6 border-4 border-blue-mama w-full'>
-        <h1 class="mb-4 text-4xl font-bold leading-relaxed">Hello {{ user.username }}, tell us more about yourself!</h1>
-
-            <div class="flex flex-col md:flex-row md:gap-8 items-center">
-                <c-form-field :field="pform.profile_picture" label="Profile Picture" rounded="True" />
-
-                <div class="flex-1">
-                    <div class="mt-4 space-y-2">
-                        <c-form-field :field="uform.username" label="Username" />
-                        <c-form-field :field="pform.bio" label="Bio" />
-                    </div>
-                </div>
+          <h1 class="mb-4 text-4xl font-bold leading-relaxed">
+            Hello {{ user.username }}, tell us more about yourself!
+          </h1>
+          <div class="flex flex-col md:flex-row md:gap-8 items-center">
+            <c-form-field :field="pform.profile_picture" label="Profile Picture" rounded="True" />
+            <div class="flex-1">
+              <div class="mt-4 space-y-2">
+                <c-form-field :field="uform.username" label="Username" />
+                <c-form-field :field="pform.bio" label="Bio" />
+              </div>
             </div>
-            <div class="mt-6 flex justify-end gap-2">
-                <c-button type="button" id="cancelBtn" variant="ghost">Cancel</c-button>
-                <c-button type="submit" variant="success">Save Changes</c-button>
-            </div>
-            </div>
-            
+          </div>
+          <div class="mt-6 flex justify-end gap-2">
+            <c-button type="button" id="cancelBtn" variant="ghost">
+              Cancel
+            </c-button>
+            <c-button type="submit" variant="success">
+              Save Changes
+            </c-button>
+          </div>
         </div>
+      </div>
     </form>
-</div>
-</div>
+  </div>
+  </div>
 {% endblock %}
-
-
 {% block content %}
-
-<section class="mb-6">
+  <section class="mb-6">
     <div class="flex justify-between items-center my-6 gap-4">
-        <h2 class="text-3xl font-semibold mb-2">Your Recipes</h2>
-        {% if recipes %}
+      <h2 class="text-3xl font-semibold mb-2">Your Recipes</h2>
+      {% if recipes %}
         <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary">Add New Recipe</c-button>
-        {% endif %}
+      {% endif %}
     </div>
-    
     {% if recipes %}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for recipe in recipes %}
-                <c-recipe-card recipe = recipe/>
-            {% endfor %}
-        </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for recipe in recipes %}<c-recipe-card recipe = recipe />{% endfor %}
+      </div>
     {% else %}
-        <div class="py-6 space-y-4">
-            <p>You haven't added any recipes yet. Let's try creating one!</p>
-            <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary">Add New Recipe</c-button>
-        </div>
+      <div class="py-6 space-y-4">
+        <p>You haven't added any recipes yet. Let's try creating one!</p>
+        <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary">Add New Recipe</c-button>
+      </div>
     {% endif %}
-</section>
-
-<section class="py-12">
-<h2 class="text-3xl font-semibold mb-2">Your Favorite Recipes</h2>
-{% if user.profile.favorite_recipes.exists %}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for recipe in user.profile.favorite_recipes.all %}
-            <c-recipe-card recipe = recipe />
-        {% endfor %}
-    </div>
-{% else %}
-    <div class="py-6 space-y-4">
+  </section>
+  <section class="py-12">
+    <h2 class="text-3xl font-semibold mb-2">Your Favorite Recipes</h2>
+    {% if user.profile.favorite_recipes.exists %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for recipe in user.profile.favorite_recipes.all %}<c-recipe-card recipe = recipe />{% endfor %}
+      </div>
+    {% else %}
+      <div class="py-6 space-y-4">
         <p>You haven't saved any recipes yet.</p>
         <c-button link="{% url 'Kitchen:recipes' %}" variant="success">Let's explore!</c-button>
-    </div>
-{% endif %}
-
-</section>
-
-
+      </div>
+    {% endif %}
+  </section>
 {% endblock %}
-
 {% block extra_js %}
-<script>
+  <script>
 document.addEventListener('DOMContentLoaded', () => {
     const profileInput = document.getElementById('profileInput');
     const profileImage = document.getElementById('profileImage');
@@ -140,5 +134,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-</script>
+  </script>
 {% endblock %}
