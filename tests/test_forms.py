@@ -172,7 +172,9 @@ class SaveDynamicFieldsTest(KitchenTestCase):
 class RecipeImageCompressionTest(TestCase, ImageMixin):
     def test_upload_compresses_to_webp(self):
         upload = self.make_upload(name="dish.png")
-        form = RecipeForm(data={"name": "Test"}, files={"image_asset": upload})
+        form = RecipeForm(
+            data={"name": "Test", "difficulty": "Easy", "category": "Meat"}, files={"image_asset": upload}
+        )
         self.assertTrue(form.is_valid(), form.errors)
 
         recipe = form.save()
@@ -186,7 +188,7 @@ class RecipeImageCompressionTest(TestCase, ImageMixin):
             override_settings(MEDIA_ROOT=media),
         ):
             first = RecipeForm(
-                data={"name": "First"},
+                data={"name": "First", "difficulty": "Easy", "category": "Meat"},
                 files={"image_asset": self.make_upload(name="a.png")},
             )
             recipe = first.save()
@@ -194,7 +196,7 @@ class RecipeImageCompressionTest(TestCase, ImageMixin):
             self.assertTrue(os.path.exists(old_path))
 
             second = RecipeForm(
-                data={"name": "First"},
+                data={"name": "First", "difficulty": "Easy", "category": "Meat"},
                 files={"image_asset": self.make_upload(name="b.png")},
                 instance=recipe,
             )
