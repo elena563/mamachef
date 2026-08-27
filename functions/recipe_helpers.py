@@ -94,6 +94,7 @@ def save_list_items(request, shop_list):
         item, is_custom = get_ingredient_or_custom(name)
 
         quantity = quantities[i] if quantities[i] and quantities[i].strip() else None
+        is_valid = True
         if quantity:
             if not is_custom:
                 is_valid, error = validate_quantity_unit(quantity, units[i], item, for_list=True)

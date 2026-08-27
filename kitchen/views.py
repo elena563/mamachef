@@ -5,6 +5,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.http import FileResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -227,11 +228,12 @@ class RecipeUpdateView(RecipeFormView, UpdateView):
     def form_valid(self, form):
         self.object = form.save()
 
-        RecipeIngredient.objects.filter(recipe=self.object).delete()
-        self.object.steps.all().delete()
+        with transaction.atomic():
+            RecipeIngredient.objects.filter(recipe=self.object).delete()
+            self.object.steps.all().delete()
 
-        if not save_dynamic_fields(self.request, self.object):
-            return self.form_invalid(form)
+            if not save_dynamic_fields(self.request, self.object):
+                return self.form_invalid(form)
         return super().form_valid(form)
 
 
@@ -281,18 +283,19 @@ def shopping_list(request):
             shop_list.name = list_name
             shop_list.save()
 
-        ShoppingListItem.objects.filter(shopping_list=shop_list).delete()
+        with transaction.atomic():
+            ShoppingListItem.objects.filter(shopping_list=shop_list).delete()
 
-        if not save_list_items(request, shop_list):
-            return render(
-                request,
-                "shopping_list.html",
-                {
-                    "shopping_list": shop_list,
-                    "items": shop_list.items.all(),
-                    "unit_choices": [choice[0] for choice in UNIT_LIST_CHOICES],
-                },
-            )
+            if not save_list_items(request, shop_list):
+                return render(
+                    request,
+                    "shopping_list.html",
+                    {
+                        "shopping_list": shop_list,
+                        "items": shop_list.items.all(),
+                        "unit_choices": [choice[0] for choice in UNIT_LIST_CHOICES],
+                    },
+                )
         return redirect("Kitchen:shopping_list")
 
     bought_items = shop_list.items.filter(bought=True)
