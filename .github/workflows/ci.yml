@@ -33,6 +33,7 @@ jobs:
     env:
       DEBUG: 'True'
       DATABASE_URL: 'sqlite:///test.db'
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
     steps:
       - uses: actions/checkout@v4
