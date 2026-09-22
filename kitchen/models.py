@@ -1,8 +1,13 @@
+import ipaddress
+from urllib.parse import urlparse
+
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.core.validators import (
     MaxLengthValidator,
     MaxValueValidator,
     MinValueValidator,
+    URLValidator,
     validate_image_file_extension,
 )
 from django.db import models
@@ -15,6 +20,21 @@ from .variables import (
     UNIT_CHOICES,
     UNIT_LIST_CHOICES,
 )
+
+
+def validate_image_url(value):
+    URLValidator(schemes=["http", "https"])(value)
+    host = urlparse(value).hostname
+    if not host:
+        raise ValidationError("The image URL does not include a valid host.")
+    try:
+        ip = ipaddress.ip_address(host)
+    except ValueError:
+        ip = None
+    if ip and (ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved or ip.is_multicast):
+        raise ValidationError("The image URL must point to a public host.")
+    if host == "localhost":
+        raise ValidationError("The image URL must point to a public host.")
 
 
 class UserProfile(models.Model):
@@ -118,6 +138,7 @@ class Recipe(models.Model):
         null=True,
         blank=True,
         verbose_name="Image URL",
+        validators=[validate_image_url],
         help_text="A URL to an image of the finished dish (optional)",
     )
     created_at = models.DateTimeField(

@@ -26,7 +26,7 @@
     {% if type == 'select' %}
       <select name="{{ name }}"
               {% if id %}id="{{ id }}"{% endif %}
-              class="{{ class }} w-full h-full px-3 py-2 bg-gray-50 border-3 border-blue-mama rounded-md focus:outline-none focus:ring-3 focus:ring-blue-mama focus:border-transparent"
+              class="{{ class }} w-full px-3 py-2 bg-gray-50 border-3 border-blue-mama rounded-md focus:outline-none focus:ring-3 focus:ring-blue-mama focus:border-transparent"
               {% if required == "True" %}required{% endif %}>
         {% for option in choices %}
           <option value="{{ option }}" {% if value == option %}selected{% endif %}>{{ option }}</option>
@@ -101,7 +101,7 @@
       {% elif 'Select' in widget_name %}
         <select name="{{ field.name }}"
                 id="{{ field.id_for_label }}"
-                class="{{ class }} w-full h-full px-3 py-2 bg-gray-50 border-3 border-blue-mama rounded-md focus:outline-none focus:ring-3 focus:ring-blue-mama focus:border-transparent"
+                class="{{ class }} w-full px-3 py-2 bg-gray-50 border-3 border-blue-mama rounded-md focus:outline-none focus:ring-3 focus:ring-blue-mama focus:border-transparent"
                 {% if field.field.required %}required{% endif %}>
           {% for choice_value, choice_label in field.field.choices %}
             <option value="{{ choice_value }}"

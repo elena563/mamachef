@@ -318,7 +318,10 @@ def add_to_list(request):
     ingredient_ids = request.POST.getlist("ingredient")
 
     for qi_id in ingredient_ids:
-        recipe_ing = RecipeIngredient.objects.get(id=qi_id)
+        try:
+            recipe_ing = RecipeIngredient.objects.get(id=qi_id)
+        except RecipeIngredient.DoesNotExist:
+            continue
         ingredient = recipe_ing.ingredient
         quantity = recipe_ing.quantity
         unit = recipe_ing.unit

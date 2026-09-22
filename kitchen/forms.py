@@ -94,3 +94,26 @@ class UserProfileForm(forms.ModelForm):
             "bio": "Bio",
             "profile_picture": "Profile Picture",
         }
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if commit:
+            if instance.profile_picture:
+                old_pic = None
+                if self.instance.pk:
+                    old_pic = (
+                        UserProfile.objects.filter(pk=self.instance.pk)
+                        .values_list("profile_picture", flat=True)
+                        .first()
+                    )
+                if not old_pic or old_pic != instance.profile_picture.name:
+                    instance.profile_picture = compress_image(instance.profile_picture)
+                    instance.save()
+                    if old_pic:
+                        instance.profile_picture.storage.delete(old_pic)
+                else:
+                    instance.save()
+            else:
+                instance.save()
+            self.save_m2m()
+        return instance

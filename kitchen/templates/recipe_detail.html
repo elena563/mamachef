@@ -18,25 +18,25 @@
                 class="font-jua text-xl text-red-mama hover:underline cursor-pointer">Delete</button>
       </div>
     {% endif %}
-    <div class="text-gray-600 mb-6 space-x-4">
-      {% if recipe.preparation_time %}
-        <span><i class="fa-solid fa-clock mr-1" style="color: #feaac2;"></i> {{ recipe.preparation_time }} min</span>
-      {% endif %}
-      {% if recipe.difficulty %}
-        <span><i class="fa-solid fa-gauge-high mr-1" style="color: #feaac2;"></i></i> {{ recipe.difficulty }}</span>
-    {% endif %}
-    {% if recipe.author %}
-      <span><i class="fa-solid fa-user mr-1" style="color: #feaac2;"></i> {{ recipe.author }}</span>
-    {% endif %}
-    {% if recipe.cooking_method %}
-      <span><i class="fa-solid fa-fire mr-1" style="color: #feaac2;"></i> {{ recipe.cooking_method }}</span>
-    {% endif %}
-  </div>
   {% if recipe.image %}
     <img src="{{ recipe.image }}"
          alt="{{ recipe.name }}"
          class="h-64 rounded-lg mb-4">
   {% endif %}
+  <div class="text-gray-600 mb-6 flex flex-col gap-2">
+      {% if recipe.preparation_time %}
+        <span><i class="fa-solid fa-clock mr-1" style="color: #feaac2;"></i> Time: {{ recipe.preparation_time }} min</span>
+      {% endif %}
+      {% if recipe.difficulty %}
+        <span><i class="fa-solid fa-gauge-high mr-1" style="color: #feaac2;"></i></i> Difficulty: {{ recipe.difficulty }}</span>
+    {% endif %}
+    {% if recipe.author %}
+      <span><i class="fa-solid fa-user mr-1" style="color: #feaac2;"></i> Chef: {{ recipe.author }}</span>
+    {% endif %}
+    {% if recipe.cooking_method %}
+      <span><i class="fa-solid fa-fire mr-1" style="color: #feaac2;"></i> Method: {{ recipe.cooking_method }}</span>
+    {% endif %}
+  </div>
   <p class="text-gray-800 mb-6">{{ recipe.description }}</p>
   <hr class="my-6 border-dashed border-2 border-navy-mama">
   <div class="flex justify-between gap-4 mb-3">
