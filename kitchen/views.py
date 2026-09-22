@@ -9,6 +9,7 @@ from django.db import transaction
 from django.http import FileResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 from django.views.generic.edit import CreateView, UpdateView
 
@@ -260,17 +261,17 @@ def recipe_delete(request, pk):
 
 
 @login_required
+@require_POST
 def add_to_favorites(request, pk):
-    user_profile = request.user.profile
+    user_profile, _ = UserProfile.objects.get_or_create(user=request.user)
     recipe = get_object_or_404(Recipe, pk=pk)
     if recipe in user_profile.favorite_recipes.all():
         user_profile.favorite_recipes.remove(recipe)
+        favorited = False
     else:
         user_profile.favorite_recipes.add(recipe)
-    referer = request.META.get("HTTP_REFERER")
-    if referer:
-        return redirect(referer)
-    return redirect("Kitchen:recipes")
+        favorited = True
+    return JsonResponse({"success": True, "favorited": favorited})
 
 
 @login_required
@@ -311,6 +312,7 @@ def shopping_list(request):
 
 
 @login_required
+@require_POST
 def add_to_list(request):
     shopping_list = request.user.shopping_list
     ingredient_ids = request.POST.getlist("ingredient")
@@ -332,7 +334,7 @@ def add_to_list(request):
             item.quantity += quantity
             item.save()
     referer = request.META.get("HTTP_REFERER")
-    if referer:
+    if referer and url_has_allowed_host_and_scheme(referer, allowed_hosts={request.get_host()}):
         return redirect(referer)
     return redirect("Kitchen:recipes")
 

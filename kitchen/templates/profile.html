@@ -71,19 +71,19 @@
   </section>
   <section class="py-12">
     <h2 class="text-3xl font-semibold mb-2">Your Favorite Recipes</h2>
-    {% if user.profile.favorite_recipes.exists %}
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for recipe in user.profile.favorite_recipes.all %}<c-recipe-card recipe = recipe />{% endfor %}
-      </div>
-    {% else %}
-      <div class="py-6 space-y-4">
-        <p>You haven't saved any recipes yet.</p>
-        <c-button link="{% url 'Kitchen:recipes' %}" variant="success">Let's explore!</c-button>
-      </div>
-    {% endif %}
+    <div id="favorites-grid"
+         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 {% if not user.profile.favorite_recipes.exists %}hidden{% endif %}">
+      {% for recipe in user.profile.favorite_recipes.all %}<c-recipe-card recipe = recipe />{% endfor %}
+    </div>
+    <div id="favorites-empty"
+         class="py-6 space-y-4 {% if user.profile.favorite_recipes.exists %}hidden{% endif %}">
+      <p>You haven't saved any recipes yet.</p>
+      <c-button link="{% url 'Kitchen:recipes' %}" variant="success">Let's explore!</c-button>
+    </div>
   </section>
 {% endblock %}
 {% block extra_js %}
+  <script src="{% static 'js/favorites.js' %}" defer></script>
   <script>
 document.addEventListener('DOMContentLoaded', () => {
     const profileInput = document.getElementById('profileInput');
