@@ -31,3 +31,5 @@ bg/
 *.ipynb
 
 django-errors.log
+
+translate.py

@@ -25,7 +25,7 @@
         {% csrf_token %}
         <div class='bg-gray-50 rounded-2xl p-6 border-4 border-blue-mama w-full'>
           <h1 class="mb-4 text-4xl font-bold leading-relaxed">
-            Hello {{ user.username }}, tell us more about yourself!
+            {% blocktrans %}Hello {{ user.username }}, tell us more about yourself!{% endblocktrans %}
           </h1>
           <div class="flex flex-col md:flex-row md:gap-8 items-center">
             <c-form-field :field="pform.profile_picture" label="Profile Picture" rounded="True" />
@@ -38,10 +38,10 @@
           </div>
           <div class="mt-6 flex justify-end gap-2">
             <c-button type="button" id="cancelBtn" variant="ghost">
-              Cancel
+              {% trans "Cancel" %}
             </c-button>
             <c-button type="submit" variant="success">
-              Save Changes
+              {% trans "Save Changes" %}
             </c-button>
           </div>
         </div>
@@ -53,9 +53,9 @@
 {% block content %}
   <section class="mb-6">
     <div class="flex justify-between items-center my-6 gap-4">
-      <h2 class="text-3xl font-semibold mb-2">Your Recipes</h2>
+      <h2 class="text-3xl font-semibold mb-2">{% trans "Your Recipes" %}</h2>
       {% if recipes %}
-        <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary">Add New Recipe</c-button>
+        <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary">{% trans "Add New Recipe" %}</c-button>
       {% endif %}
     </div>
     {% if recipes %}
@@ -64,21 +64,21 @@
       </div>
     {% else %}
       <div class="py-6 space-y-4">
-        <p>You haven't added any recipes yet. Let's try creating one!</p>
-        <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary">Add New Recipe</c-button>
+        <p>{% trans "You haven't added any recipes yet. Let's try creating one!" %}</p>
+        <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary">{% trans "Add New Recipe" %}</c-button>
       </div>
     {% endif %}
   </section>
   <section class="py-12">
-    <h2 class="text-3xl font-semibold mb-2">Your Favorite Recipes</h2>
+    <h2 class="text-3xl font-semibold mb-2">{% trans "Your Favorite Recipes" %}</h2>
     <div id="favorites-grid"
          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 {% if not user.profile.favorite_recipes.exists %}hidden{% endif %}">
       {% for recipe in user.profile.favorite_recipes.all %}<c-recipe-card recipe = recipe />{% endfor %}
     </div>
     <div id="favorites-empty"
          class="py-6 space-y-4 {% if user.profile.favorite_recipes.exists %}hidden{% endif %}">
-      <p>You haven't saved any recipes yet.</p>
-      <c-button link="{% url 'Kitchen:recipes' %}" variant="success">Let's explore!</c-button>
+      <p>{% trans "You haven't saved any recipes yet." %}</p>
+      <c-button link="{% url 'Kitchen:recipes' %}" variant="success">{% trans "Let's explore!" %}</c-button>
     </div>
   </section>
 {% endblock %}

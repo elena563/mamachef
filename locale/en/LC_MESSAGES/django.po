@@ -1,0 +1,116 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-10 19:48+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\kitchen\templates\home.html:10
+msgid "Welcome to MamaChef!"
+msgstr ""
+
+#: .\kitchen\templates\home.html:11
+msgid "Discover, create, and share your favorite recipes"
+msgstr ""
+
+#: .\kitchen\templates\home.html:13
+msgid "Start Cooking!"
+msgstr ""
+
+#: .\kitchen\templates\home.html:23
+msgid "Featured Recipes"
+msgstr ""
+
+#: .\kitchen\templates\home.html:30
+msgid "Do you have a recipe to share?"
+msgstr ""
+
+#: .\kitchen\templates\home.html:31
+msgid "Join our community of home chefs!"
+msgstr ""
+
+#: .\kitchen\templates\home.html:35
+msgid "Share a Recipe"
+msgstr ""
+
+#: .\kitchen\templates\home.html:39
+msgid "Start Sharing"
+msgstr ""
+
+#: .\kitchen\templates\home.html:43
+msgid "Explore Recipes"
+msgstr ""
+
+#: .\kitchen\templates\home.html:48
+msgid "Discover Categories"
+msgstr ""
+
+#: .\kitchen\templates\login.html:27
+msgid "Are you a new chef?"
+msgstr ""
+
+#: .\kitchen\templates\login.html:28
+msgid "Register"
+msgstr ""
+
+#: .\kitchen\templates\profile.html:28
+#, python-format
+msgid "Hello %(user.username)s, tell us more about yourself!"
+msgstr ""
+
+#: .\kitchen\templates\profile.html:41
+msgid "Cancel"
+msgstr ""
+
+#: .\kitchen\templates\profile.html:44
+msgid "Save Changes"
+msgstr ""
+
+#: .\kitchen\templates\profile.html:56
+msgid "Your Recipes"
+msgstr ""
+
+#: .\kitchen\templates\profile.html:58 .\kitchen\templates\profile.html:68
+msgid "Add New Recipe"
+msgstr ""
+
+#: .\kitchen\templates\profile.html:67
+msgid "You haven't added any recipes yet. Let's try creating one!"
+msgstr ""
+
+#: .\kitchen\templates\profile.html:73
+msgid "Your Favorite Recipes"
+msgstr ""
+
+#: .\kitchen\templates\profile.html:80
+msgid "You haven't saved any recipes yet."
+msgstr ""
+
+#: .\kitchen\templates\profile.html:81
+msgid "Let's explore!"
+msgstr ""
+
+#: .\mamachef\settings.py:20
+msgid "Italian"
+msgstr ""
+
+#: .\mamachef\settings.py:21
+msgid "English"
+msgstr ""
+
+#: .\templates\base.html:48
+msgid "All recipes are made with love by our community"
+msgstr ""
