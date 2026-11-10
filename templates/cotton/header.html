@@ -1,4 +1,6 @@
-{% load static %}
+{% load static i18n %}
+{% get_current_language as CURRENT_LANGUAGE %}
+
 <header class="bg-white shadow-lg shadow-pink-mama/30 relative">
   <div class="mx-auto px-4 sm:px-6 lg:px-8">
     <nav class="flex justify-between h-16">
@@ -17,22 +19,22 @@
         </a>
         <a href="/recipes/"
            class="border-3 {% if request.path == '/recipes/' %}border-solid{% else %}border-dashed{% endif %} border-pink-mama text-pink-mama font-jua hover:bg-pink-mama hover:text-white hover:border-pink-mama inline-flex items-center px-4 rounded-full text-lg transition-colors self-center">
-          Recipes
+          {% trans "Recipes" %}
         </a>
         {% if user.is_authenticated %}
           <a href="/shopping_list/"
              class="border-3 {% if request.path == '/shopping_list/' %}border-solid{% else %}border-dashed{% endif %} border-pink-mama text-pink-mama font-jua hover:bg-pink-mama hover:text-white hover:border-pink-mama inline-flex items-center px-4 rounded-full text-lg transition-colors self-center">
-            Shopping List
+            {% trans "Shopping List" %}
           </a>
           <a href="/profile/"
              class="border-3 {% if request.path == '/profile/' %}border-solid{% else %}border-dashed{% endif %} border-pink-mama text-pink-mama font-jua hover:bg-pink-mama hover:text-white hover:border-pink-mama inline-flex items-center px-4 rounded-full text-lg transition-colors self-center">
-            Profile
+            {% trans "Profile" %}
           </a>
         {% endif %}
       </div>
       <div class="hidden lg:flex ml-6 items-center gap-2">
         {% if user.is_authenticated %}
-          <span class="text-gray-700 mr-4">Hi, {{ user.username }}!</span>
+          <span class="text-gray-700 mr-4">{% trans "Hi, " %}{{ user.username }}!</span>
           <form method="post"
                 action="{% url 'Kitchen:logout' %}"
                 class="inline-block">
@@ -42,16 +44,17 @@
             </c-button>
           </form>
           <c-button link="{% url 'Kitchen:new_recipe' %}" variant="primary">
-            Add Recipe
+            {% trans "Add Recipe" %}
           </c-button>
         {% else %}
           <c-button link="{% url 'Kitchen:login' %}" variant="success">
             Login
           </c-button>
           <c-button link="{% url 'Kitchen:register' %}" variant="primary">
-            Sign up
+            {% trans "Sign up" %}
           </c-button>
         {% endif %}
+        <c-language-button />
       </div>
       <!-- Mobile menu -->
       <div class="lg:hidden flex items-center">
@@ -59,7 +62,7 @@
                 class="inline-flex items-center justify-center p-2 text-pink-mama hover:bg-pink-mama hover:text-white transition-colors"
                 aria-controls="mobile-menu"
                 aria-expanded="false">
-          <span class="sr-only">Open main menu</span>
+          <span class="sr-only">{% trans "Open main menu" %}</span>
           <svg class="block h-8 w-8"
                id="menu-icon"
                fill="none"
@@ -69,6 +72,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
           </svg>
         </button>
+        <c-language-button />
       </div>
     </nav>
   </div>
@@ -94,22 +98,22 @@
       </a>
       <a href="/recipes/"
          class="block px-4 py-3 rounded-full text-center font-jua border-3 {% if request.path == '/recipes/' %}border-solid bg-pink-mama text-white{% else %}border-dashed border-pink-mama text-pink-mama hover:bg-pink-mama hover:text-white{% endif %} transition-colors">
-        Recipes
+        {% trans "Recipes" %}
       </a>
       {% if user.is_authenticated %}
         <a href="/shopping-list/"
            class="block px-4 py-3 rounded-full text-center font-jua border-3 border-dotted border-pink-mama text-pink-mama hover:bg-pink-mama hover:text-white transition-colors">
-          Shopping List
+          {% trans "Shopping List" %}
         </a>
         <a href="/profile/"
            class="block px-4 py-3 rounded-full text-center font-jua border-3 {% if request.path == '/profile/' %}border-solid bg-pink-mama text-white{% else %}border-dashed border-pink-mama text-pink-mama hover:bg-pink-mama hover:text-white{% endif %} transition-colors">
-          Profile
+          {% trans "Profile" %}
         </a>
       {% endif %}
       <div class="border-t-2 border-dashed border-pink-mama/30 my-3"></div>
       <div class="flex flex-col items-center gap-2">
         {% if user.is_authenticated %}
-          <div class="px-4 py-2 text-center text-gray-700">Hi, {{ user.username }}!</div>
+          <div class="px-4 py-2 text-center text-gray-700">{% trans "Hi, " %}{{ user.username }}!</div>
           <form method="post"
                 action="{% url 'Kitchen:logout' %}"
                 class="inline-block">
@@ -124,7 +128,7 @@
               Login
             </c-button>
             <c-button link="{% url 'Kitchen:register' %}" variant="primary" class="flex-1">
-              Sign up
+              {% trans "Sign up" %}
             </c-button>
           </div>
         {% endif %}

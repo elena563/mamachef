@@ -1,10 +1,14 @@
 {% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ recipe.name }} - MamaChef{% endblock %}
+
 {% block content %}
   <div class="max-w-3xl mx-auto mt-6 md:mt-10 px-4">
     <c-button link="{% url 'Kitchen:recipes' %}"
               variant="secondary"
               size="sm"
-              class="mb-6">← Back to Recipes</c-button>
+              class="mb-6">{% trans "← Back to Recipes" %}</c-button>
     {% if recipe.category %}
       <span class="text-md font-medium text-pink-mama-dark opacity-50 block mb-2">{{ recipe.category | upper }}</span>
     {% endif %}
@@ -12,10 +16,10 @@
     {% if user.is_authenticated and user == recipe.author %}
       <div class="mb-4">
         <a href="{% url 'Kitchen:edit_recipe' recipe.id %}"
-           class="font-jua text-xl text-blue-mama-dark hover:underline mr-4">Edit</a>
+           class="font-jua text-xl text-blue-mama-dark hover:underline mr-4">{% trans "Edit" %}</a>
         <button type="button"
                 data-open-popup="delete-popup"
-                class="font-jua text-xl text-red-mama hover:underline cursor-pointer">Delete</button>
+                class="font-jua text-xl text-red-mama hover:underline cursor-pointer">{% trans "Delete" %}</button>
       </div>
     {% endif %}
   {% if recipe.image %}
@@ -25,26 +29,26 @@
   {% endif %}
   <div class="text-gray-600 mb-6 flex flex-col gap-2">
       {% if recipe.preparation_time %}
-        <span><i class="fa-solid fa-clock mr-1" style="color: #feaac2;"></i> Time: {{ recipe.preparation_time }} min</span>
+        <span><i class="fa-solid fa-clock mr-1" style="color: #feaac2;"></i> {% trans "Time" %}: {{ recipe.preparation_time }} min</span>
       {% endif %}
       {% if recipe.difficulty %}
-        <span><i class="fa-solid fa-gauge-high mr-1" style="color: #feaac2;"></i></i> Difficulty: {{ recipe.difficulty }}</span>
+        <span><i class="fa-solid fa-gauge-high mr-1" style="color: #feaac2;"></i></i> {% trans "Difficulty" %}: {{ recipe.difficulty }}</span>
     {% endif %}
     {% if recipe.author %}
       <span><i class="fa-solid fa-user mr-1" style="color: #feaac2;"></i> Chef: {{ recipe.author }}</span>
     {% endif %}
     {% if recipe.cooking_method %}
-      <span><i class="fa-solid fa-fire mr-1" style="color: #feaac2;"></i> Method: {{ recipe.cooking_method }}</span>
+      <span><i class="fa-solid fa-fire mr-1" style="color: #feaac2;"></i> {% trans "Method" %}: {{ recipe.cooking_method }}</span>
     {% endif %}
   </div>
   <p class="text-gray-800 mb-6">{{ recipe.description }}</p>
   <hr class="my-6 border-dashed border-2 border-navy-mama">
   <div class="flex justify-between gap-4 mb-3">
-    <h2 class="text-2xl font-semibold">Ingredients</h2>
+    <h2 class="text-2xl font-semibold">{% trans "Ingredients" %}</h2>
     {% if user.is_authenticated %}
       <span data-open-popup="add-to-list-popup">
         <c-button class="!hidden sm:!inline-flex" variant="green">
-          Add to Shopping List
+          {% trans "Add to Shopping List" %}
         </c-button>
       </span>
     {% endif %}
@@ -52,7 +56,7 @@
   {% if servings %}
     <div class="flex items-center gap-2 mb-4">
       <p class="text-gray-700">
-        Servings: <span id="servings">{{ recipe.servings }}</span>
+        {% trans "Servings" %}: <span id="servings">{{ recipe.servings }}</span>
       </p>
       <c-form-field id="servings-input"
                     class="hidden"
@@ -60,7 +64,7 @@
                     name="servings"
                     value="{{ recipe.servings }}" />
       <c-button id="servings-btn" size="sm">
-        Change
+        {% trans "Change" %}
       </c-button>
     </div>
   {% endif %}
@@ -77,13 +81,13 @@
     <span data-open-popup="add-to-list-popup"
           class="sm:hidden mt-4 inline-block">
       <c-button variant="green">
-        Add to Shopping List
+        {% trans "Add to Shopping List" %}
       </c-button>
     </span>
   {% endif %}
   {% if steps %}
     <hr class="my-6 border-dashed border-2 border-navy-mama">
-    <h2 class="text-2xl font-semibold mb-4">Preparation</h2>
+    <h2 class="text-2xl font-semibold mb-4">{% trans "Preparation" %}</h2>
     <div class="space-y-4">
       {% for step in steps %}
         <div class="self-end rounded-2xl p-2 bg-light-pink">
@@ -97,7 +101,7 @@
             <p class="text-gray-800">{{ step.description }}</p>
             {% if step.used_ingredients.all %}
               <div class="mt-3 text-sm text-gray-600">
-                <span class="font-medium">Uses:</span>
+                <span class="font-medium">{% trans "Uses" %}:</span>
                 <ul class="list-disc pl-5 text-navy-mama font-semibold">
                   {% for ing in step.used_ingredients.all %}<li>{{ ing.name }}</li>{% endfor %}
                 </ul>
@@ -107,11 +111,11 @@
         </div>
       {% endfor %}
     </div>
-    <h3 class="text-xl font-semibold mt-8 mb-4">Try step-by-step guided mode!</h3>
-    <p class="text-gray-700 mb-4">Follow the recipe step-by-step with timers and ingredient highlights.</p>
+    <h3 class="text-xl font-semibold mt-8 mb-4">{% trans "Try step-by-step guided mode!" %}</h3>
+    <p class="text-gray-700 mb-4">{% trans "Follow the recipe step-by-step with timers and ingredient highlights." %}</p>
     <c-button link="{% url 'Kitchen:guided_mode' recipe.id %}"
               variant="primary"
-              size="lg">Start Guided Mode!</c-button>
+              size="lg">{% trans "Start Guided Mode!" %}</c-button>
     </div>
   {% endif %}
   <c-popup id="add-to-list-popup" title="Choose ingredients">
@@ -126,20 +130,20 @@
         </p>
       {% endfor %}
       <c-button class="mt-2" type="submit" variant="green">
-        Add selected
+        {% trans "Add selected" %}
       </c-button>
     </form>
   </c-popup>
   <c-popup id="delete-popup" title="Delete recipe">
-    <p class="text-gray-700 mb-4">Are you sure you want to delete "{{ recipe.name }}"?</p>
+    <p class="text-gray-700 mb-4">{% trans "Are you sure you want to delete" %} "{{ recipe.name }}"?</p>
     <form method="POST" action="{% url 'Kitchen:delete_recipe' recipe.id %}">
       {% csrf_token %}
       <div class="flex gap-2">
         <c-button class="close-popup-btn" variant="ghost">
-          Cancel
+          {% trans "Cancel" %}
         </c-button>
         <c-button type="submit" variant="danger">
-          Confirm delete
+          {% trans "Confirm delete" %}
         </c-button>
       </div>
     </form>
