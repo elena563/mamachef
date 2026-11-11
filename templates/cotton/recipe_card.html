@@ -15,14 +15,14 @@
   <div class="p-3 flex flex-grow flex-col justify-between">
     <div>
       {% if recipe.category %}
-        <span class="text-sm font-medium text-pink-mama-dark opacity-60">{{ recipe.category|upper }}</span>
+        <span class="text-sm font-medium text-pink-mama-dark opacity-60">{{ recipe.get_category_display|upper }}</span>
       {% endif %}
       <h3 class="text-2xl font-semibold my-2">{{ recipe.name }}</h3>
       {% if recipe.description %}<p class="mb-4">{{ recipe.description|truncatewords:18 }}</p>{% endif %}
       <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
         {% if recipe.difficulty %}
-          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {% if recipe.difficulty == 'Easy' %} bg-green-100 text-green-800 {% elif recipe.difficulty == 'Medium' %} bg-yellow-100 text-yellow-800 {% else %} bg-red-100 text-red-800 {% endif %}">
-            {{ recipe.difficulty }}
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {% if recipe.difficulty == 'easy' %} bg-green-100 text-green-800 {% elif recipe.difficulty == 'medium' %} bg-yellow-100 text-yellow-800 {% else %} bg-red-100 text-red-800 {% endif %}">
+            {{ recipe.get_difficulty_display }}
           </span>
         {% endif %}
         {% if recipe.preparation_time %}
