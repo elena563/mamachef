@@ -1,6 +1,15 @@
 {% extends 'base.html' %}
-{% load static %}
-{% block title %}{{ shopping_list.name }} - MamaChef{% endblock %}
+{% load static i18n %}
+
+{% block title %}
+  {% if shopping_list.name %}
+  {{ shopping_list.name }}
+  {% else %}
+  {% trans 'Shopping List' %}
+  {% endif %}
+  - MamaChef
+ {% endblock %}
+
 {% block content %}
   <div class="max-w-4xl mx-auto px-4 py-8 mt-6 bg-beige-mama border-4 border-yellow-mama rounded-3xl">
     <form method="post">
@@ -13,24 +22,26 @@
       <div class="flex flex-col md:flex-row justify-between gap-4 mb-6">
         <div class="flex gap-4">
           <c-button variant="success" type="submit">
-            Save Changes
+            {% trans 'Save Changes' %}
           </c-button>
           <c-button variant="ghost"
                     type="button"
                     link="{% url 'Kitchen:shopping_list' %}">
-            Cancel
+            {% trans 'Cancel' %}
           </c-button>
         </div>
         <div class="flex flex-col md:flex-row gap-4">
-          <c-button link="{% url 'Kitchen:export_pdf' %}" variant="green">Export PDF</c-button>
+          <c-button link="{% url 'Kitchen:export_pdf' %}" variant="green">
+            {% trans 'Export PDF' %}
+          </c-button>
           <c-button class='remove_bought_btn'
                     type="button"
                     variant="primary"
                     disabled="
           {% if not bought_items %}True{% endif %}
-          ">Delete Bought Items</c-button>
+          ">{% trans 'Delete Bought Items' %}</c-button>
           <c-button class='clear_btn' type="button" variant="primary">
-            Clear List
+            {% trans 'Clear List' %}
           </c-button>
         </div>
       </div>
@@ -84,7 +95,7 @@
             {% endfor %}
           </ul>
         {% else %}
-          <p class="py-6">Your shopping list is empty. Start adding some items!</p>
+          <p class="py-6">{% trans 'Your shopping list is empty. Start adding some items!' %}</p>
         {% endif %}
         <template id="item-template">
           <div class="flex flex-col md:flex-row gap-4 mb-4">
