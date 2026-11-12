@@ -8,9 +8,10 @@ from .ingredient_validation import (
     get_or_validate_ingredient,
     validate_quantity_unit,
 )
+from .language_helpers import translate_text
 
 
-def save_dynamic_fields(request, recipe):
+def save_dynamic_fields(request, recipe, lang=None):
     names = request.POST.getlist("ingredient")
     quantities = request.POST.getlist("quantity")
     units = request.POST.getlist("unit")
@@ -31,7 +32,7 @@ def save_dynamic_fields(request, recipe):
             messages.error(request, f"Ingredient name is required for ingredient #{i + 1}")
             has_errors = True
             continue
-        ingredient, error = get_or_validate_ingredient(name)
+        ingredient, error = get_or_validate_ingredient(name, lang)
         if error:
             messages.error(request, error)
             has_errors = True
@@ -54,7 +55,20 @@ def save_dynamic_fields(request, recipe):
         if not step:
             continue
         timer = timers[i] if i < len(timers) and timers[i] and timers[i].strip() else None
-        step_obj = recipe.steps.create(description=step, timer=timer, order=i + 1)
+
+        if lang == "it":
+            description_en = translate_text(step, "it", "en")
+            description_it = step
+        else:
+            description_en = step
+            description_it = translate_text(step, "en", "it")
+
+        step_obj = recipe.steps.create(
+            description_en=description_en,
+            description_it=description_it,
+            timer=timer,
+            order=i + 1,
+        )
 
         used = request.POST.get(f"used_ingredients_{i}")
         if used is None and i < len(used_ingredients_list):

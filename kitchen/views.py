@@ -13,6 +13,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 from django.views.generic.edit import CreateView, UpdateView
 
+from functions.language_helpers import detect_input_language, translate_text
 from functions.pdf import generate_list_pdf
 from functions.recipe_helpers import (
     filter_recipes,
@@ -206,13 +207,45 @@ class RecipeFormView(LoginRequiredMixin):
 
         return context
 
+    def detect_recipe_language(self, form):
+        return detect_input_language(
+            [
+                form.cleaned_data.get("name", ""),
+                form.cleaned_data.get("description", ""),
+                form.cleaned_data.get("notes", ""),
+                *self.request.POST.getlist("step"),
+            ]
+        )
+
+    def apply_recipe_translations(self, obj, form, lang):
+        name = form.cleaned_data.get("name", "")
+        description = form.cleaned_data.get("description") or ""
+        notes = form.cleaned_data.get("notes") or ""
+        if lang == "it":
+            obj.name_it, obj.description_it, obj.notes_it = name, description, notes
+            obj.name_en = translate_text(name, "it", "en")
+            obj.description_en = translate_text(description, "it", "en")
+            obj.notes_en = translate_text(notes, "it", "en")
+        else:
+            obj.name_en, obj.description_en, obj.notes_en = name, description, notes
+            obj.name_it = translate_text(name, "en", "it")
+            obj.description_it = translate_text(description, "en", "it")
+            obj.notes_it = translate_text(notes, "en", "it")
+
 
 class RecipeCreateView(RecipeFormView, CreateView):
     def form_valid(self, form):
+        lang, error = self.detect_recipe_language(form)
+        if error:
+            messages.error(self.request, error)
+            return self.form_invalid(form)
+
         form.instance.author = self.request.user
         response = super().form_valid(form)
+        self.apply_recipe_translations(self.object, form, lang)
+        self.object.save()
 
-        if not save_dynamic_fields(self.request, self.object):
+        if not save_dynamic_fields(self.request, self.object, lang):
             self.object.delete()
             return self.form_invalid(form)
         return response
@@ -227,15 +260,22 @@ class RecipeUpdateView(RecipeFormView, UpdateView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        self.object = form.save()
+        lang, error = self.detect_recipe_language(form)
+        if error:
+            messages.error(self.request, error)
+            return self.form_invalid(form)
 
         with transaction.atomic():
             RecipeIngredient.objects.filter(recipe=self.object).delete()
             self.object.steps.all().delete()
 
-            if not save_dynamic_fields(self.request, self.object):
+            if not save_dynamic_fields(self.request, self.object, lang):
                 return self.form_invalid(form)
-        return super().form_valid(form)
+
+        response = super().form_valid(form)
+        self.apply_recipe_translations(self.object, form, lang)
+        self.object.save()
+        return response
 
 
 def ingredient_autocomplete(request):
@@ -276,7 +316,7 @@ def add_to_favorites(request, pk):
 
 @login_required
 def shopping_list(request):
-    shop_list = get_object_or_404(ShoppingList, user=request.user)
+    shop_list, _ = ShoppingList.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
         list_name = request.POST.get("list_name", "").strip()
@@ -314,7 +354,7 @@ def shopping_list(request):
 @login_required
 @require_POST
 def add_to_list(request):
-    shopping_list = request.user.shopping_list
+    shopping_list = get_object_or_404(ShoppingList, user=request.user)
     ingredient_ids = request.POST.getlist("ingredient")
 
     for qi_id in ingredient_ids:
@@ -344,7 +384,7 @@ def add_to_list(request):
 
 @login_required
 def export_pdf(request):
-    shop_list = get_object_or_404(ShoppingList, user=request.user)
+    shop_list, _ = ShoppingList.objects.get_or_create(user=request.user)
     pdf = generate_list_pdf(shop_list)
     return FileResponse(pdf, as_attachment=True, filename=f"{shop_list.name}.pdf")
 

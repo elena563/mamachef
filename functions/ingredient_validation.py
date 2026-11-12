@@ -3,6 +3,8 @@ from difflib import SequenceMatcher
 import inflect
 import nltk
 import spacy
+from deep_translator import GoogleTranslator
+from langdetect import detect
 from nltk.corpus import wordnet as wn
 
 from kitchen.models import Ingredient
@@ -70,33 +72,29 @@ def is_countable(name):
 
 def find_similar_ingredients(name, threshold=0.85):
     """avoid duplicates and typos by finding similar existing ingredients"""
-    first_letter = name[0].lower() if name else ""  # reduce comparisons
-    candidates = Ingredient.objects.filter(name__istartswith=first_letter)
+    first_letter = name[0].lower() if name else ""
+    candidates = Ingredient.objects.filter(name_en__istartswith=first_letter)
 
     similar = []
     for ing in candidates:
-        ratio = SequenceMatcher(None, name.lower(), ing.name.lower()).ratio()
+        ratio = SequenceMatcher(None, name.lower(), ing.name_en.lower()).ratio()
         if ratio > threshold:
             similar.append((ing, ratio))
     return sorted(similar, key=lambda x: x[1], reverse=True)
 
 
-def get_or_validate_ingredient(name):
-    name_clean = name.strip()
+def normalize_ingredient_name(name):
+    """singularizes and capitalizes the ingredient name, returns existing ingredient if found"""
+    if is_countable(name):
+        singular_form = _inflect.singular_noun(name)
+        if singular_form:
+            name = singular_form
 
-    countable = is_countable(name_clean)
-    if countable:
-        singular_form = _inflect.singular_noun(name_clean)
-
-        if not singular_form:
-            pluralized = _inflect.plural_noun(name_clean)
-            if pluralized:
-                name_clean = pluralized
-
-    target_name = name_clean.title()
+    target_name = name.title()
+    print(target_name)
 
     # get if exists
-    existing = Ingredient.objects.filter(name__iexact=target_name).first()
+    existing = Ingredient.objects.filter(name_en__iexact=target_name).first()
     if existing:
         return existing, None
 
@@ -109,10 +107,38 @@ def get_or_validate_ingredient(name):
     if not validate_new_ingredient(name):
         return None, f"'{name}' is not a valid ingredient"
 
+    return name, None
+
+
+def get_or_validate_ingredient(name, lang=None):
+    """validates the ingredient name, translates, and returns the Ingredient or an error message"""
+    name_clean = name.strip()
+
+    if not lang:
+        lang = detect(name)
+
+    if lang not in ["en", "it"]:
+        return None, f"Not supported language: {lang}"
+    elif lang == "en":
+        name, error = normalize_ingredient_name(name_clean)
+    elif lang == "it":
+        name_en = GoogleTranslator(source="it", target="en").translate(name_clean)
+        name, error = normalize_ingredient_name(name_en)
+
+    if error:
+        return None, error
+
+    if isinstance(name, Ingredient):
+        return name, None
+
+    name_en = name
+    name_it = GoogleTranslator(source="en", target="it").translate(name_en)
+
     name = name.title().strip()
     ingredient = Ingredient.objects.create(
-        name=name if not is_countable(name) else _inflect.plural_noun(name) or name,
-        countable=is_countable(name),
+        name_en=name_en,
+        name_it=name_it,
+        countable=is_countable(name_en),
     )
     return ingredient, None
 
@@ -139,7 +165,7 @@ def validate_quantity_unit(quantity, unit, ingredient_name, for_list=False):
     if not ingredient_name.countable and unit == "pcs" and not for_list:
         return (
             False,
-            f"Unit '{unit}' is not appropriate for uncountable ingredient '{ingredient_name}'",
+            f"Unit '{unit}' is not appropriate for uncountable ingredient '{ingredient_name.name_en}'",
         )
 
     return True, None
