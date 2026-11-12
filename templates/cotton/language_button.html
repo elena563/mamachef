@@ -1,0 +1,25 @@
+{% load static i18n %}
+{% get_current_language as CURRENT_LANGUAGE %}
+
+<form method="post"
+        action="{% url 'set_language' %}"
+        class="flex items-center gap-1 ml-4 self-center">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    <button type="submit"
+            name="language"
+            value="it"
+            title="Italiano"
+            aria-label="Italiano"
+            class="cursor-pointer w-12 h-10 rounded-md overflow-hidden border-2 border-pink-mama ring-2 ring-pink-mama/40 {% if CURRENT_LANGUAGE == 'it' %}bg-pink-mama{% else %}border-transparent opacity-60 hover:opacity-100{% endif %}">
+    <span class="fi fi-it !w-8 !h-8 align-middle"></span>
+    </button>
+    <button type="submit"
+            name="language"
+            value="en"
+            title="English"
+            aria-label="English"
+            class="cursor-pointer w-12 h-10 rounded-md overflow-hidden border-2 border-pink-mama ring-2 ring-pink-mama/40 {% if CURRENT_LANGUAGE == 'en' %}bg-pink-mama{% else %}border-transparent opacity-60 hover:opacity-100{% endif %}">
+    <span class="fi fi-gb !w-8 !h-8 align-middle"></span>
+    </button>
+</form>

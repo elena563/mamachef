@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
 {% block title %}Home - MamaChef{% endblock %}
 {% block hero %}
   <div class="w-full bg-cover bg-center shadow-xl px-4 py-8 sm:p-12 mb-8"
@@ -7,10 +7,10 @@
     <div class="max-w-7xl mx-auto">
       <div class='bg-gray-50 rounded-3xl p-4'>
         <div class='bg-gray-50 rounded-2xl p-6 border-4 border-dashed border-green-mama'>
-          <h1 class="text-4xl font-bold mb-4">Welcome to MamaChef!</h1>
-          <p class="text-xl mb-6">Discover, create, and share your favorite recipes</p>
+          <h1 class="text-4xl font-bold mb-4">{% trans "Welcome to MamaChef!" %}</h1>
+          <p class="text-xl mb-6">{% trans "Discover, create, and share your favorite recipes" %}</p>
           <c-button variant="primary" size="lg" link="{% url 'Kitchen:recipes' %}">
-            Start Cooking!
+            {% trans "Start Cooking!" %}
           </c-button>
         </div>
       </div>
@@ -20,32 +20,32 @@
 {% block extra_js %}<script src="{% static 'js/favorites.js' %}" defer></script>{% endblock %}
 {% block content %}
   <div class="my-8">
-    <h2 class="text-3xl font-bold mb-6">Featured Recipes</h2>
+    <h2 class="text-3xl font-bold mb-6">{% trans "Featured Recipes" %}</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {% for recipe in recipes %}<c-recipe-card recipe = recipe />{% endfor %}
     </div>
   </div>
   <!-- Call to Action -->
   <div class="gradient-blue-pink rounded-lg shadow-md p-8 text-center">
-    <h2 class="text-3xl font-bold mb-4">Do you have a recipe to share?</h2>
-    <p class="text-xl mb-6">Join our community of home chefs!</p>
+    <h2 class="text-3xl font-bold mb-4">{% trans "Do you have a recipe to share?" %}</h2>
+    <p class="text-xl mb-6">{% trans "Join our community of home chefs!" %}</p>
     <div class="flex flex-col sm:flex-row justify-center gap-4">
       {% if user.is_authenticated %}
         <c-button variant="primary" link="{% url 'Kitchen:new_recipe' %}">
-          Share a Recipe
+          {% trans "Share a Recipe" %}
         </c-button>
       {% else %}
         <c-button variant="primary" link="{% url 'Kitchen:login' %}">
-          Start Sharing
+          {% trans "Start Sharing" %}
         </c-button>
       {% endif %}
       <c-button variant="secondary-y" link="{% url 'Kitchen:recipes' %}">
-        Explore Recipes
+        {% trans "Explore Recipes" %}
       </c-button>
     </div>
   </div>
   <div class="mb-8 mt-12">
-    <h2 class="text-3xl font-bold mb-6">Discover Categories</h2>
+    <h2 class="text-3xl font-bold mb-6">{% trans "Discover Categories" %}</h2>
     <span class="text-2xl font-medium text-pink-mama-dark opacity-40 block my-4">MEAT</span>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4 mb-8">
       {% for recipe in meat_recipes %}<c-recipe-card recipe = recipe />{% endfor %}

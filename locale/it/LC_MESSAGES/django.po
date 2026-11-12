@@ -1,0 +1,414 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-12 16:08+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\kitchen\templates\guided_mode.html:3
+msgid "Guided Cooking Mode"
+msgstr "Modalità di Cottura Guidata"
+
+#: .\kitchen\templates\guided_mode.html:31
+msgid "← Back to Recipe"
+msgstr "← Torna alla Ricetta"
+
+#: .\kitchen\templates\guided_mode.html:86
+msgid "← Previous Step"
+msgstr "← Step Precedente"
+
+#: .\kitchen\templates\guided_mode.html:89
+msgid "Next Step →"
+msgstr "Prossimo Step →"
+
+#: .\kitchen\templates\home.html:10
+msgid "Welcome to MamaChef!"
+msgstr "Entra in cucina con MamaChef!"
+
+#: .\kitchen\templates\home.html:11
+msgid "Discover, create, and share your favorite recipes"
+msgstr "Scopri, crea e condividi le tue ricette preferite"
+
+#: .\kitchen\templates\home.html:13
+msgid "Start Cooking!"
+msgstr "Inizia a cucinare!"
+
+#: .\kitchen\templates\home.html:23
+msgid "Featured Recipes"
+msgstr "Ricette in Evidenza"
+
+#: .\kitchen\templates\home.html:30
+msgid "Do you have a recipe to share?"
+msgstr "Hai una ricetta da condividere?"
+
+#: .\kitchen\templates\home.html:31
+msgid "Join our community of home chefs!"
+msgstr "Unisciti alla nostra comunità di cuochi di casa!"
+
+#: .\kitchen\templates\home.html:35
+msgid "Share a Recipe"
+msgstr "Condividi una Ricetta"
+
+#: .\kitchen\templates\home.html:39
+msgid "Start Sharing"
+msgstr "Inizia a Condividere"
+
+#: .\kitchen\templates\home.html:43
+msgid "Explore Recipes"
+msgstr "Esplora le Ricette"
+
+#: .\kitchen\templates\home.html:48
+msgid "Discover Categories"
+msgstr "Scopri le Categorie"
+
+#: .\kitchen\templates\login.html:27
+msgid "Are you a new chef?"
+msgstr "Sei un nuovo chef?"
+
+#: .\kitchen\templates\login.html:28 .\kitchen\templates\register.html:12
+#: .\kitchen\templates\register.html:18 .\kitchen\templates\register.html:23
+msgid "Register"
+msgstr "Registrati"
+
+#: .\kitchen\templates\profile.html:3 .\templates\cotton\header.html:31
+#: .\templates\cotton\header.html:110
+msgid "Profile"
+msgstr "Profilo"
+
+#: .\kitchen\templates\profile.html:28
+#, python-format
+msgid "Hello %(user.username)s, tell us more about yourself!"
+msgstr "Ciao %(user.username)s, raccontaci di più su di te!"
+
+#: .\kitchen\templates\profile.html:41
+#: .\kitchen\templates\recipe_detail.html:143
+#: .\kitchen\templates\recipe_form.html:231
+#: .\kitchen\templates\shopping_list.html:30
+msgid "Cancel"
+msgstr "Annulla"
+
+#: .\kitchen\templates\profile.html:44
+#: .\kitchen\templates\shopping_list.html:25
+msgid "Save Changes"
+msgstr "Salva Modifiche"
+
+#: .\kitchen\templates\profile.html:56
+msgid "Your Recipes"
+msgstr "Le Tue Ricette"
+
+#: .\kitchen\templates\profile.html:58 .\kitchen\templates\profile.html:68
+msgid "Add New Recipe"
+msgstr "Aggiungi Nuova Ricetta"
+
+#: .\kitchen\templates\profile.html:67
+msgid "You haven't added any recipes yet. Let's try creating one!"
+msgstr "Non hai ancora aggiunto ricette. Prova a crearne una!"
+
+#: .\kitchen\templates\profile.html:73
+msgid "Your Favorite Recipes"
+msgstr "Le Tue Ricette Preferite"
+
+#: .\kitchen\templates\profile.html:80
+msgid "You haven't saved any recipes yet."
+msgstr "Non hai ancora salvato nessuna ricetta."
+
+#: .\kitchen\templates\profile.html:81
+msgid "Let's explore!"
+msgstr "Esploriamo insieme!"
+
+#: .\kitchen\templates\recipe_detail.html:11
+msgid "← Back to Recipes"
+msgstr "← Torna alle Ricette"
+
+#: .\kitchen\templates\recipe_detail.html:19
+msgid "Edit"
+msgstr "Modifica"
+
+#: .\kitchen\templates\recipe_detail.html:22
+msgid "Delete"
+msgstr "Elimina"
+
+#: .\kitchen\templates\recipe_detail.html:32
+msgid "Time"
+msgstr "Tempo"
+
+#: .\kitchen\templates\recipe_detail.html:35
+msgid "Difficulty"
+msgstr "Difficoltà"
+
+#: .\kitchen\templates\recipe_detail.html:41
+msgid "Method"
+msgstr "Metodo"
+
+#: .\kitchen\templates\recipe_detail.html:47
+#: .\kitchen\templates\recipe_form.html:56
+msgid "Ingredients"
+msgstr "Ingredienti"
+
+#: .\kitchen\templates\recipe_detail.html:51
+#: .\kitchen\templates\recipe_detail.html:84
+msgid "Add to Shopping List"
+msgstr "Aggiungi alla Lista della Spesa"
+
+#: .\kitchen\templates\recipe_detail.html:59
+msgid "Servings"
+msgstr "Porzioni"
+
+#: .\kitchen\templates\recipe_detail.html:67
+msgid "Change"
+msgstr "Cambia"
+
+#: .\kitchen\templates\recipe_detail.html:90
+msgid "Preparation"
+msgstr "Preparazione"
+
+#: .\kitchen\templates\recipe_detail.html:104
+msgid "Uses"
+msgstr "Utilizza"
+
+#: .\kitchen\templates\recipe_detail.html:114
+msgid "Try step-by-step guided mode!"
+msgstr "Prova la modalità guidata passo-passo!"
+
+#: .\kitchen\templates\recipe_detail.html:115
+msgid "Follow the recipe step-by-step with timers and ingredient highlights."
+msgstr ""
+"Segui la ricetta passo dopo passo con timer e highlight degli ingredienti."
+
+#: .\kitchen\templates\recipe_detail.html:118
+msgid "Start Guided Mode!"
+msgstr "Inizia la Modalità Guidata!"
+
+#: .\kitchen\templates\recipe_detail.html:133
+msgid "Add selected"
+msgstr "Aggiungi i selezionati"
+
+#: .\kitchen\templates\recipe_detail.html:138
+msgid "Are you sure you want to delete"
+msgstr "Sei sicuro di voler eliminare"
+
+#: .\kitchen\templates\recipe_detail.html:146
+msgid "Confirm delete"
+msgstr "Conferma eliminazione"
+
+#: .\kitchen\templates\recipe_form.html:5
+#: .\kitchen\templates\recipe_form.html:31
+msgid "Edit Recipe"
+msgstr "Modifica Ricetta"
+
+#: .\kitchen\templates\recipe_form.html:7
+#: .\kitchen\templates\recipe_form.html:33
+msgid "New Recipe"
+msgstr "Nuova Ricetta"
+
+#: .\kitchen\templates\recipe_form.html:98
+msgid "Steps"
+msgstr "Step"
+
+#: .\kitchen\templates\recipe_form.html:169
+#: .\kitchen\templates\recipe_form.html:205
+msgid "You can add a timer, for example waiting or baking time"
+msgstr "Puoi aggiungere un timer, ad esempio il tempo di attesa o cottura"
+
+#: .\kitchen\templates\recipe_form.html:222
+msgid "Update"
+msgstr "Aggiorna"
+
+#: .\kitchen\templates\recipe_form.html:224
+msgid "Create Recipe"
+msgstr "Crea Ricetta"
+
+#: .\kitchen\templates\recipe_form.html:237
+msgid "Saving..."
+msgstr "Salvando..."
+
+#: .\kitchen\templates\recipes.html:3 .\templates\cotton\header.html:22
+#: .\templates\cotton\header.html:101
+msgid "Recipes"
+msgstr "Ricette"
+
+#: .\kitchen\templates\recipes.html:9
+msgid "Explore our delicious recipes"
+msgstr "Esplora le nostre deliziose Ricette"
+
+#: .\kitchen\templates\recipes.html:15
+msgid "Add new Recipe"
+msgstr "Aggiungi nuova Ricetta"
+
+#: .\kitchen\templates\recipes.html:27 .\kitchen\templates\recipes.html:57
+msgid "Search"
+msgstr "Cerca"
+
+#: .\kitchen\templates\recipes.html:30
+msgid "Clear"
+msgstr "Cancella"
+
+#: .\kitchen\templates\register.html:27
+msgid "Do you already have an account?"
+msgstr "Hai già un account?"
+
+#: .\kitchen\templates\shopping_list.html:8 .\templates\cotton\header.html:27
+#: .\templates\cotton\header.html:106
+msgid "Shopping List"
+msgstr "Lista della Spesa"
+
+#: .\kitchen\templates\shopping_list.html:35
+msgid "Export PDF"
+msgstr "Esporta PDF"
+
+#: .\kitchen\templates\shopping_list.html:42
+msgid "Delete Bought Items"
+msgstr "Elimina Articoli Comprati"
+
+#: .\kitchen\templates\shopping_list.html:44
+msgid "Clear List"
+msgstr "Svuota Lista"
+
+#: .\kitchen\templates\shopping_list.html:98
+msgid "Your shopping list is empty. Start adding some items!"
+msgstr "La tua lista della spesa è vuota. Inizia ad aggiungere articoli!"
+
+#: .\kitchen\variables.py:4
+msgid "Easy"
+msgstr "Facile"
+
+#: .\kitchen\variables.py:5
+msgid "Medium"
+msgstr "Media"
+
+#: .\kitchen\variables.py:6
+msgid "Hard"
+msgstr "Difficile"
+
+#: .\kitchen\variables.py:9
+msgid "Baked"
+msgstr "Cotto in forno"
+
+#: .\kitchen\variables.py:10
+msgid "Stovetop"
+msgstr "Sul fuoco"
+
+#: .\kitchen\variables.py:11
+msgid "Microwaved"
+msgstr "Al microonde"
+
+#: .\kitchen\variables.py:12
+msgid "No Cook"
+msgstr "Senza Cottura"
+
+#: .\kitchen\variables.py:16 .\kitchen\variables.py:29
+msgid "grams"
+msgstr "grammi"
+
+#: .\kitchen\variables.py:17 .\kitchen\variables.py:30
+msgid "kilograms"
+msgstr "chilogrammi"
+
+#: .\kitchen\variables.py:18 .\kitchen\variables.py:31
+msgid "milliliters"
+msgstr "millilitri"
+
+#: .\kitchen\variables.py:19 .\kitchen\variables.py:32
+msgid "liters"
+msgstr "litri"
+
+#: .\kitchen\variables.py:20
+msgid "teaspoons"
+msgstr "cucchiai da tè"
+
+#: .\kitchen\variables.py:21
+msgid "tablespoons"
+msgstr "cucchiai da caffè"
+
+#: .\kitchen\variables.py:22
+msgid "cups"
+msgstr "tazze"
+
+#: .\kitchen\variables.py:23 .\kitchen\variables.py:28
+msgid "pieces"
+msgstr "pezzi"
+
+#: .\kitchen\variables.py:24
+msgid "quantum sufficit (as needed)"
+msgstr "quantità sufficiente (quanto basta)"
+
+#: .\kitchen\variables.py:36
+msgid "Meat"
+msgstr "Carne"
+
+#: .\kitchen\variables.py:37
+msgid "Fish"
+msgstr "Pesce"
+
+#: .\kitchen\variables.py:38
+msgid "Vegetarian"
+msgstr "Vegetariano"
+
+#: .\kitchen\variables.py:39
+msgid "Vegan"
+msgstr "Vegano"
+
+#: .\kitchen\variables.py:40
+msgid "Dessert"
+msgstr "Dolce"
+
+#: .\kitchen\variables.py:41
+msgid "Side"
+msgstr "Contorno"
+
+#: .\kitchen\variables.py:42
+msgid "Starter"
+msgstr "Antipasto"
+
+#: .\kitchen\variables.py:43
+msgid "Pasta"
+msgstr "Pasta"
+
+#: .\kitchen\variables.py:44
+msgid "Breakfast"
+msgstr "Colazione"
+
+#: .\mamachef\settings.py:21
+msgid "Italian"
+msgstr "Italiano"
+
+#: .\mamachef\settings.py:22
+msgid "English"
+msgstr "Inglese"
+
+#: .\templates\base.html:50
+msgid "All recipes are made with love by our community"
+msgstr "Tutte le ricette sono fatte con amore dalla nostra comunità"
+
+#: .\templates\cotton\header.html:37 .\templates\cotton\header.html:116
+msgid "Hi, "
+msgstr "Ciao, "
+
+#: .\templates\cotton\header.html:47
+msgid "Add Recipe"
+msgstr "Aggiungi Ricetta"
+
+#: .\templates\cotton\header.html:54 .\templates\cotton\header.html:131
+msgid "Sign up"
+msgstr "Registrati"
+
+#: .\templates\cotton\header.html:65
+msgid "Open main menu"
+msgstr "Apri il menu principale"
+
+#: .\templates\cotton\recipe_card.html:47
+msgid "View Recipe"
+msgstr "Visualizza Ricetta"

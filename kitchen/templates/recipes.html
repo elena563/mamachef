@@ -1,18 +1,18 @@
 {% extends "base.html" %}
-{% load static %}
-{% block title %}Recipes - MamaChef{% endblock %}
+{% load static i18n %}
+{% block title %}{% trans 'Recipes' %} - MamaChef{% endblock %}
 {% block hero %}
   <div class="w-full bg-cover bg-center p-4 sm:p-8 md:p-12"
        style="background-image: url('{% static 'images/bg-table.png' %}')">
     <div class="max-w-7xl mx-auto rounded-3xl px-6 py-8 sm:p-8 bg-gray-50/60">
       <div class="flex flex-col gap-4 lg:flex-row justify-between items-start md:items-center mb-6">
-        <h1 class="text-4xl font-bold mb-4">Explore our delicious recipes</h1>
+        <h1 class="text-4xl font-bold mb-4">{% trans 'Explore our delicious recipes' %}</h1>
         {% if user.is_authenticated %}
           <c-button link="{% url 'Kitchen:new_recipe' %}"
                     variant="primary"
                     size="lg"
                     class="mb-6">
-            Add new Recipe
+            {% trans 'Add new Recipe' %}
           </c-button>
         {% endif %}
       </div>
@@ -24,10 +24,10 @@
             </div>
             <div class="flex gap-2">
               <c-button type="submit" variant="primary" class="!hidden sm:!block">
-                Search
+                {% trans 'Search' %}
               </c-button>
               {% if search_query %}
-                <c-button link="{% url 'Kitchen:recipes' %}" variant="secondary">Clear</c-button>
+                <c-button link="{% url 'Kitchen:recipes' %}" variant="secondary">{% trans 'Clear' %}</c-button>
               {% endif %}
             </div>
           </div>
@@ -54,7 +54,7 @@
             </div>
           </div>
           <c-button type="submit" variant="primary" class="block sm:hidden">
-            Search
+            {% trans 'Search' %}
           </c-button>
         </form>
       </div>

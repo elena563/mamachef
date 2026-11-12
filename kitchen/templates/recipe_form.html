@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
 {% block title %}
   {% if object %}
-    Edit Recipe
+    {% trans 'Edit Recipe' %}
   {% else %}
-    New Recipe
+    {% trans 'New Recipe' %}
   {% endif %}
   - MamaChef
 {% endblock %}
@@ -21,15 +21,16 @@
   <div class="max-w-3xl mx-auto md:px-4 py-8">
     <c-messages-box>
     </c-messages-box>
-    <form method="post"
+    <form id="recipe-form"
+          method="post"
           enctype="multipart/form-data"
           class="bg-white rounded-lg p-6">
       {% csrf_token %}
       <h1 class="text-3xl font-bold mb-6 mt-2">
         {% if object %}
-          <i class="fa-solid fa-pen-to-square fa-md mr-2" style="color: #feaac2;"></i> Edit Recipe
+          <i class="fa-solid fa-pen-to-square fa-md mr-2" style="color: #feaac2;"></i> {% trans 'Edit Recipe' %}
         {% else %}
-          <i class="fa-solid fa-circle-plus fa-md mr-2" style="color: #feaac2;"></i> New Recipe
+          <i class="fa-solid fa-circle-plus fa-md mr-2" style="color: #feaac2;"></i> {% trans 'New Recipe' %}
         {% endif %}
       </h1>
       <div class="flex flex-col gap-4 mb-4">
@@ -52,7 +53,7 @@
       <c-form-field :field="form.category" label="Category" />
       <hr class="my-6 border-dashed border-2 border-navy-mama">
       <div id="ingredients-container">
-        <h5 class="text-xl font-semibold my-6">Ingredients</h5>
+        <h5 class="text-xl font-semibold my-6">{% trans 'Ingredients' %}</h5>
         {% if object %}
           {% for ingredient in object.ingredients.all %}
             <div class="flex flex-col md:flex-row gap-4 mb-4">
@@ -94,7 +95,7 @@
       </c-button>
       <hr class="my-6 border-dashed border-2 border-navy-mama">
       <div id="steps-container">
-        <h5 class="text-xl font-semibold my-6">Steps</h5>
+        <h5 class="text-xl font-semibold my-6">{% trans 'Steps' %}</h5>
         {% if object %}
           {% for step in steps %}
             <div class="step-wrapper mb-6">
@@ -165,7 +166,7 @@
                   <c-button class='down_btn' type="button" variant="ghost">
                     ↓
                   </c-button>
-                  <span class="text-sm text-gray-500">You can add a timer, for example waiting or baking time</span>
+                  <span class="text-sm text-gray-500">{% trans 'You can add a timer, for example waiting or baking time' %}</span>
                 </span>
               </span>
               <c-button class='remove_btn' type="button" variant="ghost">
@@ -201,7 +202,7 @@
                 <c-button class='down_btn' type="button" variant="ghost">
                   ↓
                 </c-button>
-                <span class="text-sm text-gray-500">You can add a timer, for example waiting or baking time</span>
+                <span class="text-sm text-gray-500">{% trans 'You can add a timer, for example waiting or baking time' %}</span>
               </span>
             </span>
             <c-button class='remove_btn' type="button" variant="ghost">
@@ -218,19 +219,23 @@
                   type="submit"
                   class='flex-1 sm:flex-none whitespace-nowrap'>
           {% if object %}
-            Update
+            {% trans 'Update' %}
           {% else %}
-            Create Recipe
+            {% trans 'Create Recipe' %}
           {% endif %}
         </c-button>
         <c-button variant="ghost"
                   type="button"
                   link="{% url 'Kitchen:home' %}"
                   class='flex-1 sm:flex-none'>
-          Cancel
+          {% trans 'Cancel' %}
         </c-button>
       </div>
     </form>
+    <div id="recipe-loading"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center bg-white/80">
+      <p class="text-lg font-semibold text-navy-mama">{% trans 'Saving...' %}</p>
+    </div>
   </div>
   <script type='module' src="{% static 'js/recipe_form.js' %}"></script>
 {% endblock %}

@@ -57,6 +57,20 @@ function initializeForm() {
     });
   }
 
+  const recipeForm = document.getElementById('recipe-form');
+  if (recipeForm) {
+    recipeForm.addEventListener('submit', () => {
+      const loading = document.getElementById('recipe-loading');
+      if (loading) {
+        loading.classList.remove('hidden');
+      }
+      const submitBtn = recipeForm.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+      }
+    });
+  }
+
   // Handle step reordering (up/down buttons)
   document.addEventListener('click', (e) => {
     if (e.target.classList.contains('up_btn')) {

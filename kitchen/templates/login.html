@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
 {% block extra_css %}
   <style>
     main {
@@ -24,8 +24,8 @@
         </c-button>
       </form>
       <p class="text-center mt-4 text-gray-600 bg-white/50 p-2 rounded-lg">
-        Are you a new chef? <a href="{% url 'Kitchen:register' %}"
-    class="text-pink-mama hover:underline">Register</a>
+        {% trans "Are you a new chef?" %} <a href="{% url 'Kitchen:register' %}"
+    class="text-pink-mama hover:underline">{% trans "Register" %}</a>
       </p>
     </div>
   </div>

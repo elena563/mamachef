@@ -1,7 +1,8 @@
 {% extends "base.html" %}
-{% load static %}
-{% block title %}Guided Cooking Mode - {{ recipe.name }} - MamaChef{% endblock %}
+{% load static i18n %}
+{% block title %}{% trans 'Guided Cooking Mode' %} - {{ recipe.name }} - MamaChef{% endblock %}
 {% block extra_css %}
+
   <style>
     body { 
         overflow: hidden; 
@@ -27,7 +28,7 @@
         <c-button link="{% url 'Kitchen:recipe_detail' recipe.id %}"
                   variant="ghost"
                   size="sm">
-          ← Back to Recipe
+          {% trans '← Back to Recipe' %}
         </c-button>
       </div>
       <h1 class="text-2xl md:text-3xl font-bold text-center">{{ recipe.name }}</h1>
@@ -82,10 +83,10 @@
     </div>
     <div id='btns-container' class="flex justify-between flex-shrink-0 pt-4">
       <c-button id="prev-step" variant="ghost" disabled>
-        ← Previous Step
+        {% trans '← Previous Step' %}
       </c-button>
       <c-button id="next-step" variant="primary">
-        Next Step →
+        {% trans 'Next Step →' %}
       </c-button>
     </div>
   </div>
@@ -105,5 +106,6 @@ const steps = [
 ];
 const recipeDetailUrl = "{% url 'Kitchen:recipe_detail' recipe.id %}";
   </script>
+  <script src="{% url 'javascript-catalog' %}"></script>
   <script src="{% static 'js/guided_mode.js' %}" defer></script>
 {% endblock %}
