@@ -21,7 +21,8 @@
   <div class="max-w-3xl mx-auto md:px-4 py-8">
     <c-messages-box>
     </c-messages-box>
-    <form method="post"
+    <form id="recipe-form"
+          method="post"
           enctype="multipart/form-data"
           class="bg-white rounded-lg p-6">
       {% csrf_token %}
@@ -231,6 +232,10 @@
         </c-button>
       </div>
     </form>
+    <div id="recipe-loading"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center bg-white/80">
+      <p class="text-lg font-semibold text-navy-mama">{% trans 'Saving...' %}</p>
+    </div>
   </div>
   <script type='module' src="{% static 'js/recipe_form.js' %}"></script>
 {% endblock %}

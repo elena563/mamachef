@@ -3,16 +3,48 @@ from difflib import SequenceMatcher
 import inflect
 import nltk
 import spacy
-from deep_translator import GoogleTranslator
 from langdetect import detect
 from nltk.corpus import wordnet as wn
 
 from kitchen.models import Ingredient
 
+from .language_helpers import translate_text
+
 nltk.download("wordnet", quiet=True)
 nltk.download("omw-1.4", quiet=True)
 _nlp = spacy.load("en_core_web_sm")
 _inflect = inflect.engine()
+
+# Manual Glossary For Ingredients That Machine Translation Validates Incorrectly
+INGREDIENT_GLOSSARY = {
+    "pecorino": ("Pecorino Cheese", False),
+    "pecorino romano": ("Pecorino Romano Cheese", False),
+    "parmigiano": ("Parmigiano Reggiano", False),
+    "grana padano": ("Grana Padano", False),
+    "mozzarella": ("Mozzarella", False),
+    "mozzarella di bufala": ("Buffalo Mozzarella", False),
+    "ricotta": ("Ricotta", False),
+    "scamorza": ("Scamorza Cheese", False),
+    "provola": ("Provola Cheese", False),
+    "caciocavallo": ("Caciocavallo Cheese", False),
+    "stracchino": ("Stracchino Cheese", False),
+    "taleggio": ("Taleggio Cheese", False),
+    "gorgonzola": ("Gorgonzola Cheese", False),
+    "fontina": ("Fontina Cheese", False),
+    "guanciale": ("Guanciale", False),
+    "pancetta": ("Pancetta", False),
+    "prosciutto": ("Prosciutto", False),
+    "prosciutto crudo": ("Prosciutto Crudo", False),
+    "prosciutto cotto": ("Cooked Ham", False),
+    "lardo": ("Lardo", False),
+    "bottarga": ("Bottarga", False),
+    "nduja": ("Nduja", False),
+    "'nduja": ("Nduja", False),
+    "mollica": ("Breadcrumbs", False),
+    "pangrattato": ("Breadcrumbs", False),
+    "passata": ("Tomato Passata", False),
+    "farro": ("Farro", False),
+}
 
 
 def validate_new_ingredient(name):
@@ -91,7 +123,6 @@ def normalize_ingredient_name(name):
             name = singular_form
 
     target_name = name.title()
-    print(target_name)
 
     # get if exists
     existing = Ingredient.objects.filter(name_en__iexact=target_name).first()
@@ -110,6 +141,27 @@ def normalize_ingredient_name(name):
     return name, None
 
 
+def _get_glossary_ingredient(name):
+    entry = INGREDIENT_GLOSSARY.get(" ".join(name.lower().strip().split()))
+    if entry is None:
+        return None
+
+    name_en, countable = entry
+    existing = (
+        Ingredient.objects.filter(name_it__iexact=name.strip()).first()
+        or Ingredient.objects.filter(name_en__iexact=name_en).first()
+    )
+    if existing:
+        return existing
+
+    return Ingredient.objects.create(
+        name=name_en,
+        name_en=name_en,
+        name_it=name.strip().title(),
+        countable=countable,
+    )
+
+
 def get_or_validate_ingredient(name, lang=None):
     """validates the ingredient name, translates, and returns the Ingredient or an error message"""
     name_clean = name.strip()
@@ -119,10 +171,17 @@ def get_or_validate_ingredient(name, lang=None):
 
     if lang not in ["en", "it"]:
         return None, f"Not supported language: {lang}"
-    elif lang == "en":
+
+    glossary_ingredient = _get_glossary_ingredient(name_clean)
+    if glossary_ingredient:
+        return glossary_ingredient, None
+
+    if lang == "en":
         name, error = normalize_ingredient_name(name_clean)
     elif lang == "it":
-        name_en = GoogleTranslator(source="it", target="en").translate(name_clean)
+        name_en = translate_text(name_clean, "it", "en")
+        if not name_en:
+            return None, "Translation service unavailable. Please try again."
         name, error = normalize_ingredient_name(name_en)
 
     if error:
@@ -132,7 +191,7 @@ def get_or_validate_ingredient(name, lang=None):
         return name, None
 
     name_en = name
-    name_it = GoogleTranslator(source="en", target="it").translate(name_en)
+    name_it = translate_text(name_en, "en", "it")
 
     name = name.title().strip()
     ingredient = Ingredient.objects.create(

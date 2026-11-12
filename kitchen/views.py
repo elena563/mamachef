@@ -13,7 +13,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 from django.views.generic.edit import CreateView, UpdateView
 
-from functions.language_helpers import detect_input_language, translate_text
+from functions.language_helpers import detect_input_language, translate_batch
 from functions.pdf import generate_list_pdf
 from functions.recipe_helpers import (
     filter_recipes,
@@ -223,14 +223,14 @@ class RecipeFormView(LoginRequiredMixin):
         notes = form.cleaned_data.get("notes") or ""
         if lang == "it":
             obj.name_it, obj.description_it, obj.notes_it = name, description, notes
-            obj.name_en = translate_text(name, "it", "en")
-            obj.description_en = translate_text(description, "it", "en")
-            obj.notes_en = translate_text(notes, "it", "en")
+            obj.name_en, obj.description_en, obj.notes_en = translate_batch(
+                [name, description, notes], "it", "en"
+            )
         else:
             obj.name_en, obj.description_en, obj.notes_en = name, description, notes
-            obj.name_it = translate_text(name, "en", "it")
-            obj.description_it = translate_text(description, "en", "it")
-            obj.notes_it = translate_text(notes, "en", "it")
+            obj.name_it, obj.description_it, obj.notes_it = translate_batch(
+                [name, description, notes], "en", "it"
+            )
 
 
 class RecipeCreateView(RecipeFormView, CreateView):
@@ -247,6 +247,7 @@ class RecipeCreateView(RecipeFormView, CreateView):
 
         if not save_dynamic_fields(self.request, self.object, lang):
             self.object.delete()
+            self.object = None  # Reset the object to avoid redirecting to a deleted recipe
             return self.form_invalid(form)
         return response
 

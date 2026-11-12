@@ -24,20 +24,14 @@ GERMAN_TEXT = (
 )
 
 
-class EchoTranslator:
-    def __init__(self, *args, **kwargs):
-        self.source = kwargs.get("source")
-        self.target = kwargs.get("target")
-
-    def translate(self, text):
-        return f"[{self.target}] {text}"
+def echo_translate(text, source, target):
+    return f"[{target}] {text}"
 
 
-class IngredientTranslator(EchoTranslator):
-    def translate(self, text):
-        if self.source == "it":
-            return "tomato"
-        return "pomodoro"
+def ingredient_translate(text, source, target):
+    if source == "it":
+        return "tomato"
+    return "pomodoro"
 
 
 class DetectInputLanguageTest(SimpleTestCase):
@@ -77,15 +71,19 @@ class TranslateTextTest(SimpleTestCase):
         self.assertEqual(translate_text("", "en", "it"), "")
         self.assertEqual(translate_text("   ", "en", "it"), "   ")
 
-    def test_delegates_to_google_translator(self):
-        with patch("functions.language_helpers.GoogleTranslator", EchoTranslator):
+    def test_delegates_to_argos_translator(self):
+        with patch("functions.language_helpers._translate_cached", side_effect=echo_translate):
             self.assertEqual(translate_text("hello", "en", "it"), "[it] hello")
+
+    def test_returns_empty_text_on_translation_failure(self):
+        with patch("functions.language_helpers._translate_cached", side_effect=Exception):
+            self.assertEqual(translate_text("hello", "en", "it"), "")
 
 
 class IngredientLanguageTest(TestCase):
     def test_uses_provided_language_without_detection(self):
         with (
-            patch("functions.ingredient_validation.GoogleTranslator", IngredientTranslator),
+            patch("functions.language_helpers._translate_cached", side_effect=ingredient_translate),
             patch("functions.ingredient_validation.detect") as mock_detect,
         ):
             ingredient, error = get_or_validate_ingredient("pomodoro", lang="it")
@@ -94,6 +92,24 @@ class IngredientLanguageTest(TestCase):
         self.assertIsNone(error)
         self.assertIsNotNone(ingredient)
         self.assertEqual(ingredient.name_it, "pomodoro")
+
+
+class IngredientGlossaryTest(KitchenTestCase):
+    def test_glossary_entry_skips_translation_and_validation(self):
+        with patch("functions.ingredient_validation.translate_text") as mock_translate:
+            ingredient, error = get_or_validate_ingredient("pecorino", lang="it")
+
+        mock_translate.assert_not_called()
+        self.assertIsNone(error)
+        self.assertEqual(ingredient.name_en, "Pecorino Cheese")
+        self.assertEqual(ingredient.name_it, "Pecorino")
+        self.assertFalse(ingredient.countable)
+
+    def test_non_glossary_invalid_ingredient_still_fails(self):
+        ingredient, error = get_or_validate_ingredient("bottle", lang="en")
+
+        self.assertIsNone(ingredient)
+        self.assertIn("not a valid ingredient", error)
 
 
 class SaveDynamicFieldsLanguageTest(KitchenTestCase):
@@ -112,8 +128,8 @@ class SaveDynamicFieldsLanguageTest(KitchenTestCase):
         request = self._request(data)
 
         with patch(
-            "functions.recipe_helpers.translate_text",
-            side_effect=lambda text, source, target: f"[{target}] {text}",
+            "functions.recipe_helpers.translate_batch",
+            side_effect=lambda texts, source, target: [f"[{target}] {text}" for text in texts],
         ) as mock_translate:
             result = save_dynamic_fields(request, self.recipe, lang="it")
 
@@ -121,15 +137,15 @@ class SaveDynamicFieldsLanguageTest(KitchenTestCase):
         step = self.recipe.steps.get(order=1)
         self.assertEqual(step.description_it, "Cuocere la pasta.")
         self.assertEqual(step.description_en, "[en] Cuocere la pasta.")
-        mock_translate.assert_any_call("Cuocere la pasta.", "it", "en")
+        mock_translate.assert_any_call(["Cuocere la pasta.", "Aggiungere il pomodoro."], "it", "en")
 
     def test_english_steps_are_translated_to_italian(self):
         data = {"step": ["Boil the pasta."], "timer": [""]}
         request = self._request(data)
 
         with patch(
-            "functions.recipe_helpers.translate_text",
-            side_effect=lambda text, source, target: f"[{target}] {text}",
+            "functions.recipe_helpers.translate_batch",
+            side_effect=lambda texts, source, target: [f"[{target}] {text}" for text in texts],
         ):
             result = save_dynamic_fields(request, self.recipe, lang="en")
 
@@ -161,7 +177,7 @@ class RecipeMultilingualViewTest(KitchenTestCase):
     def test_create_italian_recipe_stores_both_languages(self):
         with (
             patch("kitchen.views.detect_input_language", return_value=("it", None)),
-            patch("functions.language_helpers.GoogleTranslator", EchoTranslator),
+            patch("functions.language_helpers._translate_cached", side_effect=echo_translate),
         ):
             response = self.client.post(
                 reverse("Kitchen:new_recipe"),
@@ -189,7 +205,7 @@ class RecipeMultilingualViewTest(KitchenTestCase):
 
         with (
             patch("kitchen.views.detect_input_language", return_value=("en", None)),
-            patch("functions.language_helpers.GoogleTranslator", EchoTranslator),
+            patch("functions.language_helpers._translate_cached", side_effect=echo_translate),
         ):
             response = self.client.post(
                 reverse("Kitchen:edit_recipe", args=[recipe.pk]),
