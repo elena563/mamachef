@@ -8,13 +8,21 @@ function showStep(index) {
   document.getElementById('used-ingredients-cont').innerHTML = '';
   const nextStepText =
     index < totalSteps - 1
-      ? `Next: Step ${index + 2} <br> ${steps[index + 1].description.substring(0, 100)}...`
-      : 'This is the last step!';
-  document.getElementById('step-title').textContent = `Step ${index + 1} of ${totalSteps}`;
+      ? interpolate(gettext('Next: Step %(number)s'), { number: index + 2 }, true) +
+        ` <br> ${steps[index + 1].description.substring(0, 100)}...`
+      : gettext('This is the last step!');
+  document.getElementById('step-title').textContent = interpolate(
+    gettext('Step %(current)s of %(total)s'),
+    { current: index + 1, total: totalSteps },
+    true
+  );
   document.getElementById('step-description').textContent = step.description;
   document.getElementById('next-step-desc').innerHTML = nextStepText;
   document.getElementById('next-step').textContent =
-    index < totalSteps - 1 ? `Next: Step ${index + 2}` : 'Last Step';
+    index < totalSteps - 1
+      ? interpolate(gettext('Next: Step %(number)s'), { number: index + 2 }, true)
+      : gettext('Last Step');
+
   if (step.used_ingredients.length > 0) {
     for (const ing of step.used_ingredients) {
       document.getElementById('used-ingredients-cont').innerHTML +=
@@ -54,7 +62,7 @@ document.getElementById('next-step').addEventListener('click', () => {
       nextBtn.onclick = () => {
         window.location.href = recipeDetailUrl;
       };
-      nextBtn.textContent = 'Finish Recipe';
+      nextBtn.textContent = interpolate(gettext('Finish Recipe'), {}, true);
     }
   }
 });

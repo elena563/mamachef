@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 08:50+0100\n"
+"POT-Creation-Date: 2026-11-12 16:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,21 +20,19 @@ msgstr ""
 
 #: .\kitchen\templates\guided_mode.html:3
 msgid "Guided Cooking Mode"
-msgstr ""
+msgstr "Modalità di Cottura Guidata"
 
 #: .\kitchen\templates\guided_mode.html:31
-#, fuzzy
-#| msgid "← Back to Recipes"
 msgid "← Back to Recipe"
-msgstr "← Torna alle Ricette"
+msgstr "← Torna alla Ricetta"
 
 #: .\kitchen\templates\guided_mode.html:86
 msgid "← Previous Step"
-msgstr ""
+msgstr "← Step Precedente"
 
 #: .\kitchen\templates\guided_mode.html:89
 msgid "Next Step →"
-msgstr ""
+msgstr "Prossimo Step →"
 
 #: .\kitchen\templates\home.html:10
 msgid "Welcome to MamaChef!"
@@ -97,7 +95,7 @@ msgstr "Ciao %(user.username)s, raccontaci di più su di te!"
 
 #: .\kitchen\templates\profile.html:41
 #: .\kitchen\templates\recipe_detail.html:143
-#: .\kitchen\templates\recipe_form.html:230
+#: .\kitchen\templates\recipe_form.html:231
 #: .\kitchen\templates\shopping_list.html:30
 msgid "Cancel"
 msgstr "Annulla"
@@ -156,7 +154,7 @@ msgid "Method"
 msgstr "Metodo"
 
 #: .\kitchen\templates\recipe_detail.html:47
-#: .\kitchen\templates\recipe_form.html:55
+#: .\kitchen\templates\recipe_form.html:56
 msgid "Ingredients"
 msgstr "Ingredienti"
 
@@ -207,31 +205,35 @@ msgid "Confirm delete"
 msgstr "Conferma eliminazione"
 
 #: .\kitchen\templates\recipe_form.html:5
-#: .\kitchen\templates\recipe_form.html:30
+#: .\kitchen\templates\recipe_form.html:31
 msgid "Edit Recipe"
 msgstr "Modifica Ricetta"
 
 #: .\kitchen\templates\recipe_form.html:7
-#: .\kitchen\templates\recipe_form.html:32
+#: .\kitchen\templates\recipe_form.html:33
 msgid "New Recipe"
 msgstr "Nuova Ricetta"
 
-#: .\kitchen\templates\recipe_form.html:97
+#: .\kitchen\templates\recipe_form.html:98
 msgid "Steps"
 msgstr "Step"
 
-#: .\kitchen\templates\recipe_form.html:168
-#: .\kitchen\templates\recipe_form.html:204
+#: .\kitchen\templates\recipe_form.html:169
+#: .\kitchen\templates\recipe_form.html:205
 msgid "You can add a timer, for example waiting or baking time"
 msgstr "Puoi aggiungere un timer, ad esempio il tempo di attesa o cottura"
 
-#: .\kitchen\templates\recipe_form.html:221
+#: .\kitchen\templates\recipe_form.html:222
 msgid "Update"
 msgstr "Aggiorna"
 
-#: .\kitchen\templates\recipe_form.html:223
+#: .\kitchen\templates\recipe_form.html:224
 msgid "Create Recipe"
 msgstr "Crea Ricetta"
+
+#: .\kitchen\templates\recipe_form.html:237
+msgid "Saving..."
+msgstr "Salvando..."
 
 #: .\kitchen\templates\recipes.html:3 .\templates\cotton\header.html:22
 #: .\templates\cotton\header.html:101
@@ -278,6 +280,106 @@ msgstr "Svuota Lista"
 #: .\kitchen\templates\shopping_list.html:98
 msgid "Your shopping list is empty. Start adding some items!"
 msgstr "La tua lista della spesa è vuota. Inizia ad aggiungere articoli!"
+
+#: .\kitchen\variables.py:4
+msgid "Easy"
+msgstr "Facile"
+
+#: .\kitchen\variables.py:5
+msgid "Medium"
+msgstr "Media"
+
+#: .\kitchen\variables.py:6
+msgid "Hard"
+msgstr "Difficile"
+
+#: .\kitchen\variables.py:9
+msgid "Baked"
+msgstr "Cotto in forno"
+
+#: .\kitchen\variables.py:10
+msgid "Stovetop"
+msgstr "Sul fuoco"
+
+#: .\kitchen\variables.py:11
+msgid "Microwaved"
+msgstr "Al microonde"
+
+#: .\kitchen\variables.py:12
+msgid "No Cook"
+msgstr "Senza Cottura"
+
+#: .\kitchen\variables.py:16 .\kitchen\variables.py:29
+msgid "grams"
+msgstr "grammi"
+
+#: .\kitchen\variables.py:17 .\kitchen\variables.py:30
+msgid "kilograms"
+msgstr "chilogrammi"
+
+#: .\kitchen\variables.py:18 .\kitchen\variables.py:31
+msgid "milliliters"
+msgstr "millilitri"
+
+#: .\kitchen\variables.py:19 .\kitchen\variables.py:32
+msgid "liters"
+msgstr "litri"
+
+#: .\kitchen\variables.py:20
+msgid "teaspoons"
+msgstr "cucchiai da tè"
+
+#: .\kitchen\variables.py:21
+msgid "tablespoons"
+msgstr "cucchiai da caffè"
+
+#: .\kitchen\variables.py:22
+msgid "cups"
+msgstr "tazze"
+
+#: .\kitchen\variables.py:23 .\kitchen\variables.py:28
+msgid "pieces"
+msgstr "pezzi"
+
+#: .\kitchen\variables.py:24
+msgid "quantum sufficit (as needed)"
+msgstr "quantità sufficiente (quanto basta)"
+
+#: .\kitchen\variables.py:36
+msgid "Meat"
+msgstr "Carne"
+
+#: .\kitchen\variables.py:37
+msgid "Fish"
+msgstr "Pesce"
+
+#: .\kitchen\variables.py:38
+msgid "Vegetarian"
+msgstr "Vegetariano"
+
+#: .\kitchen\variables.py:39
+msgid "Vegan"
+msgstr "Vegano"
+
+#: .\kitchen\variables.py:40
+msgid "Dessert"
+msgstr "Dolce"
+
+#: .\kitchen\variables.py:41
+msgid "Side"
+msgstr "Contorno"
+
+#: .\kitchen\variables.py:42
+msgid "Starter"
+msgstr "Antipasto"
+
+#: .\kitchen\variables.py:43
+msgid "Pasta"
+msgstr "Pasta"
+
+#: .\kitchen\variables.py:44
+msgid "Breakfast"
+msgstr "Colazione"
 
 #: .\mamachef\settings.py:21
 msgid "Italian"

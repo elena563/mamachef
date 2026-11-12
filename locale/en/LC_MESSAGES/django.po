@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 08:50+0100\n"
+"POT-Creation-Date: 2026-11-12 16:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,7 +95,7 @@ msgstr ""
 
 #: .\kitchen\templates\profile.html:41
 #: .\kitchen\templates\recipe_detail.html:143
-#: .\kitchen\templates\recipe_form.html:230
+#: .\kitchen\templates\recipe_form.html:231
 #: .\kitchen\templates\shopping_list.html:30
 msgid "Cancel"
 msgstr ""
@@ -154,7 +154,7 @@ msgid "Method"
 msgstr ""
 
 #: .\kitchen\templates\recipe_detail.html:47
-#: .\kitchen\templates\recipe_form.html:55
+#: .\kitchen\templates\recipe_form.html:56
 msgid "Ingredients"
 msgstr ""
 
@@ -204,30 +204,34 @@ msgid "Confirm delete"
 msgstr ""
 
 #: .\kitchen\templates\recipe_form.html:5
-#: .\kitchen\templates\recipe_form.html:30
+#: .\kitchen\templates\recipe_form.html:31
 msgid "Edit Recipe"
 msgstr ""
 
 #: .\kitchen\templates\recipe_form.html:7
-#: .\kitchen\templates\recipe_form.html:32
+#: .\kitchen\templates\recipe_form.html:33
 msgid "New Recipe"
 msgstr ""
 
-#: .\kitchen\templates\recipe_form.html:97
+#: .\kitchen\templates\recipe_form.html:98
 msgid "Steps"
 msgstr ""
 
-#: .\kitchen\templates\recipe_form.html:168
-#: .\kitchen\templates\recipe_form.html:204
+#: .\kitchen\templates\recipe_form.html:169
+#: .\kitchen\templates\recipe_form.html:205
 msgid "You can add a timer, for example waiting or baking time"
 msgstr ""
 
-#: .\kitchen\templates\recipe_form.html:221
+#: .\kitchen\templates\recipe_form.html:222
 msgid "Update"
 msgstr ""
 
-#: .\kitchen\templates\recipe_form.html:223
+#: .\kitchen\templates\recipe_form.html:224
 msgid "Create Recipe"
+msgstr ""
+
+#: .\kitchen\templates\recipe_form.html:237
+msgid "Saving..."
 msgstr ""
 
 #: .\kitchen\templates\recipes.html:3 .\templates\cotton\header.html:22
@@ -274,6 +278,106 @@ msgstr ""
 
 #: .\kitchen\templates\shopping_list.html:98
 msgid "Your shopping list is empty. Start adding some items!"
+msgstr ""
+
+#: .\kitchen\variables.py:4
+msgid "Easy"
+msgstr ""
+
+#: .\kitchen\variables.py:5
+msgid "Medium"
+msgstr ""
+
+#: .\kitchen\variables.py:6
+msgid "Hard"
+msgstr ""
+
+#: .\kitchen\variables.py:9
+msgid "Baked"
+msgstr ""
+
+#: .\kitchen\variables.py:10
+msgid "Stovetop"
+msgstr ""
+
+#: .\kitchen\variables.py:11
+msgid "Microwaved"
+msgstr ""
+
+#: .\kitchen\variables.py:12
+msgid "No Cook"
+msgstr ""
+
+#: .\kitchen\variables.py:16 .\kitchen\variables.py:29
+msgid "grams"
+msgstr ""
+
+#: .\kitchen\variables.py:17 .\kitchen\variables.py:30
+msgid "kilograms"
+msgstr ""
+
+#: .\kitchen\variables.py:18 .\kitchen\variables.py:31
+msgid "milliliters"
+msgstr ""
+
+#: .\kitchen\variables.py:19 .\kitchen\variables.py:32
+msgid "liters"
+msgstr ""
+
+#: .\kitchen\variables.py:20
+msgid "teaspoons"
+msgstr ""
+
+#: .\kitchen\variables.py:21
+msgid "tablespoons"
+msgstr ""
+
+#: .\kitchen\variables.py:22
+msgid "cups"
+msgstr ""
+
+#: .\kitchen\variables.py:23 .\kitchen\variables.py:28
+msgid "pieces"
+msgstr ""
+
+#: .\kitchen\variables.py:24
+msgid "quantum sufficit (as needed)"
+msgstr ""
+
+#: .\kitchen\variables.py:36
+msgid "Meat"
+msgstr ""
+
+#: .\kitchen\variables.py:37
+msgid "Fish"
+msgstr ""
+
+#: .\kitchen\variables.py:38
+msgid "Vegetarian"
+msgstr ""
+
+#: .\kitchen\variables.py:39
+msgid "Vegan"
+msgstr ""
+
+#: .\kitchen\variables.py:40
+msgid "Dessert"
+msgstr ""
+
+#: .\kitchen\variables.py:41
+msgid "Side"
+msgstr ""
+
+#: .\kitchen\variables.py:42
+msgid "Starter"
+msgstr ""
+
+#: .\kitchen\variables.py:43
+msgid "Pasta"
+msgstr ""
+
+#: .\kitchen\variables.py:44
+msgid "Breakfast"
 msgstr ""
 
 #: .\mamachef\settings.py:21
