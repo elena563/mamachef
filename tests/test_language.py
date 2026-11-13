@@ -82,13 +82,9 @@ class TranslateTextTest(SimpleTestCase):
 
 class IngredientLanguageTest(TestCase):
     def test_uses_provided_language_without_detection(self):
-        with (
-            patch("functions.language_helpers._translate_cached", side_effect=ingredient_translate),
-            patch("functions.ingredient_validation.detect_langs") as mock_detect,
-        ):
+        with patch("functions.language_helpers._translate_cached", side_effect=ingredient_translate):
             ingredient, error = get_or_validate_ingredient("pomodoro", lang="it")
 
-        mock_detect.assert_not_called()
         self.assertIsNone(error)
         self.assertIsNotNone(ingredient)
         self.assertEqual(ingredient.name_it, "pomodoro")

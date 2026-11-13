@@ -3,7 +3,6 @@ from difflib import SequenceMatcher
 import inflect
 import nltk
 import spacy
-from langdetect import LangDetectException, detect_langs
 from nltk.corpus import wordnet as wn
 
 from kitchen.models import Ingredient
@@ -162,34 +161,17 @@ def _get_glossary_ingredient(name):
     )
 
 
-def get_or_validate_ingredient(name, lang=None):
-    """validates the ingredient name, translates, and returns the Ingredient or an error message"""
-    name_clean = name.strip()
-
-    if not lang:
-        try:
-            candidates = detect_langs(name)
-        except LangDetectException:
-            candidates = []
-        lang = next(
-            (candidate.lang for candidate in candidates if candidate.lang in ("en", "it")),
-            "en",
-        )
-
-    if lang not in ["en", "it"]:
+def _resolve_ingredient(name, lang):
+    if lang not in ("en", "it"):
         return None, f"Not supported language: {lang}"
 
-    glossary_ingredient = _get_glossary_ingredient(name_clean)
-    if glossary_ingredient:
-        return glossary_ingredient, None
-
-    if lang == "en":
-        name, error = normalize_ingredient_name(name_clean)
-    elif lang == "it":
-        name_en = translate_text(name_clean, "it", "en")
+    if lang == "it":
+        name_en = translate_text(name, "it", "en")
         if not name_en:
             return None, "Translation service unavailable. Please try again."
         name, error = normalize_ingredient_name(name_en)
+    else:
+        name, error = normalize_ingredient_name(name)
 
     if error:
         return None, error
@@ -206,6 +188,28 @@ def get_or_validate_ingredient(name, lang=None):
         countable=is_countable(name_en),
     )
     return ingredient, None
+
+
+def get_or_validate_ingredient(name, lang=None):
+    """validates the ingredient name, translates, and returns the Ingredient or an error message"""
+    name_clean = name.strip()
+
+    glossary_ingredient = _get_glossary_ingredient(name_clean)
+    if glossary_ingredient:
+        return glossary_ingredient, None
+
+    if lang:
+        return _resolve_ingredient(name_clean, lang)
+
+    ingredient, error = _resolve_ingredient(name_clean, "en")
+    if not error:
+        return ingredient, None
+
+    ingredient, _ = _resolve_ingredient(name_clean, "it")
+    if ingredient:
+        return ingredient, None
+
+    return None, error
 
 
 def get_ingredient_or_custom(name):
