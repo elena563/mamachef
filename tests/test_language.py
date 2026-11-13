@@ -84,7 +84,7 @@ class IngredientLanguageTest(TestCase):
     def test_uses_provided_language_without_detection(self):
         with (
             patch("functions.language_helpers._translate_cached", side_effect=ingredient_translate),
-            patch("functions.ingredient_validation.detect") as mock_detect,
+            patch("functions.ingredient_validation.detect_langs") as mock_detect,
         ):
             ingredient, error = get_or_validate_ingredient("pomodoro", lang="it")
 

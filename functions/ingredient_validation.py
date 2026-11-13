@@ -3,7 +3,7 @@ from difflib import SequenceMatcher
 import inflect
 import nltk
 import spacy
-from langdetect import detect
+from langdetect import LangDetectException, detect_langs
 from nltk.corpus import wordnet as wn
 
 from kitchen.models import Ingredient
@@ -167,7 +167,14 @@ def get_or_validate_ingredient(name, lang=None):
     name_clean = name.strip()
 
     if not lang:
-        lang = detect(name)
+        try:
+            candidates = detect_langs(name)
+        except LangDetectException:
+            candidates = []
+        lang = next(
+            (candidate.lang for candidate in candidates if candidate.lang in ("en", "it")),
+            "en",
+        )
 
     if lang not in ["en", "it"]:
         return None, f"Not supported language: {lang}"
@@ -190,10 +197,9 @@ def get_or_validate_ingredient(name, lang=None):
     if isinstance(name, Ingredient):
         return name, None
 
-    name_en = name
+    name_en = name.title().strip()
     name_it = translate_text(name_en, "en", "it")
 
-    name = name.title().strip()
     ingredient = Ingredient.objects.create(
         name_en=name_en,
         name_it=name_it,

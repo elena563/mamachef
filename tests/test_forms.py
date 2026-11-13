@@ -18,10 +18,10 @@ class RecipeFormTest(TestCase, ImageMixin):
         return {
             "name": "Test Recipe",
             "description": "This is a test recipe.",
-            "difficulty": "Easy",
+            "difficulty": "easy",
             "preparation_time": 30,
             "servings": 4,
-            "cooking_method": "Baked",
+            "cooking_method": "baked",
             "category": "Dessert",
         }
 
@@ -173,7 +173,7 @@ class RecipeImageCompressionTest(TestCase, ImageMixin):
     def test_upload_compresses_to_webp(self):
         upload = self.make_upload(name="dish.png")
         form = RecipeForm(
-            data={"name": "Test", "difficulty": "Easy", "category": "Meat"}, files={"image_asset": upload}
+            data={"name": "Test", "difficulty": "easy", "category": "Meat"}, files={"image_asset": upload}
         )
         self.assertTrue(form.is_valid(), form.errors)
 
@@ -188,7 +188,7 @@ class RecipeImageCompressionTest(TestCase, ImageMixin):
             override_settings(MEDIA_ROOT=media),
         ):
             first = RecipeForm(
-                data={"name": "First", "difficulty": "Easy", "category": "Meat"},
+                data={"name": "First", "difficulty": "easy", "category": "Meat"},
                 files={"image_asset": self.make_upload(name="a.png")},
             )
             recipe = first.save()
@@ -196,7 +196,7 @@ class RecipeImageCompressionTest(TestCase, ImageMixin):
             self.assertTrue(os.path.exists(old_path))
 
             second = RecipeForm(
-                data={"name": "First", "difficulty": "Easy", "category": "Meat"},
+                data={"name": "First", "difficulty": "easy", "category": "Meat"},
                 files={"image_asset": self.make_upload(name="b.png")},
                 instance=recipe,
             )
