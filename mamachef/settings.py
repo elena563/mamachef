@@ -44,7 +44,12 @@ DEBUG = os.getenv("DEBUG") == "True"
 
 ALLOWED_HOSTS = ["mamachef.elenazen.it", "mamachef.alwaysdata.net", "localhost", "127.0.0.1"]
 
-CSRF_TRUSTED_ORIGINS = ["https://mamachef.alwaysdata.net"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://mamachef.alwaysdata.net",
+    "https://mamachef.elenazen.it",
+]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Application definition
 
@@ -178,6 +183,9 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
         "file": {
             "level": "ERROR",
             "class": "logging.FileHandler",
@@ -186,7 +194,7 @@ LOGGING = {
     },
     "loggers": {
         "django": {
-            "handlers": ["file"],
+            "handlers": ["console", "file"],
             "level": "ERROR",
             "propagate": True,
         },
