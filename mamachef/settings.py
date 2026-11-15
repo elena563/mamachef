@@ -42,9 +42,16 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = ["mamachef.elenazen.it", "mamachef.alwaysdata.net", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [
+    "https://v80puftj-django-mamachef.apps-2.websson.cloud/",
+    "mamachef.elenazen.it",
+    "mamachef.alwaysdata.net",
+    "localhost",
+    "127.0.0.1",
+]
 
 CSRF_TRUSTED_ORIGINS = [
+    "https://v80puftj-django-mamachef.apps-2.websson.cloud/",
     "https://mamachef.alwaysdata.net",
     "https://mamachef.elenazen.it",
 ]
